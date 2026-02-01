@@ -2,10 +2,16 @@ import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import CssBaseline from '@mui/material/CssBaseline';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import Typography from '@mui/material/Typography';
 import type { FC } from 'react';
 
+import { EncounterProvider } from '../contexts/EncounterContext';
+
+import { ActionRecorder } from './ActionRecorder';
+import { CharacterList } from './CharacterList';
+import { ConditionManager } from './ConditionManager';
+import { EncounterSetup } from './EncounterSetup';
 import { Header } from './Header';
+import { RemindersDisplay } from './RemindersDisplay';
 
 const theme = createTheme({
   palette: {
@@ -17,12 +23,18 @@ export const App: FC = () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Header />
-      <Container maxWidth="lg">
-        <Box sx={{ mb: 4, mt: 0 }}>
-          <Typography variant="h1">Welcome to your new project!</Typography>
-        </Box>
-      </Container>
+      <EncounterProvider>
+        <Header />
+        <Container maxWidth="lg">
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, my: 4 }}>
+            <EncounterSetup />
+            <CharacterList />
+            <ConditionManager />
+            <ActionRecorder />
+            <RemindersDisplay />
+          </Box>
+        </Container>
+      </EncounterProvider>
     </ThemeProvider>
   );
 };
