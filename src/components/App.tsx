@@ -19,8 +19,8 @@ export const App: FC = () => {
       <CssBaseline />
       <Header />
       <Container maxWidth="lg">
-        <Box sx={{ my: 4 }}>
-          <Typography variant="body1">Welcome to your new project!</Typography>
+        <Box sx={{ mb: 4, mt: 0 }}>
+          <Typography variant="h1">Welcome to your new project!</Typography>
         </Box>
       </Container>
     </ThemeProvider>
