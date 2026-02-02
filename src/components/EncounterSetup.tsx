@@ -15,13 +15,13 @@ import {
 import { useCallback, useEffect, useState } from 'react';
 import type { FC } from 'react';
 
-import { useEncounter } from '../contexts/EncounterContext';
 import { getMonster, getMonsters } from '../services/dndApi';
+import { useEncounterStore } from '../store/encounterStore';
 import type { ApiReference } from '../types/dnd';
 import type { CharacterType } from '../types/encounter';
 
 export const EncounterSetup: FC = () => {
-  const { encounter, createEncounter, addCharacter } = useEncounter();
+  const { encounter, createEncounter, addCharacter } = useEncounterStore();
   const [openPlayerDialog, setOpenPlayerDialog] = useState(false);
   const [openMonsterDialog, setOpenMonsterDialog] = useState(false);
   const [playerName, setPlayerName] = useState('');

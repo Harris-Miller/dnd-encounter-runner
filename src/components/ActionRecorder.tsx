@@ -2,11 +2,11 @@ import { Autocomplete, Box, Button, Card, CardContent, TextField, Typography } f
 import { useCallback, useState } from 'react';
 import type { FC } from 'react';
 
-import { useEncounter } from '../contexts/EncounterContext';
+import { useEncounterStore } from '../store/encounterStore';
 import type { TriggerEvent } from '../types/triggers';
 
 export const ActionRecorder: FC = () => {
-  const { encounter, recordEvent, addCondition } = useEncounter();
+  const { encounter, recordEvent, addCondition } = useEncounterStore();
   const [attackerId, setAttackerId] = useState<string>('');
   const [targetId, setTargetId] = useState<string>('');
   const [damageType, setDamageType] = useState('');

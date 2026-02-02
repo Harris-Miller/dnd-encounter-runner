@@ -4,8 +4,6 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import type { FC } from 'react';
 
-import { EncounterProvider } from '../contexts/EncounterContext';
-
 import { ActionRecorder } from './ActionRecorder';
 import { CharacterList } from './CharacterList';
 import { ConditionManager } from './ConditionManager';
@@ -23,18 +21,16 @@ export const App: FC = () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <EncounterProvider>
-        <Header />
-        <Container maxWidth="lg">
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, my: 4 }}>
-            <EncounterSetup />
-            <CharacterList />
-            <ConditionManager />
-            <ActionRecorder />
-            <RemindersDisplay />
-          </Box>
-        </Container>
-      </EncounterProvider>
+      <Header />
+      <Container maxWidth="lg">
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, my: 4 }}>
+          <EncounterSetup />
+          <CharacterList />
+          <ConditionManager />
+          <ActionRecorder />
+          <RemindersDisplay />
+        </Box>
+      </Container>
     </ThemeProvider>
   );
 };

@@ -3,11 +3,11 @@ import { Box, Card, CardContent, Chip, IconButton, TextField, Typography } from 
 import { useCallback } from 'react';
 import type { FC } from 'react';
 
-import { useEncounter } from '../contexts/EncounterContext';
 import { getConditionById } from '../data/conditions';
+import { useEncounterStore } from '../store/encounterStore';
 
 export const CharacterList: FC = () => {
-  const { encounter, updateCharacterInitiative, removeCharacter } = useEncounter();
+  const { encounter, updateCharacterInitiative, removeCharacter } = useEncounterStore();
 
   const handleInitiativeChange = useCallback(
     (characterId: string, value: number) => {

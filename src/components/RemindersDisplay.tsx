@@ -3,10 +3,10 @@ import { Box, Button, Card, CardContent, List, ListItem, ListItemText, Typograph
 import { useMemo } from 'react';
 import type { FC } from 'react';
 
-import { useEncounter } from '../contexts/EncounterContext';
+import { useEncounterStore } from '../store/encounterStore';
 
 export const RemindersDisplay: FC = () => {
-  const { encounter, clearReminderLog } = useEncounter();
+  const { encounter, clearReminderLog } = useEncounterStore();
 
   const sortedReminders = useMemo(() => {
     if (!encounter) {
