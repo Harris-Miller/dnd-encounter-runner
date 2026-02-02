@@ -9,8 +9,18 @@
 - use React's `PropsWithChildren` utility type for components that accept child components
 - exclude file extensions when importing typescript files
 - take an immutable value approach to all code
+- throw descriptive errors instead of silently returning when encountering invalid state or missing data
+- use `R.assocPath` for nested state updates in Zustand stores, calling `set(R.assocPath([...path], value))` directly without wrapping in objects
+- prefer `findIndex` + direct index access over mapping entire arrays when updating a single item in a collection
+- use native array methods (`.filter()`, `.map()`, `.sort()`) when they're clearer than Ramda equivalents
+- use the `sortBy` utility function for sorting instead of custom comparator functions
+- use spread operators for simple object creation instead of Ramda pipe/assoc chains
+- use descriptive variable names like `nextCharacters`, `updatedEffects`, `indexOfCharacter` to indicate transformed state
 
 ## Don't
 - use barrel exports
 - use default exports, unless explicitly told otherwise
 - start with empty arrays and add to them via conditionals
+- silently return early on invalid state - throw descriptive errors instead
+- wrap `R.assocPath` calls in objects when updating Zustand state - pass the result directly to `set()`
+- use `R.map` to update a single item when `findIndex` + direct update is more efficient
