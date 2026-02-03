@@ -1,6 +1,5 @@
 import * as R from 'ramda';
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
 
 import { generateReminders } from '../services/reminderEngine';
 import type { Character, Encounter, StandardCondition } from '../types/encounter';
@@ -19,140 +18,141 @@ interface EncounterStore {
   updateCharacterInitiative: (characterId: string, initiative: number) => void;
 }
 
-export const useEncounterStore = create<EncounterStore>()(
-  persist(
-    (set, get) => ({
-      addCharacter: (characterData: Omit<Character, 'activeEffects' | 'id'>) => {
-        const { encounter } = get();
-        if (!encounter) {
-          throw new Error('Attempted to update the encounter state with no active encounter.');
-        }
+export const useEncounterStore = create<EncounterStore>()((set, get) => ({
+  addCharacter: (characterData: Omit<Character, 'activeEffects' | 'id'>) => {
+    const { encounter } = get();
+    if (!encounter) {
+      throw new Error('Attempted to update the encounter state with no active encounter.');
+    }
 
-        const newCharacter: Character = {
-          ...characterData,
-          activeEffects: [],
-          id: `character-${Date.now()}-${Math.random()}`,
-        };
+    const newCharacter: Character = {
+      ...characterData,
+      activeEffects: [],
+      id: `character-${Date.now()}-${Math.random()}`,
+    };
 
-        const nextCharacters = R.append(newCharacter, encounter.characters).sort(sortBy(char => char.initiative));
+    const nextCharacters = R.append(newCharacter, encounter.characters).sort(sortBy(char => char.initiative));
 
-        set(R.assocPath(['encounter', 'characters'], nextCharacters));
+    set(R.assocPath(['encounter', 'characters'], nextCharacters));
+  },
+
+  addCondition: (characterId: string, conditionId: StandardCondition, source: string, duration?: number) => {
+    const { encounter } = get();
+    if (!encounter) {
+      throw new Error('Attempted to update the encounter state with no active encounter.');
+    }
+
+    const newEffect = {
+      appliedAt: Date.now(),
+      conditionId,
+      duration,
+      id: `effect-${Date.now()}-${Math.random()}`,
+      remainingTurns: duration,
+      source,
+    };
+
+    const characterIndex = encounter.characters.findIndex(char => char.id === characterId);
+
+    if (characterIndex === -1) {
+      throw new Error('Attempted to add a condition for a character that does not exist.');
+    }
+
+    const updatedEffects = R.flow(encounter.characters[characterIndex].activeEffects, [
+      R.when(
+        () => conditionId === 'concentrating',
+        ae => ae.filter(effect => effect.conditionId !== 'concentrating'),
+      ),
+      R.append(newEffect),
+    ]);
+
+    set(R.assocPath(['encounter', 'characters', characterIndex, 'activeEffects'], updatedEffects));
+  },
+
+  clearReminderLog: () => {
+    const { encounter } = get();
+    if (!encounter) {
+      throw new Error('Attempted to update the encounter state with no active encounter.');
+    }
+
+    set(R.assocPath(['encounter', 'reminderLog'], []));
+  },
+
+  createEncounter: () => {
+    set({
+      encounter: {
+        characters: [],
+        id: `encounter-${Date.now()}`,
+        reminderLog: [],
       },
+    });
+  },
 
-      addCondition: (characterId: string, conditionId: StandardCondition, source: string, duration?: number) => {
-        const { encounter } = get();
-        if (!encounter) {
-          throw new Error('Attempted to update the encounter state with no active encounter.');
-        }
+  // TODO: right now, we're supporting a single encounter
+  // eventually, we'll be able to load one-of-many saved encounters as the "active" encounter
+  encounter: {
+    characters: [],
+    id: `encounter-${Date.now()}`,
+    reminderLog: [],
+  },
 
-        const newEffect = {
-          appliedAt: Date.now(),
-          conditionId,
-          duration,
-          id: `effect-${Date.now()}-${Math.random()}`,
-          remainingTurns: duration,
-          source,
-        };
+  recordEvent: (event: TriggerEvent, damageType?: string) => {
+    const { encounter } = get();
+    if (!encounter) {
+      throw new Error('Attempted to update the encounter state with no active encounter.');
+    }
 
-        const characterIndex = encounter.characters.findIndex(char => char.id === characterId);
+    const character = encounter.characters.find(char => char.id === event.characterId);
 
-        if (characterIndex === -1) {
-          throw new Error('Attempted to add a condition for a character that does not exist.');
-        }
+    if (!character) {
+      throw new Error('Attempted to record an event for a character that does not exist.');
+    }
 
-        const updatedEffects = R.flow(encounter.characters[characterIndex].activeEffects, [
-          R.when(
-            () => conditionId === 'concentrating',
-            ae => ae.filter(effect => effect.conditionId !== 'concentrating'),
-          ),
-          R.append(newEffect),
-        ]);
+    const reminders = generateReminders(character, event, damageType);
 
-        set(R.assocPath(['encounter', 'characters', characterIndex, 'activeEffects'], updatedEffects));
-      },
+    if (reminders.length > 0) {
+      set(R.assocPath(['encounter', 'reminderLog'], R.concat(encounter.reminderLog, reminders)));
+    }
+  },
 
-      clearReminderLog: () => {
-        const { encounter } = get();
-        if (!encounter) {
-          throw new Error('Attempted to update the encounter state with no active encounter.');
-        }
+  removeCharacter: (characterId: string) => {
+    const { encounter } = get();
+    if (!encounter) {
+      throw new Error('Attempted to update the encounter state with no active encounter.');
+    }
 
-        set(R.assocPath(['encounter', 'reminderLog'], []));
-      },
+    const nextCharacters = encounter.characters.filter(char => char.id !== characterId);
+    set(R.assocPath(['encounter', 'characters'], nextCharacters));
+  },
 
-      createEncounter: () => {
-        set({
-          encounter: {
-            characters: [],
-            id: `encounter-${Date.now()}`,
-            reminderLog: [],
-          },
-        });
-      },
+  removeCondition: (characterId: string, effectId: string) => {
+    const { encounter } = get();
+    if (!encounter) {
+      throw new Error('Attempted to update the encounter state with no active encounter.');
+    }
 
-      encounter: null,
+    const indexOfCharacter = encounter.characters.findIndex(char => char.id === characterId);
 
-      recordEvent: (event: TriggerEvent, damageType?: string) => {
-        const { encounter } = get();
-        if (!encounter) {
-          throw new Error('Attempted to update the encounter state with no active encounter.');
-        }
+    if (indexOfCharacter === -1) {
+      throw new Error('Attempted to remove a condition for a character that does not exist.');
+    }
 
-        const character = encounter.characters.find(char => char.id === event.characterId);
+    const updatedEffects = encounter.characters[indexOfCharacter].activeEffects.filter(
+      effect => effect.id !== effectId,
+    );
 
-        if (!character) {
-          throw new Error('Attempted to record an event for a character that does not exist.');
-        }
+    set(R.assocPath(['encounter', 'characters', indexOfCharacter, 'activeEffects'], updatedEffects));
+  },
 
-        const reminders = generateReminders(character, event, damageType);
+  updateCharacterInitiative: (characterId: string, initiative: number) => {
+    const { encounter } = get();
+    if (!encounter) {
+      throw new Error('Attempted to update the encounter state with no active encounter.');
+    }
 
-        if (reminders.length > 0) {
-          set(R.assocPath(['encounter', 'reminderLog'], R.concat(encounter.reminderLog, reminders)));
-        }
-      },
+    const nextCharacters = encounter.characters
+      .map(char => (char.id === characterId ? { ...char, initiative } : char))
+      .sort(sortBy(char => char.initiative));
 
-      removeCharacter: (characterId: string) => {
-        const { encounter } = get();
-        if (!encounter) {
-          throw new Error('Attempted to update the encounter state with no active encounter.');
-        }
-
-        const nextCharacters = encounter.characters.filter(char => char.id !== characterId);
-        set(R.assocPath(['encounter', 'characters'], nextCharacters));
-      },
-
-      removeCondition: (characterId: string, effectId: string) => {
-        const { encounter } = get();
-        if (!encounter) {
-          throw new Error('Attempted to update the encounter state with no active encounter.');
-        }
-
-        const indexOfCharacter = encounter.characters.findIndex(char => char.id === characterId);
-
-        if (indexOfCharacter === -1) {
-          throw new Error('Attempted to remove a condition for a character that does not exist.');
-        }
-
-        const updatedEffects = encounter.characters[indexOfCharacter].activeEffects.filter(
-          effect => effect.id !== effectId,
-        );
-
-        set(R.assocPath(['encounter', 'characters', indexOfCharacter, 'activeEffects'], updatedEffects));
-      },
-
-      updateCharacterInitiative: (characterId: string, initiative: number) => {
-        const { encounter } = get();
-        if (!encounter) {
-          throw new Error('Attempted to update the encounter state with no active encounter.');
-        }
-
-        const nextCharacters = encounter.characters
-          .map(char => (char.id === characterId ? { ...char, initiative } : char))
-          .sort(sortBy(char => char.initiative));
-
-        set(R.assocPath(['encounter', 'characters'], nextCharacters));
-      },
-    }),
-    { name: 'encounter-store' },
-  ),
-);
+    set(R.assocPath(['encounter', 'characters'], nextCharacters));
+  },
+}));
