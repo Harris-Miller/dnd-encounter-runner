@@ -53,4 +53,4 @@ export const characterStore = createStore<CharacterStore>()((set, get) => ({
   },
 }));
 
-export const useCharacterStore = useStore(characterStore);
+export const useCharacterStore = <T>(selector: (state: CharacterStore) => T): T => useStore(characterStore, selector);

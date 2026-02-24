@@ -3,8 +3,8 @@ import { Box, Card, CardContent, Chip, IconButton, TextField, Typography } from 
 import { useCallback } from 'react';
 import type { FC } from 'react';
 
-import { getConditionById } from '../data/conditions';
-import { useEncounterStoreOrig } from '../store/encounterStore';
+import { getConditionById } from '../../data/conditions';
+import { useEncounterStoreOrig } from '../../store/encounterStore';
 
 export const CharacterList: FC = () => {
   const { encounter, updateCharacterInitiative, removeCharacter } = useEncounterStoreOrig();

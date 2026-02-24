@@ -2,8 +2,8 @@ import { Autocomplete, Box, Button, Card, CardContent, TextField, Typography } f
 import { useCallback, useState } from 'react';
 import type { FC } from 'react';
 
-import { useEncounterStoreOrig } from '../store/encounterStore';
-import type { TriggerEvent } from '../types/triggers';
+import { useEncounterStoreOrig } from '../../store/encounterStore';
+import type { TriggerEvent } from '../../types/triggers';
 
 export const ActionRecorder: FC = () => {
   const { encounter, recordEvent, addCondition } = useEncounterStoreOrig();

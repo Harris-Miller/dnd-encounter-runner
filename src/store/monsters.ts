@@ -51,4 +51,4 @@ export const monsterStore = createStore<MonsterStore>()((set, get) => ({
   },
 }));
 
-export const useMonsterStore = useStore(monsterStore);
+export const useMonsterStore = <T>(selector: (state: MonsterStore) => T): T => useStore(monsterStore, selector);

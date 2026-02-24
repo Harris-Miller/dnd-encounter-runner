@@ -3,7 +3,7 @@ import { Box, Button, Card, CardContent, List, ListItem, ListItemText, Typograph
 import { useMemo } from 'react';
 import type { FC } from 'react';
 
-import { useEncounterStoreOrig } from '../store/encounterStore';
+import { useEncounterStoreOrig } from '../../store/encounterStore';
 
 export const RemindersDisplay: FC = () => {
   const { encounter, clearReminderLog } = useEncounterStoreOrig();

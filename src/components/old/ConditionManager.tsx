@@ -17,9 +17,9 @@ import {
 import { useCallback, useState } from 'react';
 import type { FC } from 'react';
 
-import { getAllConditions } from '../data/conditions';
-import { useEncounterStoreOrig } from '../store/encounterStore';
-import type { StandardCondition } from '../types/encounter';
+import { getAllConditions } from '../../data/conditions';
+import { useEncounterStoreOrig } from '../../store/encounterStore';
+import type { StandardCondition } from '../../types/encounter';
 
 export const ConditionManager: FC = () => {
   const { encounter, addCondition, removeCondition } = useEncounterStoreOrig();

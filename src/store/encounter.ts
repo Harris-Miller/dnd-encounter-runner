@@ -29,12 +29,14 @@ export interface Encounter extends StandardDbProps {
   combatants: Record<string, Combatant>;
   /** id of one of the combatants */
   currentInitiative: string | null;
+  name: string;
 }
 
 interface EncounterStore {
   addCombatant: (encounterId: string, combatantType: 'character' | 'monster', refId: string) => void;
   changeActiveStatus: (id: string, active: boolean) => void;
   create: () => void;
+  delete: (encounterId: string) => void;
   encounters: Record<string, Encounter>;
   removeCombatant: (encounterId: string, combatantId: string) => void;
   setCurrentInitiative: (encounterId: string, combatantId: string) => void;
@@ -103,9 +105,14 @@ export const encounterStore = createStore<EncounterStore>()((set, get) => ({
       createdAt: dateNowIsoString,
       currentInitiative: null,
       id,
+      name: 'My Encounter',
       updatedAt: dateNowIsoString,
     };
     set(store => ({ encounters: { ...store.encounters, [id]: newEncounter } }));
+  },
+
+  delete: (encounterId: string) => {
+    set(state => ({ encounters: R.dissoc(encounterId, state.encounters) }));
   },
 
   encounters: {},
@@ -170,4 +177,4 @@ export const encounterStore = createStore<EncounterStore>()((set, get) => ({
   },
 }));
 
-export const useEncounterStore = useStore(encounterStore);
+export const useEncounterStore = <T>(selector: (state: EncounterStore) => T): T => useStore(encounterStore, selector);

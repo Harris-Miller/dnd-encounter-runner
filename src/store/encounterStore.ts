@@ -18,6 +18,9 @@ interface EncounterStore {
   updateCharacterInitiative: (characterId: string, initiative: number) => void;
 }
 
+/**
+ * @deprecated Use the new encounter store instead.
+ */
 export const useEncounterStoreOrig = create<EncounterStore>()((set, get) => ({
   addCharacter: (characterData: Omit<Character, 'activeEffects' | 'id'>) => {
     const { encounter } = get();

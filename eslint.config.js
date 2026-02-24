@@ -1,12 +1,10 @@
-import { defineConfig } from 'eslint/config';
+import { defineConfig, globalIgnores } from 'eslint/config';
 import harrisConfig from 'eslint-config-harris';
 import globals from 'eslint-config-harris/globals';
 
 const eslintConfig = defineConfig([
   ...harrisConfig,
-  {
-    ignores: ['node_modules/', 'src/vite-env.d.ts'],
-  },
+  globalIgnores(['dist', 'src/vite-env.d.ts']),
   {
     files: ['src/**'],
     languageOptions: {
