@@ -40,6 +40,7 @@ interface EncounterStore {
   encounters: Record<string, Encounter>;
   removeCombatant: (encounterId: string, combatantId: string) => void;
   setCurrentInitiative: (encounterId: string, combatantId: string) => void;
+  setName: (encounterId: string, name: string) => void;
   updateCombatant: (encounterId: string, combatantId: string) => void;
 }
 
@@ -105,7 +106,7 @@ export const encounterStore = createStore<EncounterStore>()((set, get) => ({
       createdAt: dateNowIsoString,
       currentInitiative: null,
       id,
-      name: 'My Encounter',
+      name: 'Untitled Encounter',
       updatedAt: dateNowIsoString,
     };
     set(store => ({ encounters: { ...store.encounters, [id]: newEncounter } }));
@@ -156,6 +157,16 @@ export const encounterStore = createStore<EncounterStore>()((set, get) => ({
         [encounterId]: updatedEncounter,
       },
     }));
+  },
+  setName: (encounterId: string, name: string) => {
+    const encounter = get().encounters[encounterId];
+
+    if (encounter == null) {
+      throw new Error(`Encounter "${encounterId}" not found`);
+    }
+
+    const updatedEncounter: Encounter = { ...encounter, name: name || 'Untitled Encounter' };
+    set(state => ({ encounters: { ...state.encounters, [encounterId]: updatedEncounter } }));
   },
   updateCombatant: (encounterId: string, combatantId: string) => {
     const encounter = get().encounters[encounterId];
