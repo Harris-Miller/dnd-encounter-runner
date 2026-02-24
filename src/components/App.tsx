@@ -6,14 +6,14 @@ import type { FC } from 'react';
 import { router } from '../router';
 
 const theme = createTheme({
-  palette: {
-    mode: 'light',
+  colorSchemes: {
+    dark: true,
   },
 });
 
 export const App: FC = () => {
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider noSsr theme={theme}>
       <CssBaseline />
       <RouterProvider router={router} />
     </ThemeProvider>
