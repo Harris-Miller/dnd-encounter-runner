@@ -4,10 +4,10 @@ import { useCallback } from 'react';
 import type { FC } from 'react';
 
 import { getConditionById } from '../data/conditions';
-import { useEncounterStore } from '../store/encounterStore';
+import { useEncounterStoreOrig } from '../store/encounterStore';
 
 export const CharacterList: FC = () => {
-  const { encounter, updateCharacterInitiative, removeCharacter } = useEncounterStore();
+  const { encounter, updateCharacterInitiative, removeCharacter } = useEncounterStoreOrig();
 
   const handleInitiativeChange = useCallback(
     (characterId: string, value: number) => {

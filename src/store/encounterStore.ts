@@ -18,7 +18,7 @@ interface EncounterStore {
   updateCharacterInitiative: (characterId: string, initiative: number) => void;
 }
 
-export const useEncounterStore = create<EncounterStore>()((set, get) => ({
+export const useEncounterStoreOrig = create<EncounterStore>()((set, get) => ({
   addCharacter: (characterData: Omit<Character, 'activeEffects' | 'id'>) => {
     const { encounter } = get();
     if (!encounter) {
@@ -57,7 +57,7 @@ export const useEncounterStore = create<EncounterStore>()((set, get) => ({
       throw new Error('Attempted to add a condition for a character that does not exist.');
     }
 
-    const updatedEffects = R.flow(encounter.characters[characterIndex].activeEffects, [
+    const updatedEffects = R.flow(encounter.characters[characterIndex]!.activeEffects, [
       R.when(
         () => conditionId === 'concentrating',
         ae => ae.filter(effect => effect.conditionId !== 'concentrating'),
@@ -136,7 +136,7 @@ export const useEncounterStore = create<EncounterStore>()((set, get) => ({
       throw new Error('Attempted to remove a condition for a character that does not exist.');
     }
 
-    const updatedEffects = encounter.characters[indexOfCharacter].activeEffects.filter(
+    const updatedEffects = encounter.characters[indexOfCharacter]!.activeEffects.filter(
       effect => effect.id !== effectId,
     );
 

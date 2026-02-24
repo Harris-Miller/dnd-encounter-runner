@@ -18,11 +18,11 @@ import { useCallback, useState } from 'react';
 import type { FC } from 'react';
 
 import { getAllConditions } from '../data/conditions';
-import { useEncounterStore } from '../store/encounterStore';
+import { useEncounterStoreOrig } from '../store/encounterStore';
 import type { StandardCondition } from '../types/encounter';
 
 export const ConditionManager: FC = () => {
-  const { encounter, addCondition, removeCondition } = useEncounterStore();
+  const { encounter, addCondition, removeCondition } = useEncounterStoreOrig();
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedCharacterId, setSelectedCharacterId] = useState<string>('');
   const [selectedCondition, setSelectedCondition] = useState<{
