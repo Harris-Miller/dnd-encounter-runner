@@ -23,13 +23,14 @@ function EncounterPage() {
   }
 
   return (
-    <Card>
-      <CardHeader title={`Encounter: ${encounter.name}`} />
-      <CardContent>
-        <Typography>
-          <RouterLink to="/">Back to encounters</RouterLink>
-        </Typography>
-      </CardContent>
-    </Card>
+    <>
+      <Typography>
+        <RouterLink to="/">Back to encounters</RouterLink>
+      </Typography>
+      <Card>
+        <CardHeader title={encounter.name} />
+        <CardContent />
+      </Card>
+    </>
   );
 }

@@ -20,6 +20,7 @@
     "@mui/material": "^7.3.8",
     "@tanstack/react-router": "^1.162.8",
     "@tanstack/react-router-devtools": "^1.162.8",
+    "date-fns": "^4.1.0",
     "ramda": "^0.32.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
