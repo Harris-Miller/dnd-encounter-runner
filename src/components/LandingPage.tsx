@@ -6,6 +6,10 @@ import {
   Card,
   CardContent,
   Chip,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   IconButton,
   Paper,
   Table,
@@ -16,24 +20,55 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
+import { useNavigate } from '@tanstack/react-router';
+import { useState } from 'react';
 import type { FC } from 'react';
 
 import { useEncounterStore } from '../store/encounter';
 import type { Encounter } from '../store/encounter';
 
+import { RouterLink } from './RouterLink';
+
 export const LandingPage: FC = () => {
+  const navigate = useNavigate();
   const encounters = useEncounterStore((state): Record<string, Encounter> => state.encounters);
   const createEncounter = useEncounterStore(state => state.create);
   const deleteEncounter = useEncounterStore(state => state.delete);
 
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [encounterToDelete, setEncounterToDelete] = useState<Encounter | null>(null);
+
   const encounterList: Encounter[] = Object.values(encounters);
+
+  const handleCreateEncounter = () => {
+    const newEncounter = createEncounter();
+    navigate({ params: { encounterId: newEncounter.id }, to: '/encounter/$encounterId' });
+  };
+
+  const handleDeleteClick = (encounter: Encounter) => {
+    setEncounterToDelete(encounter);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = () => {
+    if (encounterToDelete) {
+      deleteEncounter(encounterToDelete.id);
+    }
+    setDeleteDialogOpen(false);
+    setEncounterToDelete(null);
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteDialogOpen(false);
+    setEncounterToDelete(null);
+  };
 
   return (
     <Card>
       <CardContent>
         <Box sx={{ alignItems: 'center', display: 'flex', justifyContent: 'space-between', mb: 2 }}>
           <Typography variant="h5">Encounters</Typography>
-          <Button onClick={createEncounter} startIcon={<AddIcon />} variant="contained">
+          <Button onClick={handleCreateEncounter} startIcon={<AddIcon />} variant="contained">
             Create Encounter
           </Button>
         </Box>
@@ -63,7 +98,11 @@ export const LandingPage: FC = () => {
 
                   return (
                     <TableRow key={encounter.id}>
-                      <TableCell>{encounter.name}</TableCell>
+                      <TableCell>
+                        <RouterLink params={{ encounterId: encounter.id }} to="/encounter/$encounterId">
+                          {encounter.name}
+                        </RouterLink>
+                      </TableCell>
                       <TableCell>
                         <Chip
                           color={encounter.active ? 'success' : 'default'}
@@ -89,7 +128,7 @@ export const LandingPage: FC = () => {
                         <IconButton
                           color="error"
                           onClick={() => {
-                            deleteEncounter(encounter.id);
+                            handleDeleteClick(encounter);
                           }}
                           size="small"
                         >
@@ -103,6 +142,20 @@ export const LandingPage: FC = () => {
             </Table>
           </TableContainer>
         )}
+        <Dialog onClose={handleDeleteCancel} open={deleteDialogOpen}>
+          <DialogTitle>Delete Encounter</DialogTitle>
+          <DialogContent>
+            <Typography>
+              Are you sure you want to delete &quot;{encounterToDelete?.name}&quot;? This action cannot be undone.
+            </Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleDeleteCancel}>Cancel</Button>
+            <Button color="error" onClick={handleDeleteConfirm} variant="contained">
+              Delete
+            </Button>
+          </DialogActions>
+        </Dialog>
       </CardContent>
     </Card>
   );

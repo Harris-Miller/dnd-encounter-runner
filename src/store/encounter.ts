@@ -35,7 +35,7 @@ export interface Encounter extends StandardDbProps {
 interface EncounterStore {
   addCombatant: (encounterId: string, combatantType: 'character' | 'monster', refId: string) => void;
   changeActiveStatus: (id: string, active: boolean) => void;
-  create: () => void;
+  create: () => Encounter;
   delete: (encounterId: string) => void;
   encounters: Record<string, Encounter>;
   removeCombatant: (encounterId: string, combatantId: string) => void;
@@ -109,6 +109,7 @@ export const encounterStore = createStore<EncounterStore>()((set, get) => ({
       updatedAt: dateNowIsoString,
     };
     set(store => ({ encounters: { ...store.encounters, [id]: newEncounter } }));
+    return newEncounter;
   },
 
   delete: (encounterId: string) => {

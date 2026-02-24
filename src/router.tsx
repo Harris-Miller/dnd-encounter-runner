@@ -1,22 +1,9 @@
-import { Container } from '@mui/material';
-import { createRootRoute, createRoute, createRouter, Outlet } from '@tanstack/react-router';
-import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
+import { createRoute, createRouter } from '@tanstack/react-router';
 
-import { Header } from './components/Header';
+import { encounterRoute } from './components/EncounterPage';
 import { LandingPage } from './components/LandingPage';
 import { SingleEncounterLandingPage } from './components/old/SingleEncounterLandingPage';
-
-const rootRoute = createRootRoute({
-  component: () => (
-    <>
-      <Header />
-      <Container maxWidth="lg">
-        <Outlet />
-      </Container>
-      <TanStackRouterDevtools />
-    </>
-  ),
-});
+import { rootRoute } from './routes/rootRoute';
 
 const indexRoute = createRoute({
   component: LandingPage,
@@ -30,7 +17,7 @@ const oldLandingPageRoute = createRoute({
   path: '/old',
 });
 
-const routeTree = rootRoute.addChildren([indexRoute, oldLandingPageRoute]);
+const routeTree = rootRoute.addChildren([indexRoute, oldLandingPageRoute, encounterRoute]);
 
 export const router = createRouter({
   defaultPreload: 'intent',
