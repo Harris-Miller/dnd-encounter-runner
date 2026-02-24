@@ -1,10 +1,9 @@
-import Container from '@mui/material/Container';
 import CssBaseline from '@mui/material/CssBaseline';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { RouterProvider } from '@tanstack/react-router';
 import type { FC } from 'react';
 
-import { Header } from './Header';
-import { LandingPage } from './LandingPage';
+import { router } from '../router';
 
 const theme = createTheme({
   palette: {
@@ -16,10 +15,7 @@ export const App: FC = () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Header />
-      <Container maxWidth="lg">
-        <LandingPage />
-      </Container>
+      <RouterProvider router={router} />
     </ThemeProvider>
   );
 };

@@ -1,3 +1,4 @@
+import pluginRouter from '@tanstack/eslint-plugin-router';
 import { defineConfig, globalIgnores } from 'eslint/config';
 import harrisConfig from 'eslint-config-harris';
 import globals from 'eslint-config-harris/globals';
@@ -5,6 +6,7 @@ import globals from 'eslint-config-harris/globals';
 const eslintConfig = defineConfig([
   ...harrisConfig,
   globalIgnores(['dist', 'src/vite-env.d.ts']),
+  ...pluginRouter.configs['flat/recommended'],
   {
     files: ['src/**'],
     languageOptions: {

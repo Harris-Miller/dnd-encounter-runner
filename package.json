@@ -18,6 +18,8 @@
     "@emotion/styled": "^11.13.0",
     "@mui/icons-material": "^7.3.8",
     "@mui/material": "^7.3.8",
+    "@tanstack/react-router": "^1.162.8",
+    "@tanstack/react-router-devtools": "^1.162.8",
     "ramda": "^0.32.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -26,6 +28,7 @@
     "zustand": "^5.0.11"
   },
   "devDependencies": {
+    "@tanstack/eslint-plugin-router": "^1.161.4",
     "@testing-library/jest-dom": "^6.4.5",
     "@testing-library/react": "^16.0.0",
     "@testing-library/user-event": "^14.5.2",
