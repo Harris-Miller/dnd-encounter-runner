@@ -34,6 +34,19 @@ export const damageModifierAppliedEnum = pgEnum('damage_modifier_applied', ['nor
 export const combatOutcomeEnum = pgEnum('combat_outcome', ['hit', 'miss', 'critical']);
 export const encounterStatusEnum = pgEnum('encounter_status', ['setup', 'in_progress', 'ended']);
 
+export const users = pgTable('users', {
+  createdAt: timestamp({ withTimezone: true }).defaultNow(),
+  email: text().unique(),
+  emailVerified: boolean().default(false),
+  id: ulid()
+    .primaryKey()
+    .$defaultFn(() => getUlid()),
+  image: text(),
+  name: text(),
+  passwordHash: text(),
+  updatedAt: timestamp({ withTimezone: true }).defaultNow(),
+});
+
 export const damageTypes = pgTable('damage_types', {
   id: ulid()
     .primaryKey()
@@ -189,19 +202,6 @@ export const playerCharacterWeapons = pgTable(
   },
   t => [primaryKey({ columns: [t.playerCharacterId, t.weaponId] })],
 );
-
-export const users = pgTable('users', {
-  createdAt: timestamp({ withTimezone: true }).defaultNow(),
-  email: text().unique(),
-  emailVerified: boolean().default(false),
-  id: ulid()
-    .primaryKey()
-    .$defaultFn(() => getUlid()),
-  image: text(),
-  name: text(),
-  passwordHash: text(),
-  updatedAt: timestamp({ withTimezone: true }).defaultNow(),
-});
 
 export const accounts = pgTable(
   'accounts',

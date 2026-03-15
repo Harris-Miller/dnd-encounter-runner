@@ -13,9 +13,6 @@ export const relations = defineRelations(schema, r => ({
   castingTimes: {
     spells: r.many.spells(),
   },
-  classes: {
-    spellClassMap: r.many.spellClassMap(),
-  },
   conditions: {
     monsterConditionImmunities: r.many.monsterConditionImmunities(),
   },
