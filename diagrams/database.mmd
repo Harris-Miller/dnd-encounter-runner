@@ -1,0 +1,133 @@
+erDiagram
+    damage_types {
+        char id PK
+        text name
+        text slug
+    }
+
+    status_definitions {
+        char id PK
+        text name
+        text slug
+        text description
+    }
+
+    status_rules {
+        char id PK
+        char status_definition_id FK
+        text trigger
+        text rule_type
+        jsonb rule_value
+    }
+
+    weapons {
+        char id PK
+        text name
+        char damage_type_id FK
+    }
+
+    monsters {
+        char id PK
+        text name
+        int armor_class
+        int hit_points
+    }
+
+    monster_damage_modifiers {
+        char id PK
+        char monster_id FK
+        char damage_type_id FK
+        text modifier
+    }
+
+    users {
+        char id PK
+        text name
+        text email
+    }
+
+    player_characters {
+        char id PK
+        text name
+        char user_id FK
+        int armor_class
+        int max_hit_points
+    }
+
+    encounters {
+        char id PK
+        text name
+        text status
+        int current_round
+        int current_turn_index
+        timestamp created_at
+    }
+
+    encounter_creatures {
+        char id PK
+        char encounter_id FK
+        text source_type
+        char player_character_id FK
+        char monster_id FK
+        text display_name
+        int current_hp
+        int max_hp
+        int armor_class
+        int initiative_roll
+        int initiative_order
+    }
+
+    creature_effects {
+        char id PK
+        char encounter_creature_id FK
+        char status_definition_id FK
+        timestamp applied_at
+        timestamp expires_at
+        jsonb metadata
+    }
+
+    combat_events {
+        char id PK
+        char encounter_id FK
+        int round
+        char attacker_encounter_creature_id FK
+        char target_encounter_creature_id FK
+        char weapon_id FK
+        char damage_type_id FK
+        text modifier_applied
+        int raw_damage
+        int final_damage
+        text outcome
+        timestamp created_at
+    }
+
+    player_character_weapons {
+        char player_character_id FK
+        char weapon_id FK
+        boolean equipped
+    }
+
+    damage_types ||--o{ weapons : "has"
+    damage_types ||--o{ monster_damage_modifiers : "has"
+    damage_types ||--o{ combat_events : "has"
+
+    status_definitions ||--o{ status_rules : "has"
+    status_definitions ||--o{ creature_effects : "has"
+
+    monsters ||--o{ monster_damage_modifiers : "has"
+    monsters ||--o{ encounter_creatures : "instance of"
+
+    users ||--o{ player_characters : "owns"
+
+    player_characters ||--o{ encounter_creatures : "participates as"
+    player_characters ||--o{ player_character_weapons : "has"
+
+    weapons ||--o{ player_character_weapons : "in"
+    weapons ||--o{ combat_events : "used in"
+
+    encounters ||--o{ encounter_creatures : "has"
+    encounters ||--o{ combat_events : "has"
+
+    encounter_creatures ||--o{ creature_effects : "has"
+    encounter_creatures ||--o{ combat_events : "attacker"
+    encounter_creatures ||--o{ combat_events : "target"
