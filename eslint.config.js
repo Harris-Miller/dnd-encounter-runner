@@ -5,7 +5,7 @@ import globals from 'eslint-config-harris/globals';
 
 const eslintConfig = defineConfig([
   ...harrisConfig,
-  globalIgnores(['dist', 'src/vite-env.d.ts']),
+  globalIgnores(['dist', 'src/vite-env.d.ts', 'src/types/database.types.ts']),
   ...pluginRouter.configs['flat/recommended'],
   {
     files: ['src/**'],

@@ -1,4 +1,3 @@
-import { relations } from 'drizzle-orm';
 import { boolean, char, pgTable, text, timestamp, unique } from 'drizzle-orm/pg-core';
 import { ulid as getUlid } from 'ulid';
 
@@ -45,16 +44,3 @@ export const sessions = pgTable('sessions', {
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
 });
-
-export const usersRelations = relations(users, ({ many }) => ({
-  accounts: many(accounts),
-  sessions: many(sessions),
-}));
-
-export const accountsRelations = relations(accounts, ({ one }) => ({
-  user: one(users, { fields: [accounts.userId], references: [users.id] }),
-}));
-
-export const sessionsRelations = relations(sessions, ({ one }) => ({
-  user: one(users, { fields: [sessions.userId], references: [users.id] }),
-}));
