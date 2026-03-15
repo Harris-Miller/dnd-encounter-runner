@@ -1,7 +1,7 @@
 import { boolean, integer, numeric, pgTable, primaryKey, text } from 'drizzle-orm/pg-core';
 
 import { ulid, ulidFk, ulidPk } from './column.utils';
-import { spells } from './schemas/spells';
+import { spells } from './schema/spells';
 
 export { spells };
 
