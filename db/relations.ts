@@ -9,82 +9,27 @@ export const relations = defineRelations(schema, r => ({
       to: r.users.id,
     }),
   },
-  sessions: {
-    user: r.one.users({
-      from: r.sessions.userId,
-      to: r.users.id,
-    }),
-  },
-  users: {
-    accounts: r.many.accounts(),
-    sessions: r.many.sessions(),
-    playerCharacters: r.many.playerCharacters(),
-  },
-  damageTypes: {
-    weapons: r.many.weapons(),
-    monsterDamageModifiers: r.many.monsterDamageModifiers(),
-    combatEvents: r.many.combatEvents(),
-  },
-  statusDefinitions: {
-    statusRules: r.many.statusRules(),
-    creatureEffects: r.many.creatureEffects(),
-  },
-  statusRules: {
-    statusDefinition: r.one.statusDefinitions({
-      from: r.statusRules.statusDefinitionId,
-      to: r.statusDefinitions.id,
-    }),
-  },
-  weapons: {
-    damageType: r.one.damageTypes({
-      from: r.weapons.damageTypeId,
-      to: r.damageTypes.id,
-    }),
-    playerCharacterWeapons: r.many.playerCharacterWeapons(),
-    combatEvents: r.many.combatEvents(),
-  },
-  monsters: {
-    monsterDamageModifiers: r.many.monsterDamageModifiers(),
-    encounterCreatures: r.many.encounterCreatures(),
-  },
-  monsterDamageModifiers: {
-    monster: r.one.monsters({
-      from: r.monsterDamageModifiers.monsterId,
-      to: r.monsters.id,
+  combatEvents: {
+    attackerEncounterCreature: r.one.encounterCreatures({
+      from: r.combatEvents.attackerEncounterCreatureId,
+      to: r.encounterCreatures.id,
     }),
     damageType: r.one.damageTypes({
-      from: r.monsterDamageModifiers.damageTypeId,
+      from: r.combatEvents.damageTypeId,
       to: r.damageTypes.id,
     }),
-  },
-  playerCharacters: {
-    user: r.one.users({
-      from: r.playerCharacters.userId,
-      to: r.users.id,
-    }),
-    encounterCreatures: r.many.encounterCreatures(),
-    playerCharacterWeapons: r.many.playerCharacterWeapons(),
-  },
-  encounters: {
-    encounterCreatures: r.many.encounterCreatures(),
-    combatEvents: r.many.combatEvents(),
-  },
-  encounterCreatures: {
     encounter: r.one.encounters({
-      from: r.encounterCreatures.encounterId,
+      from: r.combatEvents.encounterId,
       to: r.encounters.id,
     }),
-    playerCharacter: r.one.playerCharacters({
-      from: r.encounterCreatures.playerCharacterId,
-      to: r.playerCharacters.id,
+    targetEncounterCreature: r.one.encounterCreatures({
+      from: r.combatEvents.targetEncounterCreatureId,
+      to: r.encounterCreatures.id,
     }),
-    monster: r.one.monsters({
-      from: r.encounterCreatures.monsterId,
-      to: r.monsters.id,
+    weapon: r.one.weapons({
+      from: r.combatEvents.weaponId,
+      to: r.weapons.id,
     }),
-    creatureEffects: r.many.creatureEffects(),
-    combatEventsAsAttacker: r.many.combatEvents(),
-    combatEventsAsTarget: r.many.combatEvents(),
   },
   creatureEffects: {
     encounterCreature: r.one.encounterCreatures({
@@ -96,27 +41,45 @@ export const relations = defineRelations(schema, r => ({
       to: r.statusDefinitions.id,
     }),
   },
-  combatEvents: {
+  damageTypes: {
+    combatEvents: r.many.combatEvents(),
+    monsterDamageModifiers: r.many.monsterDamageModifiers(),
+    weapons: r.many.weapons(),
+  },
+  encounterCreatures: {
+    combatEventsAsAttacker: r.many.combatEvents(),
+    combatEventsAsTarget: r.many.combatEvents(),
+    creatureEffects: r.many.creatureEffects(),
     encounter: r.one.encounters({
-      from: r.combatEvents.encounterId,
+      from: r.encounterCreatures.encounterId,
       to: r.encounters.id,
     }),
-    attackerEncounterCreature: r.one.encounterCreatures({
-      from: r.combatEvents.attackerEncounterCreatureId,
-      to: r.encounterCreatures.id,
+    monster: r.one.monsters({
+      from: r.encounterCreatures.monsterId,
+      to: r.monsters.id,
     }),
-    targetEncounterCreature: r.one.encounterCreatures({
-      from: r.combatEvents.targetEncounterCreatureId,
-      to: r.encounterCreatures.id,
+    playerCharacter: r.one.playerCharacters({
+      from: r.encounterCreatures.playerCharacterId,
+      to: r.playerCharacters.id,
     }),
-    weapon: r.one.weapons({
-      from: r.combatEvents.weaponId,
-      to: r.weapons.id,
-    }),
+  },
+  encounters: {
+    combatEvents: r.many.combatEvents(),
+    encounterCreatures: r.many.encounterCreatures(),
+  },
+  monsterDamageModifiers: {
     damageType: r.one.damageTypes({
-      from: r.combatEvents.damageTypeId,
+      from: r.monsterDamageModifiers.damageTypeId,
       to: r.damageTypes.id,
     }),
+    monster: r.one.monsters({
+      from: r.monsterDamageModifiers.monsterId,
+      to: r.monsters.id,
+    }),
+  },
+  monsters: {
+    encounterCreatures: r.many.encounterCreatures(),
+    monsterDamageModifiers: r.many.monsterDamageModifiers(),
   },
   playerCharacterWeapons: {
     playerCharacter: r.one.playerCharacters({
@@ -127,5 +90,42 @@ export const relations = defineRelations(schema, r => ({
       from: r.playerCharacterWeapons.weaponId,
       to: r.weapons.id,
     }),
+  },
+  playerCharacters: {
+    encounterCreatures: r.many.encounterCreatures(),
+    playerCharacterWeapons: r.many.playerCharacterWeapons(),
+    user: r.one.users({
+      from: r.playerCharacters.userId,
+      to: r.users.id,
+    }),
+  },
+  sessions: {
+    user: r.one.users({
+      from: r.sessions.userId,
+      to: r.users.id,
+    }),
+  },
+  statusDefinitions: {
+    creatureEffects: r.many.creatureEffects(),
+    statusRules: r.many.statusRules(),
+  },
+  statusRules: {
+    statusDefinition: r.one.statusDefinitions({
+      from: r.statusRules.statusDefinitionId,
+      to: r.statusDefinitions.id,
+    }),
+  },
+  users: {
+    accounts: r.many.accounts(),
+    playerCharacters: r.many.playerCharacters(),
+    sessions: r.many.sessions(),
+  },
+  weapons: {
+    combatEvents: r.many.combatEvents(),
+    damageType: r.one.damageTypes({
+      from: r.weapons.damageTypeId,
+      to: r.damageTypes.id,
+    }),
+    playerCharacterWeapons: r.many.playerCharacterWeapons(),
   },
 }));

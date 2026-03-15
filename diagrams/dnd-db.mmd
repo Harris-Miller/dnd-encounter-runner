@@ -1,0 +1,318 @@
+erDiagram
+    SCHOOLS ||--o{ SPELLS : "categorizes"
+    CASTING_TIMES ||--o{ SPELLS : "defines"
+    RANGES ||--o{ SPELLS : "defines"
+    DURATIONS ||--o{ SPELLS : "defines"
+    SPELLS ||--|| SPELL_COMPONENTS : "requires"
+    SPELLS ||--o{ SPELL_CLASS_MAP : "available to"
+    CLASSES ||--o{ SPELL_CLASS_MAP : "can cast"
+    SPELLS ||--o{ SPELL_DAMAGE_TYPES : "deals"
+    DAMAGE_TYPES ||--o{ SPELL_DAMAGE_TYPES : "categorizes"
+    SIZES ||--o{ MONSTERS : "defines size"
+    CREATURE_TYPES ||--o{ MONSTERS : "categorizes"
+    ALIGNMENTS ||--o{ MONSTERS : "defines alignment"
+    MONSTERS ||--o{ MONSTER_DESCRIPTIVE_TAGS : "has"
+    DESCRIPTIVE_TAGS ||--o{ MONSTER_DESCRIPTIVE_TAGS : "tags"
+    MONSTERS ||--o{ MONSTER_DAMAGE_RESISTANCES : "has"
+    DAMAGE_TYPES ||--o{ MONSTER_DAMAGE_RESISTANCES : "type"
+    MONSTERS ||--o{ MONSTER_DAMAGE_VULNERABILITIES : "has"
+    DAMAGE_TYPES ||--o{ MONSTER_DAMAGE_VULNERABILITIES : "type"
+    MONSTERS ||--o{ MONSTER_DAMAGE_IMMUNITIES : "has"
+    DAMAGE_TYPES ||--o{ MONSTER_DAMAGE_IMMUNITIES : "type"
+    MONSTERS ||--o{ MONSTER_CONDITION_IMMUNITIES : "has"
+    CONDITIONS ||--o{ MONSTER_CONDITION_IMMUNITIES : "condition"
+    MONSTERS ||--o{ MONSTER_TRAITS : "has"
+    MONSTERS ||--o{ MONSTER_ACTIONS : "has"
+    MONSTERS ||--o{ MONSTER_SPEEDS : "has"
+    MONSTERS ||--o| MONSTER_SPELLCASTING : "has"
+    MONSTERS ||--o{ MONSTER_SPELLS : "casts"
+    SPELLS ||--o{ MONSTER_SPELLS : "cast by"
+    MAGIC_ITEM_CATEGORIES ||--o{ MAGIC_ITEMS : "category"
+    MAGIC_ITEM_RARITIES ||--o{ MAGIC_ITEMS : "rarity"
+    MAGIC_ITEMS ||--o| MAGIC_ITEM_CHARGES : "has"
+    MAGIC_ITEMS ||--o{ MAGIC_ITEM_SPELLS : "casts"
+    SPELLS ||--o{ MAGIC_ITEM_SPELLS : "spell"
+    MAGIC_ITEMS ||--o{ MAGIC_ITEM_DAMAGE_RESISTANCES : "grants resistance"
+    DAMAGE_TYPES ||--o{ MAGIC_ITEM_DAMAGE_RESISTANCES : "type"
+    MAGIC_ITEMS ||--o{ MAGIC_ITEM_DAMAGE_VULNERABILITIES : "grants vulnerability"
+    DAMAGE_TYPES ||--o{ MAGIC_ITEM_DAMAGE_VULNERABILITIES : "type"
+    MAGIC_ITEM_CATEGORIES ||--o{ MAGIC_ITEM_CRAFTING_TOOLS : "requires tool"
+    TOOLS ||--o{ MAGIC_ITEM_CRAFTING_TOOLS : "tool"
+    MAGIC_ITEMS ||--o| SENTIENT_MAGIC_ITEMS : "sentient"
+    ALIGNMENTS ||--o{ SENTIENT_MAGIC_ITEMS : "alignment"
+    ARMOR ||--o{ MAGIC_ITEMS : "base armor"
+    WEAPONS ||--o{ MAGIC_ITEMS : "base weapon"
+
+    SCHOOLS {
+        int school_id PK
+        string name
+    }
+
+    CLASSES {
+        int class_id PK
+        string name
+    }
+
+    CASTING_TIMES {
+        int casting_time_id PK
+        string name
+        string qualifier_text
+    }
+
+    RANGES {
+        int range_id PK
+        string name
+        int sort_feet
+    }
+
+    DURATIONS {
+        int duration_id PK
+        string name
+        bool is_concentration
+        int amount
+        string unit
+        string display_text
+    }
+
+    SPELLS {
+        int spell_id PK
+        string name
+        int level
+        int school_id FK
+        int casting_time_id FK
+        int range_id FK
+        int duration_id FK
+        bool is_ritual
+        text description
+        text upcast_description
+        text cantrip_upgrade_description
+    }
+
+    SPELL_CLASS_MAP {
+        int spell_id FK "PK"
+        int class_id FK "PK"
+    }
+
+    SPELL_COMPONENTS {
+        int spell_id FK "PK"
+        bool verbal
+        bool somatic
+        bool material
+        text material_description
+        decimal material_cost_gp
+        bool material_consumed
+    }
+
+    DAMAGE_TYPES {
+        int damage_type_id PK
+        string name
+    }
+
+    SPELL_DAMAGE_TYPES {
+        int spell_id FK "PK"
+        int damage_type_id FK "PK"
+    }
+
+    SIZES {
+        int size_id PK
+        string name
+    }
+
+    CREATURE_TYPES {
+        int creature_type_id PK
+        string name
+    }
+
+    ALIGNMENTS {
+        int alignment_id PK
+        string name
+    }
+
+    DESCRIPTIVE_TAGS {
+        int descriptive_tag_id PK
+        string name
+    }
+
+    CONDITIONS {
+        int condition_id PK
+        string name
+    }
+
+    MONSTERS {
+        int monster_id PK
+        string name
+        int size_id FK
+        int creature_type_id FK
+        int alignment_id FK
+        int ac
+        int initiative_modifier
+        int initiative_score
+        int hp_average
+        string hp_dice
+        int str
+        int dex
+        int con
+        int int_score
+        int wis
+        int cha
+        int str_save
+        int dex_save
+        int con_save
+        int int_save
+        int wis_save
+        int cha_save
+        string skills_text
+        string senses_text
+        string languages_text
+        decimal cr
+        int xp
+        int xp_in_lair
+        int proficiency_bonus
+        string speed_text
+        string gear_text
+        int legendary_action_uses
+        int legendary_action_uses_in_lair
+    }
+
+    MONSTER_DESCRIPTIVE_TAGS {
+        int monster_id FK "PK"
+        int descriptive_tag_id FK "PK"
+    }
+
+    MONSTER_DAMAGE_RESISTANCES {
+        int monster_id FK "PK"
+        int damage_type_id FK "PK"
+    }
+
+    MONSTER_DAMAGE_VULNERABILITIES {
+        int monster_id FK "PK"
+        int damage_type_id FK "PK"
+    }
+
+    MONSTER_DAMAGE_IMMUNITIES {
+        int monster_id FK "PK"
+        int damage_type_id FK "PK"
+    }
+
+    MONSTER_CONDITION_IMMUNITIES {
+        int monster_id FK "PK"
+        int condition_id FK "PK"
+    }
+
+    MONSTER_TRAITS {
+        int monster_trait_id PK
+        int monster_id FK
+        string name
+        text description_text
+        string usage_limit_text
+        int sort_order
+    }
+
+    MONSTER_ACTIONS {
+        int monster_action_id PK
+        int monster_id FK
+        string name
+        string section
+        text description_text
+        string usage_limit_text
+        int sort_order
+    }
+
+    MONSTER_SPEEDS {
+        int monster_speed_id PK
+        int monster_id FK
+        string speed_type
+        int distance_ft
+        string note
+    }
+
+    MONSTER_SPELLCASTING {
+        int monster_id FK "PK"
+        string spellcasting_ability
+        int spell_save_dc
+        int spell_attack_bonus
+        string component_note
+    }
+
+    MONSTER_SPELLS {
+        int monster_id FK "PK"
+        int spell_id FK "PK"
+        string usage "PK"
+    }
+
+    MAGIC_ITEM_CATEGORIES {
+        int magic_item_category_id PK
+        string name
+    }
+
+    MAGIC_ITEM_RARITIES {
+        int magic_item_rarity_id PK
+        string name
+        decimal value_gp
+        int crafting_days
+        decimal crafting_cost_gp
+    }
+
+    MAGIC_ITEMS {
+        int magic_item_id PK
+        string name
+        int magic_item_category_id FK
+        int magic_item_rarity_id FK
+        bool requires_attunement
+        bool is_consumable
+        bool is_cursed
+        string category_specifier_text
+        text description_text
+        int base_armor_id FK
+        int base_weapon_id FK
+    }
+
+    MAGIC_ITEM_CHARGES {
+        int magic_item_id FK "PK"
+        int max_charges
+        string recharge_text
+    }
+
+    MAGIC_ITEM_SPELLS {
+        int magic_item_id FK "PK"
+        int spell_id FK "PK"
+        string usage
+    }
+
+    MAGIC_ITEM_DAMAGE_RESISTANCES {
+        int magic_item_id FK "PK"
+        int damage_type_id FK "PK"
+    }
+
+    MAGIC_ITEM_DAMAGE_VULNERABILITIES {
+        int magic_item_id FK "PK"
+        int damage_type_id FK "PK"
+    }
+
+    MAGIC_ITEM_CRAFTING_TOOLS {
+        int magic_item_category_id FK "PK"
+        int tool_id FK "PK"
+    }
+
+    SENTIENT_MAGIC_ITEMS {
+        int magic_item_id FK "PK"
+        int int_score
+        int wis_score
+        int cha_score
+        int alignment_id FK
+        string communication_type
+        string senses_text
+        string special_purpose_text
+    }
+
+    TOOLS {
+        int tool_id PK
+    }
+
+    ARMOR {
+        int armor_id PK
+    }
+
+    WEAPONS {
+        int weapon_id PK
+    }

@@ -1,0 +1,80 @@
+erDiagram
+    SCHOOLS ||--o{ SPELLS : "categorizes"
+    CASTING_TIMES ||--o{ SPELLS : "defines"
+    RANGES ||--o{ SPELLS : "defines"
+    DURATIONS ||--o{ SPELLS : "defines"
+    SPELLS ||--|| SPELL_COMPONENTS : "requires"
+    SPELLS ||--o{ SPELL_CLASS_MAP : "available to"
+    CLASSES ||--o{ SPELL_CLASS_MAP : "can cast"
+    SPELLS ||--o{ SPELL_DAMAGE_TYPES : "deals"
+    DAMAGE_TYPES ||--o{ SPELL_DAMAGE_TYPES : "categorizes"
+
+    SCHOOLS {
+        int school_id PK
+        string name
+    }
+
+    CLASSES {
+        int class_id PK
+        string name
+    }
+
+    CASTING_TIMES {
+        int casting_time_id PK
+        string name
+        string qualifier_text
+    }
+
+    RANGES {
+        int range_id PK
+        string name
+        int sort_feet
+    }
+
+    DURATIONS {
+        int duration_id PK
+        string name
+        bool is_concentration
+        int amount
+        string unit
+        string display_text
+    }
+
+    SPELLS {
+        int spell_id PK
+        string name
+        int level
+        int school_id FK
+        int casting_time_id FK
+        int range_id FK
+        int duration_id FK
+        bool is_ritual
+        text description
+        text upcast_description
+        text cantrip_upgrade_description
+    }
+
+    SPELL_CLASS_MAP {
+        int spell_id FK "PK"
+        int class_id FK "PK"
+    }
+
+    SPELL_COMPONENTS {
+        int spell_id FK "PK"
+        bool verbal
+        bool somatic
+        bool material
+        text material_description
+        decimal material_cost_gp
+        bool material_consumed
+    }
+
+    DAMAGE_TYPES {
+        int damage_type_id PK
+        string name
+    }
+
+    SPELL_DAMAGE_TYPES {
+        int spell_id FK "PK"
+        int damage_type_id FK "PK"
+    }

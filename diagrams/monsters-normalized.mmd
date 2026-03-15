@@ -1,0 +1,156 @@
+erDiagram
+    SIZES ||--o{ MONSTERS : "defines size"
+    CREATURE_TYPES ||--o{ MONSTERS : "categorizes"
+    ALIGNMENTS ||--o{ MONSTERS : "defines alignment"
+    MONSTERS ||--o{ MONSTER_DESCRIPTIVE_TAGS : "has"
+    DESCRIPTIVE_TAGS ||--o{ MONSTER_DESCRIPTIVE_TAGS : "tags"
+    MONSTERS ||--o{ MONSTER_DAMAGE_RESISTANCES : "has"
+    DAMAGE_TYPES ||--o{ MONSTER_DAMAGE_RESISTANCES : "type"
+    MONSTERS ||--o{ MONSTER_DAMAGE_VULNERABILITIES : "has"
+    DAMAGE_TYPES ||--o{ MONSTER_DAMAGE_VULNERABILITIES : "type"
+    MONSTERS ||--o{ MONSTER_DAMAGE_IMMUNITIES : "has"
+    DAMAGE_TYPES ||--o{ MONSTER_DAMAGE_IMMUNITIES : "type"
+    MONSTERS ||--o{ MONSTER_CONDITION_IMMUNITIES : "has"
+    CONDITIONS ||--o{ MONSTER_CONDITION_IMMUNITIES : "condition"
+    MONSTERS ||--o{ MONSTER_TRAITS : "has"
+    MONSTERS ||--o{ MONSTER_ACTIONS : "has"
+    MONSTERS ||--o{ MONSTER_SPEEDS : "has"
+    MONSTERS ||--o| MONSTER_SPELLCASTING : "has"
+    MONSTERS ||--o{ MONSTER_SPELLS : "casts"
+    SPELLS ||--o{ MONSTER_SPELLS : "cast by"
+
+    SIZES {
+        int size_id PK
+        string name
+    }
+
+    CREATURE_TYPES {
+        int creature_type_id PK
+        string name
+    }
+
+    ALIGNMENTS {
+        int alignment_id PK
+        string name
+    }
+
+    DESCRIPTIVE_TAGS {
+        int descriptive_tag_id PK
+        string name
+    }
+
+    DAMAGE_TYPES {
+        int damage_type_id PK
+        string name
+    }
+
+    CONDITIONS {
+        int condition_id PK
+        string name
+    }
+
+    MONSTERS {
+        int monster_id PK
+        string name
+        int size_id FK
+        int creature_type_id FK
+        int alignment_id FK
+        int ac
+        int initiative_modifier
+        int initiative_score
+        int hp_average
+        string hp_dice
+        int str
+        int dex
+        int con
+        int int_score
+        int wis
+        int cha
+        int str_save
+        int dex_save
+        int con_save
+        int int_save
+        int wis_save
+        int cha_save
+        string skills_text
+        string senses_text
+        string languages_text
+        decimal cr
+        int xp
+        int xp_in_lair
+        int proficiency_bonus
+        string speed_text
+        string gear_text
+        int legendary_action_uses
+        int legendary_action_uses_in_lair
+    }
+
+    MONSTER_DESCRIPTIVE_TAGS {
+        int monster_id FK "PK"
+        int descriptive_tag_id FK "PK"
+    }
+
+    MONSTER_DAMAGE_RESISTANCES {
+        int monster_id FK "PK"
+        int damage_type_id FK "PK"
+    }
+
+    MONSTER_DAMAGE_VULNERABILITIES {
+        int monster_id FK "PK"
+        int damage_type_id FK "PK"
+    }
+
+    MONSTER_DAMAGE_IMMUNITIES {
+        int monster_id FK "PK"
+        int damage_type_id FK "PK"
+    }
+
+    MONSTER_CONDITION_IMMUNITIES {
+        int monster_id FK "PK"
+        int condition_id FK "PK"
+    }
+
+    MONSTER_TRAITS {
+        int monster_trait_id PK
+        int monster_id FK
+        string name
+        text description_text
+        string usage_limit_text
+        int sort_order
+    }
+
+    MONSTER_ACTIONS {
+        int monster_action_id PK
+        int monster_id FK
+        string name
+        string section
+        text description_text
+        string usage_limit_text
+        int sort_order
+    }
+
+    MONSTER_SPEEDS {
+        int monster_speed_id PK
+        int monster_id FK
+        string speed_type
+        int distance_ft
+        string note
+    }
+
+    MONSTER_SPELLCASTING {
+        int monster_id FK "PK"
+        string spellcasting_ability
+        int spell_save_dc
+        int spell_attack_bonus
+        string component_note
+    }
+
+    SPELLS {
+        int spell_id PK
+    }
+
+    MONSTER_SPELLS {
+        int monster_id FK "PK"
+        int spell_id FK "PK"
+        string usage "PK"
+    }

@@ -1,0 +1,173 @@
+erDiagram
+    WEAPON_CATEGORIES ||--o{ WEAPONS : "category"
+    WEAPON_KINDS ||--o{ WEAPONS : "melee or ranged"
+    WEAPON_MASTERY ||--o{ WEAPONS : "mastery"
+    DAMAGE_TYPES ||--o{ WEAPONS : "damage type"
+    WEAPONS ||--o{ WEAPON_PROPERTIES_MAP : "has"
+    WEAPON_PROPERTIES ||--o{ WEAPON_PROPERTIES_MAP : "property"
+    ARMOR_CATEGORIES ||--o{ ARMOR : "category"
+    TOOLS ||--o{ TOOL_VARIANTS : "has variant"
+    EQUIPMENT_ITEMS ||--o{ PACK_CONTENTS : "pack"
+    EQUIPMENT_ITEMS ||--o{ PACK_CONTENTS : "contained item"
+    EQUIPMENT_ITEMS ||--o{ EQUIPMENT_VARIANTS : "has variant"
+    VEHICLE_TYPES ||--o{ VEHICLES : "type"
+
+    COIN_TYPES {
+        int coin_type_id PK
+        string name
+        decimal value_in_gp
+    }
+
+    WEAPON_CATEGORIES {
+        int weapon_category_id PK
+        string name
+    }
+
+    WEAPON_KINDS {
+        int weapon_kind_id PK
+        string name
+    }
+
+    WEAPON_PROPERTIES {
+        int weapon_property_id PK
+        string name
+    }
+
+    WEAPON_MASTERY {
+        int weapon_mastery_id PK
+        string name
+    }
+
+    DAMAGE_TYPES {
+        int damage_type_id PK
+        string name
+    }
+
+    WEAPONS {
+        int weapon_id PK
+        string name
+        int weapon_category_id FK
+        int weapon_kind_id FK
+        string damage_dice
+        int damage_type_id FK
+        decimal weight_lb
+        decimal cost_gp
+        int weapon_mastery_id FK
+    }
+
+    WEAPON_PROPERTIES_MAP {
+        int weapon_id FK "PK"
+        int weapon_property_id FK "PK"
+        string range_text
+    }
+
+    ARMOR_CATEGORIES {
+        int armor_category_id PK
+        string name
+        int don_minutes
+        int doff_minutes
+    }
+
+    ARMOR {
+        int armor_id PK
+        string name
+        int armor_category_id FK
+        string ac_formula
+        int strength_required
+        bool stealth_disadvantage
+        decimal weight_lb
+        decimal cost_gp
+    }
+
+    TOOLS {
+        int tool_id PK
+        string name
+        string ability
+        decimal weight_lb
+        decimal cost_gp
+        text utilize_text
+        text craft_text
+    }
+
+    TOOL_VARIANTS {
+        int tool_variant_id PK
+        int tool_id FK
+        string variant_name
+        decimal cost_gp
+        decimal weight_lb
+    }
+
+    EQUIPMENT_ITEMS {
+        int equipment_item_id PK
+        string name
+        decimal weight_lb
+        decimal cost_gp
+        string item_category
+        text description_text
+    }
+
+    PACK_CONTENTS {
+        int pack_item_id FK "PK"
+        int contained_item_id FK "PK"
+        int quantity
+    }
+
+    EQUIPMENT_VARIANTS {
+        int equipment_variant_id PK
+        int equipment_item_id FK
+        string variant_name
+        decimal weight_lb
+        decimal cost_gp
+    }
+
+    MOUNTS {
+        int mount_id PK
+        string name
+        int carrying_capacity_lb
+        decimal cost_gp
+    }
+
+    VEHICLE_TYPES {
+        int vehicle_type_id PK
+        string name
+    }
+
+    VEHICLES {
+        int vehicle_id PK
+        string name
+        int vehicle_type_id FK
+        decimal weight_lb
+        decimal cost_gp
+        decimal speed_mph
+        int crew
+        int passengers
+        decimal cargo_tons
+        int ac
+        int hp
+        int damage_threshold
+    }
+
+    LIFESTYLES {
+        int lifestyle_id PK
+        string name
+        decimal cost_gp_per_day
+    }
+
+    FOOD_DRINK_LODGING {
+        int item_id PK
+        string name
+        string category
+        decimal cost_gp
+    }
+
+    HIRELING_SERVICES {
+        int hireling_service_id PK
+        string service_name
+        string cost_text
+    }
+
+    SPELLCASTING_SERVICES {
+        int spell_level PK
+        string availability
+        decimal cost_gp
+    }

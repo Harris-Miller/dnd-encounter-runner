@@ -4,24 +4,15 @@ import { defineConfig } from 'drizzle-kit';
 config({ path: '.env.development' });
 
 // the localhost fallback is for a running docker compose
-const dbUrl = process.env.DATABASE_URL;
-
-console.log(dbUrl);
-
-if (dbUrl == null || dbUrl === '') {
-  throw new Error('DATABASE_URL is not set');
-} else {
-  console.log(`DATABASE_URL is set as "${dbUrl}"`);
-}
-
+const dbUrl = 'postgres://postgres:postgres@localhost:5435/dnd_2?sslmode=disable';
 export default defineConfig({
   casing: 'snake_case',
   dbCredentials: {
     url: dbUrl,
   },
   dialect: 'postgresql',
-  out: './drizzle',
+  out: './drizzle2',
   // @ts-expect-error - drizzle-kit@beta doesn't have this typed yet
-  relations: './db/relations.ts',
-  schema: './db/schema.ts',
+  relations: './db2/relations.ts',
+  schema: './db2/schema.ts',
 });
