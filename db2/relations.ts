@@ -220,12 +220,6 @@ export const relations = defineRelations(schema, r => ({
       to: r.sizes.id,
     }),
   },
-  ranges: {
-    spells: r.many.spells(),
-  },
-  schools: {
-    spells: r.many.spells(),
-  },
   sentientMagicItems: {
     alignment: r.one.alignments({
       from: r.sentientMagicItems.alignmentId,
@@ -239,22 +233,6 @@ export const relations = defineRelations(schema, r => ({
   sizes: {
     monsters: r.many.monsters(),
   },
-  spellClassMap: {
-    class: r.one.classes({
-      from: r.spellClassMap.classId,
-      to: r.classes.id,
-    }),
-    spell: r.one.spells({
-      from: r.spellClassMap.spellId,
-      to: r.spells.id,
-    }),
-  },
-  spellComponents: {
-    spell: r.one.spells({
-      from: r.spellComponents.spellId,
-      to: r.spells.id,
-    }),
-  },
   spellDamageTypes: {
     damageType: r.one.damageTypes({
       from: r.spellDamageTypes.damageTypeId,
@@ -266,26 +244,8 @@ export const relations = defineRelations(schema, r => ({
     }),
   },
   spells: {
-    castingTime: r.one.castingTimes({
-      from: r.spells.castingTimeId,
-      to: r.castingTimes.id,
-    }),
-    duration: r.one.durations({
-      from: r.spells.durationId,
-      to: r.durations.id,
-    }),
     magicItemSpells: r.many.magicItemSpells(),
     monsterSpells: r.many.monsterSpells(),
-    range: r.one.ranges({
-      from: r.spells.rangeId,
-      to: r.ranges.id,
-    }),
-    school: r.one.schools({
-      from: r.spells.schoolId,
-      to: r.schools.id,
-    }),
-    spellClassMap: r.many.spellClassMap(),
-    spellComponents: r.one.spellComponents(),
     spellDamageTypes: r.many.spellDamageTypes(),
   },
   tools: {

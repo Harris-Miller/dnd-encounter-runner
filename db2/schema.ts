@@ -1,46 +1,9 @@
-import { boolean, char, integer, numeric, pgTable, primaryKey, text } from 'drizzle-orm/pg-core';
-import type { ReferenceConfig } from 'drizzle-orm/pg-core';
-import { ulid as getUlid } from 'ulid';
+import { boolean, integer, numeric, pgTable, primaryKey, text } from 'drizzle-orm/pg-core';
 
-const ulid = () => char({ length: 26 });
+import { ulid, ulidFk, ulidPk } from './column.utils';
+import { spells } from './schemas/spells';
 
-const ulidPk = () =>
-  ulid()
-    .primaryKey()
-    .$defaultFn(() => getUlid());
-
-const ulidFk = (ref: ReferenceConfig['ref']) => ulid().notNull().references(ref, { onDelete: 'cascade' });
-
-export const schools = pgTable('schools', {
-  id: ulidPk(),
-  name: text().notNull(),
-});
-
-export const classes = pgTable('classes', {
-  id: ulidPk(),
-  name: text().notNull(),
-});
-
-export const castingTimes = pgTable('casting_times', {
-  id: ulidPk(),
-  name: text().notNull(),
-  qualifierText: text(),
-});
-
-export const ranges = pgTable('ranges', {
-  id: ulidPk(),
-  name: text().notNull(),
-  sortFeet: integer().notNull(),
-});
-
-export const durations = pgTable('durations', {
-  amount: integer(),
-  displayText: text(),
-  id: ulidPk(),
-  isConcentration: boolean().notNull(),
-  name: text().notNull(),
-  unit: text(),
-});
+export { spells };
 
 export const damageTypes = pgTable('damage_types', {
   id: ulidPk(),
@@ -84,41 +47,6 @@ export const weapons = pgTable('weapons', {
   damageTypeId: ulidFk(() => damageTypes.id),
   id: ulidPk(),
   name: text().notNull().unique(),
-});
-
-export const spells = pgTable('spells', {
-  cantripUpgradeDescription: text(),
-  castingTimeId: ulidFk(() => castingTimes.id).notNull(),
-  description: text(),
-  durationId: ulidFk(() => durations.id).notNull(),
-  id: ulidPk(),
-  isRitual: boolean().notNull(),
-  level: integer().notNull(),
-  name: text().notNull(),
-  rangeId: ulidFk(() => ranges.id).notNull(),
-  schoolId: ulidFk(() => schools.id).notNull(),
-  upcastDescription: text(),
-});
-
-export const spellClassMap = pgTable(
-  'spell_class_map',
-  {
-    classId: ulidFk(() => classes.id).notNull(),
-    spellId: ulidFk(() => spells.id).notNull(),
-  },
-  t => [primaryKey({ columns: [t.spellId, t.classId] })],
-);
-
-export const spellComponents = pgTable('spell_components', {
-  material: boolean().notNull(),
-  materialConsumed: boolean().notNull(),
-  materialCostGp: numeric('material_cost_gp', { precision: 12, scale: 2 }),
-  materialDescription: text(),
-  somatic: boolean().notNull(),
-  spellId: ulid()
-    .primaryKey()
-    .references(() => spells.id, { onDelete: 'cascade' }),
-  verbal: boolean().notNull(),
 });
 
 export const spellDamageTypes = pgTable(
