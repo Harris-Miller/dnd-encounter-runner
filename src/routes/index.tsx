@@ -1,24 +1,15 @@
-import FacebookIcon from '@mui/icons-material/Facebook';
-import GoogleIcon from '@mui/icons-material/Google';
-import { Button, Container, Paper, Typography } from '@mui/material';
-import { createFileRoute } from '@tanstack/react-router';
+import { Container, Paper, Typography } from '@mui/material';
+import { createFileRoute, redirect } from '@tanstack/react-router';
 import type { FC } from 'react';
 
 // import dndLogo from '../assets/dnd-logo.svg';
 import { FullScreenCenter } from '../components/FullScreenCenter';
+import { RouterLink } from '../components/RouterLink';
+import { supabase } from '../services/supabase';
 
 // const Img = styled('img')();
 
 const IndexComponent: FC = () => {
-  // const navigate = useNavigate();
-  // const user = useStore(state => state.user);
-
-  // TODO: this nav should happen not in the index page, but in the pre-loader
-  // if (user != null) {
-  //   navigate({ to: '/rooms' });
-  //   return null;
-  // }
-
   return (
     <FullScreenCenter>
       <Container maxWidth="sm">
@@ -27,27 +18,9 @@ const IndexComponent: FC = () => {
             {/* <Img alt="D&D Logo" src={dndLogo} sx={{ color: 'red', height: '1.5em', marginX: '12px', width: '1.5em' }} />{' '} */}
             DnD Encounter Runner
           </Typography>
-          <Typography sx={{ marginBottom: '24px' }} variant="h5">
-            Sign In
-          </Typography>
-          <Button
-            startIcon={<GoogleIcon />}
-            sx={{ '&:hover': { cursor: 'not-allowed' }, marginBottom: '12px', width: '100%' }}
-            variant="outlined"
-          >
-            Google
-          </Button>
-          <Button
-            startIcon={<FacebookIcon />}
-            sx={{ '&:hover': { cursor: 'not-allowed' }, marginBottom: '12px', width: '100%' }}
-            variant="outlined"
-          >
-            Facebook
-          </Button>
-          {/* <Box sx={{ marginBottom: '12px' }}>
-            <Typography>Or</Typography>
-          </Box> */}
-          {/* <SignUp /> */}
+          <RouterLink sx={{ marginBottom: '12px' }} to="/login">
+            Login
+          </RouterLink>
         </Paper>
       </Container>
     </FullScreenCenter>
@@ -55,5 +28,20 @@ const IndexComponent: FC = () => {
 };
 
 export const Route = createFileRoute('/')({
+  beforeLoad: async () => {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
+    console.log(session);
+
+    // when a session exists, redirect to `/home`
+    if (session != null) {
+      // eslint-disable-next-line @typescript-eslint/only-throw-error -- TanStack Router redirect API
+      throw redirect({
+        to: '/home',
+      });
+    }
+  },
   component: IndexComponent,
 });
