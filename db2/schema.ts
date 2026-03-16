@@ -10,21 +10,6 @@ export const damageTypes = pgTable('damage_types', {
   name: text().notNull(),
 });
 
-export const sizes = pgTable('sizes', {
-  id: ulidPk(),
-  name: text().notNull(),
-});
-
-export const creatureTypes = pgTable('creature_types', {
-  id: ulidPk(),
-  name: text().notNull(),
-});
-
-export const alignments = pgTable('alignments', {
-  id: ulidPk(),
-  name: text().notNull(),
-});
-
 export const descriptiveTags = pgTable('descriptive_tags', {
   id: ulidPk(),
   name: text().notNull(),
@@ -60,13 +45,13 @@ export const spellDamageTypes = pgTable(
 
 export const monsters = pgTable('monsters', {
   ac: integer().notNull(),
-  alignmentId: ulidFk(() => alignments.id).notNull(),
+  alignment: text().notNull(),
   cha: integer().notNull(),
   chaSave: integer(),
   con: integer().notNull(),
   conSave: integer(),
   cr: numeric('cr', { precision: 6, scale: 2 }),
-  creatureTypeId: ulidFk(() => creatureTypes.id).notNull(),
+  creatureType: text().notNull(),
   dex: integer().notNull(),
   dexSave: integer(),
   gearText: text(),
@@ -83,7 +68,7 @@ export const monsters = pgTable('monsters', {
   name: text().notNull(),
   proficiencyBonus: integer().notNull(),
   sensesText: text(),
-  sizeId: ulidFk(() => sizes.id).notNull(),
+  size: text().notNull(),
   skillsText: text(),
   speedText: text(),
   str: integer().notNull(),

@@ -4,7 +4,6 @@ import { ulidPk } from '../column.utils';
 
 export const spells = pgTable('spells', {
   castingTime: text().notNull(),
-  components: text().array(),
   description: text(),
   duration: text().notNull(),
   id: ulidPk(),
@@ -14,6 +13,7 @@ export const spells = pgTable('spells', {
   isSomatic: boolean().notNull(),
   isVerbal: boolean().notNull(),
   level: integer().notNull(),
+  materialDescription: text(),
   name: text().notNull(),
   range: text().notNull(),
   school: text().notNull(),

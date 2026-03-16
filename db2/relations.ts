@@ -194,14 +194,6 @@ export const relations = defineRelations(schema, r => ({
     }),
   },
   monsters: {
-    alignment: r.one.alignments({
-      from: r.monsters.alignmentId,
-      to: r.alignments.id,
-    }),
-    creatureType: r.one.creatureTypes({
-      from: r.monsters.creatureTypeId,
-      to: r.creatureTypes.id,
-    }),
     monsterActions: r.many.monsterActions(),
     monsterConditionImmunities: r.many.monsterConditionImmunities(),
     monsterDamageImmunities: r.many.monsterDamageImmunities(),
@@ -212,16 +204,8 @@ export const relations = defineRelations(schema, r => ({
     monsterSpellcasting: r.one.monsterSpellcasting(),
     monsterSpells: r.many.monsterSpells(),
     monsterTraits: r.many.monsterTraits(),
-    size: r.one.sizes({
-      from: r.monsters.sizeId,
-      to: r.sizes.id,
-    }),
   },
   sentientMagicItems: {
-    alignment: r.one.alignments({
-      from: r.sentientMagicItems.alignmentId,
-      to: r.alignments.id,
-    }),
     magicItem: r.one.magicItems({
       from: r.sentientMagicItems.magicItemId,
       to: r.magicItems.id,
