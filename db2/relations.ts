@@ -29,6 +29,12 @@ export const relations = defineRelations(schema, r => ({
   durations: {
     spells: r.many.spells(),
   },
+  encounters: {
+    user: r.one.users({
+      from: r.encounters.userId,
+      to: r.users.id,
+    }),
+  },
   magicItemCategories: {
     magicItemCraftingTools: r.many.magicItemCraftingTools(),
     magicItems: r.many.magicItems(),
@@ -227,6 +233,9 @@ export const relations = defineRelations(schema, r => ({
   },
   tools: {
     magicItemCraftingTools: r.many.magicItemCraftingTools(),
+  },
+  users: {
+    encounters: r.many.encounters(),
   },
   weapons: {
     magicItems: r.many.magicItems(),
