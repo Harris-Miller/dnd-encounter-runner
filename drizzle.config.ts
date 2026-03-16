@@ -3,12 +3,8 @@ import { defineConfig } from 'drizzle-kit';
 
 config({ path: '.env.development' });
 
-// TODO: const dbUrl = process.env.DATABASE_URL;
-const dbUrl: string | undefined = 'postgres://postgres:postgres@localhost:5435/dnd_2?sslmode=disable';
+const dbUrl = process.env.DATABASE_URL;
 
-console.log(dbUrl);
-
-// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 if (dbUrl == null || dbUrl === '') {
   throw new Error('DATABASE_URL is not set');
 } else {
@@ -22,7 +18,5 @@ export default defineConfig({
   },
   dialect: 'postgresql',
   out: './drizzle',
-  // @ts-expect-error - drizzle-kit@beta doesn't have this typed yet
-  relations: './db/relations.ts',
-  schema: './db/schema.ts',
+  schema: ['./db/schema.ts', './db/relations.ts'],
 });

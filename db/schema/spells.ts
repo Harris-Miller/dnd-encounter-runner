@@ -1,12 +1,13 @@
-import { boolean, integer, pgTable, text } from 'drizzle-orm/pg-core';
+import { boolean, integer, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 
-import { ulidPk } from '../column.utils';
+import { uuidPk } from '../column.utils';
 
 export const spells = pgTable('spells', {
   castingTime: text().notNull(),
+  createdAt: timestamp({ withTimezone: true }).defaultNow(),
   description: text(),
   duration: text().notNull(),
-  id: ulidPk(),
+  id: uuidPk(),
   isConcentration: boolean().notNull(),
   isMaterial: boolean().notNull(),
   isRitual: boolean().notNull(),
@@ -18,4 +19,5 @@ export const spells = pgTable('spells', {
   range: text().notNull(),
   school: text().notNull(),
   upcastDescription: text(),
+  updatedAt: timestamp({ withTimezone: true }).defaultNow(),
 });

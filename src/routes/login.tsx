@@ -8,7 +8,8 @@ import { FullScreenCenter } from '../components/FullScreenCenter';
 import { supabase } from '../services/supabase';
 
 const LoginComponent: FC = () => {
-  const { redirect: redirectParam } = useSearch({ from: '/login' });
+  const searchParams = useSearch({ from: '/login' });
+  const redirectParam = (searchParams as Record<string, string | undefined>).redirect ?? '/';
 
   const handleGoogleOAuth = async () => {
     await supabase.auth.signInWithOAuth({

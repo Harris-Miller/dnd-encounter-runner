@@ -1,8 +1,10 @@
-import { pgTable, text } from 'drizzle-orm/pg-core';
+import { pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 
-import { ulidPk } from '../column.utils';
+import { uuidPk } from '../column.utils';
 
 export const damageTypes = pgTable('damage_types', {
-  id: ulidPk(),
+  createdAt: timestamp({ withTimezone: true }).defaultNow(),
+  id: uuidPk(),
   name: text().notNull(),
+  updatedAt: timestamp({ withTimezone: true }).defaultNow(),
 });

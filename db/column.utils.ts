@@ -1,12 +1,8 @@
-import { char } from 'drizzle-orm/pg-core';
+import { uuid } from 'drizzle-orm/pg-core';
 import type { ReferenceConfig } from 'drizzle-orm/pg-core';
-import { ulid as getUlid } from 'ulid';
 
-export const ulid = () => char({ length: 26 });
+export const uuidPk = () => uuid().defaultRandom().primaryKey();
 
-export const ulidPk = () =>
-  ulid()
-    .primaryKey()
-    .$defaultFn(() => getUlid());
+export const uuidFk = (ref: ReferenceConfig['ref']) => uuid().notNull().references(ref);
 
-export const ulidFk = (ref: ReferenceConfig['ref']) => ulid().notNull().references(ref, { onDelete: 'cascade' });
+export const uuidFkCascade = (ref: ReferenceConfig['ref']) => uuid().notNull().references(ref, { onDelete: 'cascade' });
