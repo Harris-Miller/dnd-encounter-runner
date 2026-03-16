@@ -3,11 +3,12 @@ import { defineConfig } from 'drizzle-kit';
 
 config({ path: '.env.development' });
 
-// the localhost fallback is for a running docker compose
-const dbUrl = process.env.DATABASE_URL;
+// TODO: const dbUrl = process.env.DATABASE_URL;
+const dbUrl: string | undefined = 'postgres://postgres:postgres@localhost:5435/dnd_2?sslmode=disable';
 
 console.log(dbUrl);
 
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 if (dbUrl == null || dbUrl === '') {
   throw new Error('DATABASE_URL is not set');
 } else {

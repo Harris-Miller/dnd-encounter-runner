@@ -3,129 +3,241 @@ import { defineRelations } from 'drizzle-orm';
 import * as schema from './schema';
 
 export const relations = defineRelations(schema, r => ({
-  accounts: {
+  armor: {
+    magicItems: r.many.magicItems(),
+  },
+  castingTimes: {
+    spells: r.many.spells(),
+  },
+  conditions: {
+    monsterConditionImmunities: r.many.monsterConditionImmunities(),
+  },
+  creatureTypes: {
+    monsters: r.many.monsters(),
+  },
+  damageTypes: {
+    magicItemDamageResistances: r.many.magicItemDamageResistances(),
+    magicItemDamageVulnerabilities: r.many.magicItemDamageVulnerabilities(),
+    monsterDamageImmunities: r.many.monsterDamageImmunities(),
+    monsterDamageResistances: r.many.monsterDamageResistances(),
+    monsterDamageVulnerabilities: r.many.monsterDamageVulnerabilities(),
+    spellDamageTypes: r.many.spellDamageTypes(),
+  },
+  descriptiveTags: {
+    monsterDescriptiveTags: r.many.monsterDescriptiveTags(),
+  },
+  durations: {
+    spells: r.many.spells(),
+  },
+  encounters: {
     user: r.one.users({
-      from: r.accounts.userId,
+      from: r.encounters.userId,
       to: r.users.id,
     }),
   },
-  combatEvents: {
-    attackerEncounterCreature: r.one.encounterCreatures({
-      from: r.combatEvents.attackerEncounterCreatureId,
-      to: r.encounterCreatures.id,
+  magicItemCategories: {
+    magicItemCraftingTools: r.many.magicItemCraftingTools(),
+    magicItems: r.many.magicItems(),
+  },
+  magicItemCharges: {
+    magicItem: r.one.magicItems({
+      from: r.magicItemCharges.magicItemId,
+      to: r.magicItems.id,
     }),
+  },
+  magicItemCraftingTools: {
+    magicItemCategory: r.one.magicItemCategories({
+      from: r.magicItemCraftingTools.magicItemCategoryId,
+      to: r.magicItemCategories.id,
+    }),
+    tool: r.one.tools({
+      from: r.magicItemCraftingTools.toolId,
+      to: r.tools.id,
+    }),
+  },
+  magicItemDamageResistances: {
     damageType: r.one.damageTypes({
-      from: r.combatEvents.damageTypeId,
+      from: r.magicItemDamageResistances.damageTypeId,
       to: r.damageTypes.id,
     }),
-    encounter: r.one.encounters({
-      from: r.combatEvents.encounterId,
-      to: r.encounters.id,
+    magicItem: r.one.magicItems({
+      from: r.magicItemDamageResistances.magicItemId,
+      to: r.magicItems.id,
     }),
-    targetEncounterCreature: r.one.encounterCreatures({
-      from: r.combatEvents.targetEncounterCreatureId,
-      to: r.encounterCreatures.id,
+  },
+  magicItemDamageVulnerabilities: {
+    damageType: r.one.damageTypes({
+      from: r.magicItemDamageVulnerabilities.damageTypeId,
+      to: r.damageTypes.id,
     }),
-    weapon: r.one.weapons({
-      from: r.combatEvents.weaponId,
+    magicItem: r.one.magicItems({
+      from: r.magicItemDamageVulnerabilities.magicItemId,
+      to: r.magicItems.id,
+    }),
+  },
+  magicItemRarities: {
+    magicItems: r.many.magicItems(),
+  },
+  magicItemSpells: {
+    magicItem: r.one.magicItems({
+      from: r.magicItemSpells.magicItemId,
+      to: r.magicItems.id,
+    }),
+    spell: r.one.spells({
+      from: r.magicItemSpells.spellId,
+      to: r.spells.id,
+    }),
+  },
+  magicItems: {
+    baseArmor: r.one.armor({
+      from: r.magicItems.baseArmorId,
+      to: r.armor.id,
+    }),
+    baseWeapon: r.one.weapons({
+      from: r.magicItems.baseWeaponId,
       to: r.weapons.id,
     }),
-  },
-  creatureEffects: {
-    encounterCreature: r.one.encounterCreatures({
-      from: r.creatureEffects.encounterCreatureId,
-      to: r.encounterCreatures.id,
+    magicItemCategory: r.one.magicItemCategories({
+      from: r.magicItems.magicItemCategoryId,
+      to: r.magicItemCategories.id,
     }),
-    statusDefinition: r.one.statusDefinitions({
-      from: r.creatureEffects.statusDefinitionId,
-      to: r.statusDefinitions.id,
+    magicItemCharges: r.one.magicItemCharges(),
+    magicItemDamageResistances: r.many.magicItemDamageResistances(),
+    magicItemDamageVulnerabilities: r.many.magicItemDamageVulnerabilities(),
+    magicItemRarity: r.one.magicItemRarities({
+      from: r.magicItems.magicItemRarityId,
+      to: r.magicItemRarities.id,
     }),
+    magicItemSpells: r.many.magicItemSpells(),
+    sentientMagicItems: r.one.sentientMagicItems(),
   },
-  damageTypes: {
-    combatEvents: r.many.combatEvents(),
-    monsterDamageModifiers: r.many.monsterDamageModifiers(),
-    weapons: r.many.weapons(),
-  },
-  encounterCreatures: {
-    combatEventsAsAttacker: r.many.combatEvents(),
-    combatEventsAsTarget: r.many.combatEvents(),
-    creatureEffects: r.many.creatureEffects(),
-    encounter: r.one.encounters({
-      from: r.encounterCreatures.encounterId,
-      to: r.encounters.id,
-    }),
+  monsterActions: {
     monster: r.one.monsters({
-      from: r.encounterCreatures.monsterId,
+      from: r.monsterActions.monsterId,
       to: r.monsters.id,
     }),
-    playerCharacter: r.one.playerCharacters({
-      from: r.encounterCreatures.playerCharacterId,
-      to: r.playerCharacters.id,
+  },
+  monsterConditionImmunities: {
+    condition: r.one.conditions({
+      from: r.monsterConditionImmunities.conditionId,
+      to: r.conditions.id,
+    }),
+    monster: r.one.monsters({
+      from: r.monsterConditionImmunities.monsterId,
+      to: r.monsters.id,
     }),
   },
-  encounters: {
-    combatEvents: r.many.combatEvents(),
-    encounterCreatures: r.many.encounterCreatures(),
-  },
-  monsterDamageModifiers: {
+  monsterDamageImmunities: {
     damageType: r.one.damageTypes({
-      from: r.monsterDamageModifiers.damageTypeId,
+      from: r.monsterDamageImmunities.damageTypeId,
       to: r.damageTypes.id,
     }),
     monster: r.one.monsters({
-      from: r.monsterDamageModifiers.monsterId,
+      from: r.monsterDamageImmunities.monsterId,
+      to: r.monsters.id,
+    }),
+  },
+  monsterDamageResistances: {
+    damageType: r.one.damageTypes({
+      from: r.monsterDamageResistances.damageTypeId,
+      to: r.damageTypes.id,
+    }),
+    monster: r.one.monsters({
+      from: r.monsterDamageResistances.monsterId,
+      to: r.monsters.id,
+    }),
+  },
+  monsterDamageVulnerabilities: {
+    damageType: r.one.damageTypes({
+      from: r.monsterDamageVulnerabilities.damageTypeId,
+      to: r.damageTypes.id,
+    }),
+    monster: r.one.monsters({
+      from: r.monsterDamageVulnerabilities.monsterId,
+      to: r.monsters.id,
+    }),
+  },
+  monsterDescriptiveTags: {
+    descriptiveTag: r.one.descriptiveTags({
+      from: r.monsterDescriptiveTags.descriptiveTagId,
+      to: r.descriptiveTags.id,
+    }),
+    monster: r.one.monsters({
+      from: r.monsterDescriptiveTags.monsterId,
+      to: r.monsters.id,
+    }),
+  },
+  monsterSpeeds: {
+    monster: r.one.monsters({
+      from: r.monsterSpeeds.monsterId,
+      to: r.monsters.id,
+    }),
+  },
+  monsterSpellcasting: {
+    monster: r.one.monsters({
+      from: r.monsterSpellcasting.monsterId,
+      to: r.monsters.id,
+    }),
+  },
+  monsterSpells: {
+    monster: r.one.monsters({
+      from: r.monsterSpells.monsterId,
+      to: r.monsters.id,
+    }),
+    spell: r.one.spells({
+      from: r.monsterSpells.spellId,
+      to: r.spells.id,
+    }),
+  },
+  monsterTraits: {
+    monster: r.one.monsters({
+      from: r.monsterTraits.monsterId,
       to: r.monsters.id,
     }),
   },
   monsters: {
-    encounterCreatures: r.many.encounterCreatures(),
-    monsterDamageModifiers: r.many.monsterDamageModifiers(),
+    monsterActions: r.many.monsterActions(),
+    monsterConditionImmunities: r.many.monsterConditionImmunities(),
+    monsterDamageImmunities: r.many.monsterDamageImmunities(),
+    monsterDamageResistances: r.many.monsterDamageResistances(),
+    monsterDamageVulnerabilities: r.many.monsterDamageVulnerabilities(),
+    monsterDescriptiveTags: r.many.monsterDescriptiveTags(),
+    monsterSpeeds: r.many.monsterSpeeds(),
+    monsterSpellcasting: r.one.monsterSpellcasting(),
+    monsterSpells: r.many.monsterSpells(),
+    monsterTraits: r.many.monsterTraits(),
   },
-  playerCharacterWeapons: {
-    playerCharacter: r.one.playerCharacters({
-      from: r.playerCharacterWeapons.playerCharacterId,
-      to: r.playerCharacters.id,
-    }),
-    weapon: r.one.weapons({
-      from: r.playerCharacterWeapons.weaponId,
-      to: r.weapons.id,
-    }),
-  },
-  playerCharacters: {
-    encounterCreatures: r.many.encounterCreatures(),
-    playerCharacterWeapons: r.many.playerCharacterWeapons(),
-    user: r.one.users({
-      from: r.playerCharacters.userId,
-      to: r.users.id,
+  sentientMagicItems: {
+    magicItem: r.one.magicItems({
+      from: r.sentientMagicItems.magicItemId,
+      to: r.magicItems.id,
     }),
   },
-  sessions: {
-    user: r.one.users({
-      from: r.sessions.userId,
-      to: r.users.id,
-    }),
+  sizes: {
+    monsters: r.many.monsters(),
   },
-  statusDefinitions: {
-    creatureEffects: r.many.creatureEffects(),
-    statusRules: r.many.statusRules(),
-  },
-  statusRules: {
-    statusDefinition: r.one.statusDefinitions({
-      from: r.statusRules.statusDefinitionId,
-      to: r.statusDefinitions.id,
-    }),
-  },
-  users: {
-    accounts: r.many.accounts(),
-    playerCharacters: r.many.playerCharacters(),
-    sessions: r.many.sessions(),
-  },
-  weapons: {
-    combatEvents: r.many.combatEvents(),
+  spellDamageTypes: {
     damageType: r.one.damageTypes({
-      from: r.weapons.damageTypeId,
+      from: r.spellDamageTypes.damageTypeId,
       to: r.damageTypes.id,
     }),
-    playerCharacterWeapons: r.many.playerCharacterWeapons(),
+    spell: r.one.spells({
+      from: r.spellDamageTypes.spellId,
+      to: r.spells.id,
+    }),
+  },
+  spells: {
+    magicItemSpells: r.many.magicItemSpells(),
+    monsterSpells: r.many.monsterSpells(),
+    spellDamageTypes: r.many.spellDamageTypes(),
+  },
+  tools: {
+    magicItemCraftingTools: r.many.magicItemCraftingTools(),
+  },
+  users: {
+    encounters: r.many.encounters(),
+  },
+  weapons: {
+    magicItems: r.many.magicItems(),
   },
 }));

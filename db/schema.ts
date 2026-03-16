@@ -1,233 +1,250 @@
-import {
-  boolean,
-  char,
-  integer,
-  jsonb,
-  pgEnum,
-  pgTable,
-  primaryKey,
-  text,
-  timestamp,
-  unique,
-} from 'drizzle-orm/pg-core';
-import { ulid as getUlid } from 'ulid';
+import { boolean, integer, numeric, pgTable, primaryKey, text } from 'drizzle-orm/pg-core';
 
-const ulid = () => char({ length: 26 });
+import { ulid, ulidFk, ulidPk } from './column.utils';
+import { damageTypes } from './schema/general';
+import { spells } from './schema/spells';
+import { weapons } from './schema/weapons';
 
-export const sourceTypeEnum = pgEnum('source_type', ['player_character', 'monster']);
-export const damageModifierEnum = pgEnum('damage_modifier', ['vulnerable', 'resistant', 'immune']);
-export const statusTriggerEnum = pgEnum('status_trigger', [
-  'start_of_turn',
-  'end_of_turn',
-  'when_damaged',
-  'when_attacked',
-  'melee_attack_roll_against',
-  'ranged_attack_roll_against',
-]);
-export const statusRuleTypeEnum = pgEnum('status_rule_type', [
-  'advantage',
-  'disadvantage',
-  'saving_throw',
-  'ability_check',
-]);
-export const damageModifierAppliedEnum = pgEnum('damage_modifier_applied', ['normal', 'half', 'double', 'zero']);
-export const combatOutcomeEnum = pgEnum('combat_outcome', ['hit', 'miss', 'critical']);
-export const encounterStatusEnum = pgEnum('encounter_status', ['setup', 'in_progress', 'ended']);
+export * from './schema/general';
+export * from './schema/spells';
+export * from './schema/weapons';
+export * from './schema/users';
 
-export const users = pgTable('users', {
-  createdAt: timestamp({ withTimezone: true }).defaultNow(),
-  email: text().unique(),
-  emailVerified: boolean().default(false),
-  id: ulid()
-    .primaryKey()
-    .$defaultFn(() => getUlid()),
-  image: text(),
-  name: text(),
-  passwordHash: text(),
-  updatedAt: timestamp({ withTimezone: true }).defaultNow(),
-});
-
-export const damageTypes = pgTable('damage_types', {
-  id: ulid()
-    .primaryKey()
-    .$defaultFn(() => getUlid()),
-  name: text().notNull(),
-  slug: text().notNull(),
-});
-
-export const statusDefinitions = pgTable('status_definitions', {
-  description: text(),
-  id: ulid()
-    .primaryKey()
-    .$defaultFn(() => getUlid()),
-  name: text().notNull(),
-  slug: text().notNull(),
-});
-
-export const statusRules = pgTable('status_rules', {
-  id: ulid()
-    .primaryKey()
-    .$defaultFn(() => getUlid()),
-  ruleType: statusRuleTypeEnum().notNull(),
-  ruleValue: jsonb(),
-  statusDefinitionId: ulid()
-    .notNull()
-    .references(() => statusDefinitions.id, { onDelete: 'cascade' }),
-  trigger: statusTriggerEnum().notNull(),
-});
-
-export const weapons = pgTable('weapons', {
-  damageTypeId: ulid()
-    .notNull()
-    .references(() => damageTypes.id, { onDelete: 'cascade' }),
-  id: ulid()
-    .primaryKey()
-    .$defaultFn(() => getUlid()),
+export const descriptiveTags = pgTable('descriptive_tags', {
+  id: ulidPk(),
   name: text().notNull(),
 });
+
+export const conditions = pgTable('conditions', {
+  id: ulidPk(),
+  name: text().notNull(),
+});
+
+export const tools = pgTable('tools', {
+  id: ulidPk(),
+});
+
+export const armor = pgTable('armor', {
+  id: ulidPk(),
+});
+
+export const spellDamageTypes = pgTable(
+  'spell_damage_types',
+  {
+    damageTypeId: ulidFk(() => damageTypes.id).notNull(),
+    spellId: ulidFk(() => spells.id).notNull(),
+  },
+  t => [primaryKey({ columns: [t.spellId, t.damageTypeId] })],
+);
 
 export const monsters = pgTable('monsters', {
-  armorClass: integer().notNull(),
-  hitPoints: integer().notNull(),
-  id: ulid()
-    .primaryKey()
-    .$defaultFn(() => getUlid()),
+  ac: integer().notNull(),
+  alignment: text().notNull(),
+  cha: integer().notNull(),
+  chaSave: integer(),
+  con: integer().notNull(),
+  conSave: integer(),
+  cr: numeric('cr', { precision: 6, scale: 2 }),
+  creatureType: text().notNull(),
+  dex: integer().notNull(),
+  dexSave: integer(),
+  gearText: text(),
+  hpAverage: integer().notNull(),
+  hpDice: text().notNull(),
+  id: ulidPk(),
+  initiativeModifier: integer().notNull(),
+  initiativeScore: integer().notNull(),
+  intSave: integer(),
+  intScore: integer().notNull(),
+  languagesText: text(),
+  legendaryActionUses: integer(),
+  legendaryActionUsesInLair: integer(),
   name: text().notNull(),
+  proficiencyBonus: integer().notNull(),
+  sensesText: text(),
+  size: text().notNull(),
+  skillsText: text(),
+  speedText: text(),
+  str: integer().notNull(),
+  strSave: integer(),
+  wis: integer().notNull(),
+  wisSave: integer(),
+  xp: integer(),
+  xpInLair: integer(),
 });
 
-export const monsterDamageModifiers = pgTable('monster_damage_modifiers', {
-  damageTypeId: ulid()
-    .notNull()
-    .references(() => damageTypes.id, { onDelete: 'cascade' }),
-  id: ulid()
-    .primaryKey()
-    .$defaultFn(() => getUlid()),
-  modifier: damageModifierEnum().notNull(),
+export const monsterDescriptiveTags = pgTable(
+  'monster_descriptive_tags',
+  {
+    descriptiveTagId: ulidFk(() => descriptiveTags.id).notNull(),
+    monsterId: ulidFk(() => monsters.id).notNull(),
+  },
+  t => [primaryKey({ columns: [t.monsterId, t.descriptiveTagId] })],
+);
+
+export const monsterDamageResistances = pgTable(
+  'monster_damage_resistances',
+  {
+    damageTypeId: ulidFk(() => damageTypes.id).notNull(),
+    monsterId: ulidFk(() => monsters.id).notNull(),
+  },
+  t => [primaryKey({ columns: [t.monsterId, t.damageTypeId] })],
+);
+
+export const monsterDamageVulnerabilities = pgTable(
+  'monster_damage_vulnerabilities',
+  {
+    damageTypeId: ulidFk(() => damageTypes.id).notNull(),
+    monsterId: ulidFk(() => monsters.id).notNull(),
+  },
+  t => [primaryKey({ columns: [t.monsterId, t.damageTypeId] })],
+);
+
+export const monsterDamageImmunities = pgTable(
+  'monster_damage_immunities',
+  {
+    damageTypeId: ulidFk(() => damageTypes.id).notNull(),
+    monsterId: ulidFk(() => monsters.id).notNull(),
+  },
+  t => [primaryKey({ columns: [t.monsterId, t.damageTypeId] })],
+);
+
+export const monsterConditionImmunities = pgTable(
+  'monster_condition_immunities',
+  {
+    conditionId: ulidFk(() => conditions.id).notNull(),
+    monsterId: ulidFk(() => monsters.id).notNull(),
+  },
+  t => [primaryKey({ columns: [t.monsterId, t.conditionId] })],
+);
+
+export const monsterTraits = pgTable('monster_traits', {
+  descriptionText: text(),
+  id: ulidPk(),
+  monsterId: ulidFk(() => monsters.id).notNull(),
+  name: text().notNull(),
+  sortOrder: integer().notNull(),
+  usageLimitText: text(),
+});
+
+export const monsterActions = pgTable('monster_actions', {
+  descriptionText: text(),
+  id: ulidPk(),
+  monsterId: ulidFk(() => monsters.id).notNull(),
+  name: text().notNull(),
+  section: text(),
+  sortOrder: integer().notNull(),
+  usageLimitText: text(),
+});
+
+export const monsterSpeeds = pgTable('monster_speeds', {
+  distanceFt: integer().notNull(),
+  id: ulidPk(),
+  monsterId: ulidFk(() => monsters.id).notNull(),
+  note: text(),
+  speedType: text().notNull(),
+});
+
+export const monsterSpellcasting = pgTable('monster_spellcasting', {
+  componentNote: text(),
   monsterId: ulid()
-    .notNull()
+    .primaryKey()
     .references(() => monsters.id, { onDelete: 'cascade' }),
+  spellAttackBonus: integer().notNull(),
+  spellSaveDc: integer().notNull(),
+  spellcastingAbility: text().notNull(),
 });
 
-export const playerCharacters = pgTable('player_characters', {
-  armorClass: integer().notNull(),
-  id: ulid()
-    .primaryKey()
-    .$defaultFn(() => getUlid()),
-  maxHitPoints: integer().notNull(),
-  name: text().notNull(),
-  userId: ulid().references(() => users.id, { onDelete: 'set null' }),
-});
-
-export const encounters = pgTable('encounters', {
-  createdAt: timestamp({ withTimezone: true }).defaultNow(),
-  currentRound: integer(),
-  currentTurnIndex: integer(),
-  id: ulid()
-    .primaryKey()
-    .$defaultFn(() => getUlid()),
-  name: text().notNull(),
-  status: encounterStatusEnum().notNull(),
-});
-
-export const encounterCreatures = pgTable('encounter_creatures', {
-  armorClass: integer().notNull(),
-  currentHp: integer().notNull(),
-  displayName: text().notNull(),
-  encounterId: ulid()
-    .notNull()
-    .references(() => encounters.id, { onDelete: 'cascade' }),
-  id: ulid()
-    .primaryKey()
-    .$defaultFn(() => getUlid()),
-  initiativeOrder: integer().notNull(),
-  initiativeRoll: integer().notNull(),
-  maxHp: integer().notNull(),
-  monsterId: ulid().references(() => monsters.id, { onDelete: 'set null' }),
-  playerCharacterId: ulid().references(() => playerCharacters.id, {
-    onDelete: 'set null',
-  }),
-  sourceType: sourceTypeEnum().notNull(),
-});
-
-export const creatureEffects = pgTable('creature_effects', {
-  appliedAt: timestamp({ withTimezone: true }).notNull(),
-  encounterCreatureId: ulid()
-    .notNull()
-    .references(() => encounterCreatures.id, { onDelete: 'cascade' }),
-  expiresAt: timestamp({ withTimezone: true }),
-  id: ulid()
-    .primaryKey()
-    .$defaultFn(() => getUlid()),
-  metadata: jsonb(),
-  statusDefinitionId: ulid()
-    .notNull()
-    .references(() => statusDefinitions.id, { onDelete: 'cascade' }),
-});
-
-export const combatEvents = pgTable('combat_events', {
-  attackerEncounterCreatureId: ulid()
-    .notNull()
-    .references(() => encounterCreatures.id, { onDelete: 'cascade' }),
-  createdAt: timestamp({ withTimezone: true }).defaultNow(),
-  damageTypeId: ulid()
-    .notNull()
-    .references(() => damageTypes.id, { onDelete: 'cascade' }),
-  encounterId: ulid()
-    .notNull()
-    .references(() => encounters.id, { onDelete: 'cascade' }),
-  finalDamage: integer(),
-  id: ulid()
-    .primaryKey()
-    .$defaultFn(() => getUlid()),
-  modifierApplied: damageModifierAppliedEnum().notNull(),
-  outcome: combatOutcomeEnum().notNull(),
-  rawDamage: integer(),
-  round: integer(),
-  targetEncounterCreatureId: ulid()
-    .notNull()
-    .references(() => encounterCreatures.id, { onDelete: 'cascade' }),
-  weaponId: ulid().references(() => weapons.id, { onDelete: 'set null' }),
-});
-
-export const playerCharacterWeapons = pgTable(
-  'player_character_weapons',
+export const monsterSpells = pgTable(
+  'monster_spells',
   {
-    equipped: boolean().default(false),
-    playerCharacterId: ulid()
-      .notNull()
-      .references(() => playerCharacters.id, { onDelete: 'cascade' }),
-    weaponId: ulid()
-      .notNull()
-      .references(() => weapons.id, { onDelete: 'cascade' }),
+    monsterId: ulidFk(() => monsters.id).notNull(),
+    spellId: ulidFk(() => spells.id).notNull(),
+    usage: text().notNull(),
   },
-  t => [primaryKey({ columns: [t.playerCharacterId, t.weaponId] })],
+  t => [primaryKey({ columns: [t.monsterId, t.spellId, t.usage] })],
 );
 
-export const accounts = pgTable(
-  'accounts',
+export const magicItemCategories = pgTable('magic_item_categories', {
+  id: ulidPk(),
+  name: text().notNull(),
+});
+
+export const magicItemRarities = pgTable('magic_item_rarities', {
+  craftingCostGp: numeric('crafting_cost_gp', { precision: 12, scale: 2 }),
+  craftingDays: integer(),
+  id: ulidPk(),
+  name: text().notNull(),
+  valueGp: numeric('value_gp', { precision: 12, scale: 2 }),
+});
+
+export const magicItems = pgTable('magic_items', {
+  baseArmorId: ulid().references(() => armor.id, { onDelete: 'set null' }),
+  baseWeaponId: ulid().references(() => weapons.id, { onDelete: 'set null' }),
+  categorySpecifierText: text(),
+  descriptionText: text(),
+  id: ulidPk(),
+  isConsumable: boolean().notNull(),
+  isCursed: boolean().notNull(),
+  magicItemCategoryId: ulidFk(() => magicItemCategories.id).notNull(),
+  magicItemRarityId: ulidFk(() => magicItemRarities.id).notNull(),
+  name: text().notNull(),
+  requiresAttunement: boolean().notNull(),
+});
+
+export const magicItemCharges = pgTable('magic_item_charges', {
+  magicItemId: ulid()
+    .primaryKey()
+    .references(() => magicItems.id, { onDelete: 'cascade' }),
+  maxCharges: integer().notNull(),
+  rechargeText: text(),
+});
+
+export const magicItemSpells = pgTable(
+  'magic_item_spells',
   {
-    accessToken: text(),
-    expiresAt: timestamp({ withTimezone: true }),
-    id: ulid()
-      .primaryKey()
-      .$defaultFn(() => getUlid()),
-    provider: text().notNull(),
-    providerAccountId: text().notNull(),
-    refreshToken: text(),
-    userId: ulid()
-      .notNull()
-      .references(() => users.id, { onDelete: 'cascade' }),
+    magicItemId: ulidFk(() => magicItems.id).notNull(),
+    spellId: ulidFk(() => spells.id).notNull(),
+    usage: text(),
   },
-  t => [unique().on(t.provider, t.providerAccountId)],
+  t => [primaryKey({ columns: [t.magicItemId, t.spellId] })],
 );
 
-export const sessions = pgTable('sessions', {
-  expiresAt: timestamp({ withTimezone: true }).notNull(),
-  id: ulid()
+export const magicItemDamageResistances = pgTable(
+  'magic_item_damage_resistances',
+  {
+    damageTypeId: ulidFk(() => damageTypes.id).notNull(),
+    magicItemId: ulidFk(() => magicItems.id).notNull(),
+  },
+  t => [primaryKey({ columns: [t.magicItemId, t.damageTypeId] })],
+);
+
+export const magicItemDamageVulnerabilities = pgTable(
+  'magic_item_damage_vulnerabilities',
+  {
+    damageTypeId: ulidFk(() => damageTypes.id).notNull(),
+    magicItemId: ulidFk(() => magicItems.id).notNull(),
+  },
+  t => [primaryKey({ columns: [t.magicItemId, t.damageTypeId] })],
+);
+
+export const magicItemCraftingTools = pgTable(
+  'magic_item_crafting_tools',
+  {
+    magicItemCategoryId: ulidFk(() => magicItemCategories.id).notNull(),
+    toolId: ulidFk(() => tools.id).notNull(),
+  },
+  t => [primaryKey({ columns: [t.magicItemCategoryId, t.toolId] })],
+);
+
+export const sentientMagicItems = pgTable('sentient_magic_items', {
+  chaScore: integer().notNull(),
+  communicationType: text(),
+  intScore: integer().notNull(),
+  magicItemId: ulid()
     .primaryKey()
-    .$defaultFn(() => getUlid()),
-  token: text().notNull().unique(),
-  userId: ulid()
-    .notNull()
-    .references(() => users.id, { onDelete: 'cascade' }),
+    .references(() => magicItems.id, { onDelete: 'cascade' }),
+  sensesText: text(),
+  specialPurposeText: text(),
+  wisScore: integer().notNull(),
 });

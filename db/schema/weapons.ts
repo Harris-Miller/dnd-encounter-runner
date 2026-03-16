@@ -1,6 +1,6 @@
 import { integer, pgTable, text } from 'drizzle-orm/pg-core';
 
-import { damageTypes } from '../../db/schema';
+import { damageTypes } from '../schema';
 import { ulidFk, ulidPk } from '../column.utils';
 
 export const mastery = pgTable('mastery', {
