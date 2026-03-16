@@ -3,10 +3,6 @@ import { defineRelations } from 'drizzle-orm';
 import * as schema from './schema';
 
 export const relations = defineRelations(schema, r => ({
-  alignments: {
-    monsters: r.many.monsters(),
-    sentientMagicItems: r.many.sentientMagicItems(),
-  },
   armor: {
     magicItems: r.many.magicItems(),
   },

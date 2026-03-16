@@ -1,14 +1,13 @@
 import { boolean, integer, numeric, pgTable, primaryKey, text } from 'drizzle-orm/pg-core';
 
 import { ulid, ulidFk, ulidPk } from './column.utils';
+import { damageTypes } from './schema/general';
 import { spells } from './schema/spells';
+import { weapons } from './schema/weapons';
 
-export { spells };
-
-export const damageTypes = pgTable('damage_types', {
-  id: ulidPk(),
-  name: text().notNull(),
-});
+export * from './schema/general';
+export * from './schema/spells';
+export * from './schema/weapons';
 
 export const descriptiveTags = pgTable('descriptive_tags', {
   id: ulidPk(),
@@ -26,12 +25,6 @@ export const tools = pgTable('tools', {
 
 export const armor = pgTable('armor', {
   id: ulidPk(),
-});
-
-export const weapons = pgTable('weapons', {
-  damageTypeId: ulidFk(() => damageTypes.id),
-  id: ulidPk(),
-  name: text().notNull().unique(),
 });
 
 export const spellDamageTypes = pgTable(
@@ -244,7 +237,6 @@ export const magicItemCraftingTools = pgTable(
 );
 
 export const sentientMagicItems = pgTable('sentient_magic_items', {
-  alignmentId: ulidFk(() => alignments.id).notNull(),
   chaScore: integer().notNull(),
   communicationType: text(),
   intScore: integer().notNull(),
