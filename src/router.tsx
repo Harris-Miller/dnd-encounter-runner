@@ -1,28 +1,19 @@
-import { createRoute, createRouter } from '@tanstack/react-router';
+import { CircularProgress } from '@mui/material';
+import { createRouter, RouterProvider } from '@tanstack/react-router';
+import type { FC } from 'react';
 
-import { encounterRoute } from './components/EncounterPage';
-import { LandingPage } from './components/LandingPage';
-import { SingleEncounterLandingPage } from './components/old/SingleEncounterLandingPage';
-import { rootRoute } from './routes/rootRoute';
+import { FullScreenCenter } from './components/FullScreenCenter';
+import { routeTree } from './routeTree.gen';
 
-const indexRoute = createRoute({
-  component: LandingPage,
-  getParentRoute: () => rootRoute,
-  path: '/',
-});
-
-const oldLandingPageRoute = createRoute({
-  component: SingleEncounterLandingPage,
-  getParentRoute: () => rootRoute,
-  path: '/old',
-});
-
-const routeTree = rootRoute.addChildren([indexRoute, oldLandingPageRoute, encounterRoute]);
-
-export const router = createRouter({
-  defaultPreload: 'intent',
+const router = createRouter({
+  defaultPendingComponent: () => (
+    <FullScreenCenter>
+      <CircularProgress />
+    </FullScreenCenter>
+  ),
+  defaultPendingMinMs: 500,
+  defaultPendingMs: 10,
   routeTree,
-  scrollRestoration: true,
 });
 
 declare module '@tanstack/react-router' {
@@ -30,3 +21,5 @@ declare module '@tanstack/react-router' {
     router: typeof router;
   }
 }
+
+export const Router: FC = () => <RouterProvider router={router} />;

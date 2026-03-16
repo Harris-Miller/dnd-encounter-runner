@@ -5,7 +5,7 @@ import globals from 'eslint-config-harris/globals';
 
 const eslintConfig = defineConfig([
   ...harrisConfig,
-  globalIgnores(['dist', 'src/vite-env.d.ts', 'src/types/database.types.ts']),
+  globalIgnores(['dist', 'src/vite-env.d.ts', 'src/types/database.types.ts', 'stuff']),
   ...pluginRouter.configs['flat/recommended'],
   {
     files: ['src/**'],
@@ -23,6 +23,7 @@ const eslintConfig = defineConfig([
     rules: {
       'no-console': 'off',
       'prefer-arrow/prefer-arrow-functions': 'off',
+      'react-refresh/only-export-components': 'off',
     },
   },
   {
@@ -35,8 +36,6 @@ const eslintConfig = defineConfig([
     rules: {
       '@typescript-eslint/explicit-module-boundary-types': 'off',
       '@typescript-eslint/no-non-null-assertion': 'off',
-      // remove once consume next eslint-config-harris
-      '@typescript-eslint/switch-exhaustiveness-check': ['error', { requireDefaultForNonUnion: true }],
     },
   },
 ]);

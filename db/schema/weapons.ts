@@ -1,7 +1,8 @@
 import { integer, pgTable, text } from 'drizzle-orm/pg-core';
 
-import { damageTypes } from '../schema';
 import { ulidFk, ulidPk } from '../column.utils';
+
+import { damageTypes } from './general';
 
 export const mastery = pgTable('mastery', {
   description: text().notNull(),
