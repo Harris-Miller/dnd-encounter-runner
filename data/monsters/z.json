@@ -1,0 +1,170 @@
+[
+  {
+    "actions": [
+      "Slam. Melee Attack Roll: +3 , reach 5 ft. Hit: 5 ( 1d8 + 1 ) Bludgeoning damage."
+    ],
+    "alignment": "Neutral Evil",
+    "armorClass": 8,
+    "bonusActions": [],
+    "challengeRating": "1/4",
+    "charisma": 5,
+    "charismaSave": -3,
+    "constitution": 16,
+    "constitutionSave": 3,
+    "creatureType": "Undead",
+    "descriptiveTags": null,
+    "dexterity": 6,
+    "dexteritySave": -2,
+    "experiencePoints": 50,
+    "experiencePointsAlt": null,
+    "gear": null,
+    "hitPointDice": "2d8 + 6",
+    "hitPoints": 15,
+    "immunities": [
+      "Poison; Exhaustion",
+      "Poisoned"
+    ],
+    "initiativeModifier": "-2",
+    "initiativeScore": 8,
+    "intelligence": 3,
+    "intelligenceSave": -4,
+    "languages": "Understands Common plus one other language but can’t speak",
+    "legendaryActions": [],
+    "name": "Zombie",
+    "proficiencyBonus": 2,
+    "reactions": [],
+    "resistances": [],
+    "senses": [
+      "Darkvision 60 ft.",
+      "Passive Perception 8"
+    ],
+    "size": "Medium",
+    "skills": null,
+    "speed": "20 ft.",
+    "speedBurrow": null,
+    "speedClimb": null,
+    "speedFly": null,
+    "speedSwim": null,
+    "strength": 13,
+    "strengthSave": 1,
+    "traits": [
+      "Undead Fortitude. If damage reduces the zombie to 0 Hit Points, it makes a Constitution saving throw (DC 5 plus the damage taken) unless the damage is Radiant or from a Critical Hit. On a successful save, the zombie drops to 1 Hit Point instead."
+    ],
+    "vulnerabilities": null,
+    "wisdom": 6,
+    "wisdomSave": 0
+  },
+  {
+    "actions": [
+      "Slam. Melee Attack Roll: +6 , reach 5 ft. Hit: 13 ( 2d8 + 4 ) Bludgeoning damage."
+    ],
+    "alignment": "Neutral Evil",
+    "armorClass": 8,
+    "bonusActions": [],
+    "challengeRating": "2",
+    "charisma": 5,
+    "charismaSave": -3,
+    "constitution": 18,
+    "constitutionSave": 4,
+    "creatureType": "Undead",
+    "descriptiveTags": null,
+    "dexterity": 6,
+    "dexteritySave": -2,
+    "experiencePoints": 450,
+    "experiencePointsAlt": null,
+    "gear": null,
+    "hitPointDice": "9d10 + 36",
+    "hitPoints": 85,
+    "immunities": [
+      "Poison; Exhaustion",
+      "Poisoned"
+    ],
+    "initiativeModifier": "-2",
+    "initiativeScore": 8,
+    "intelligence": 3,
+    "intelligenceSave": -4,
+    "languages": "Understands Common and Giant but can’t speak",
+    "legendaryActions": [],
+    "name": "Ogre Zombie",
+    "proficiencyBonus": 2,
+    "reactions": [],
+    "resistances": [],
+    "senses": [
+      "Darkvision 60 ft.",
+      "Passive Perception 8"
+    ],
+    "size": "Large",
+    "skills": null,
+    "speed": "30 ft.",
+    "speedBurrow": null,
+    "speedClimb": null,
+    "speedFly": null,
+    "speedSwim": null,
+    "strength": 19,
+    "strengthSave": 4,
+    "traits": [
+      "Undead Fortitude. If damage reduces the zombie to 0 Hit Points, it makes a Constitution saving throw (DC 5 plus the damage taken) unless the damage is Radiant or from a Critical Hit. On a successful save, the zombie drops to 1 Hit Point instead."
+    ],
+    "vulnerabilities": null,
+    "wisdom": 6,
+    "wisdomSave": 0
+  },
+  {
+    "actions": [
+      "Multiattack. The zombie uses Eye Rays twice.",
+      "Bite. Melee Attack Roll: +5 , reach 5 ft. Hit: 16 ( 4d6 + 2 ) Piercing damage.",
+      "Eye Rays. The zombie randomly shoots one of the following magical rays at a target it can see within 120 feet of itself (roll 1d4 ; reroll if the zombie has already used that ray during this turn):"
+    ],
+    "alignment": "Neutral Evil",
+    "armorClass": 15,
+    "bonusActions": [],
+    "challengeRating": "5",
+    "charisma": 5,
+    "charismaSave": -3,
+    "constitution": 16,
+    "constitutionSave": 3,
+    "creatureType": "Undead",
+    "descriptiveTags": null,
+    "dexterity": 8,
+    "dexteritySave": -1,
+    "experiencePoints": 1800,
+    "experiencePointsAlt": null,
+    "gear": null,
+    "hitPointDice": "11d10 + 33",
+    "hitPoints": 93,
+    "immunities": [
+      "Poison; Exhaustion",
+      "Poisoned",
+      "Prone"
+    ],
+    "initiativeModifier": "-1",
+    "initiativeScore": 9,
+    "intelligence": 3,
+    "intelligenceSave": -4,
+    "languages": "Understands Deep Speech and Undercommon but can’t speak",
+    "legendaryActions": [],
+    "name": "Beholder Zombie",
+    "proficiencyBonus": 3,
+    "reactions": [],
+    "resistances": [],
+    "senses": [
+      "Darkvision 60 ft.",
+      "Passive Perception 9"
+    ],
+    "size": "Large",
+    "skills": null,
+    "speed": "5 ft.",
+    "speedBurrow": null,
+    "speedClimb": null,
+    "speedFly": "20 ft. (hover)",
+    "speedSwim": null,
+    "strength": 14,
+    "strengthSave": 2,
+    "traits": [
+      "Undead Fortitude. If damage reduces the zombie to 0 Hit Points, it makes a Constitution saving throw (DC 5 plus the damage taken) unless the damage is Radiant or from a Critical Hit. On a successful save, the zombie drops to 1 Hit Point instead."
+    ],
+    "vulnerabilities": null,
+    "wisdom": 8,
+    "wisdomSave": 2
+  }
+]

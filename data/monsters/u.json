@@ -1,0 +1,201 @@
+[
+  {
+    "actions": [
+      "Multiattack. The ultroloth uses Hypnotic Gaze and makes two Mercurial Whip attacks.",
+      "Mercurial Whip. Melee Attack Roll: +9 , reach 15 ft. Hit: 25 ( 6d6 + 4 ) Force damage, and the ultroloth can teleport the target up to 10 feet to an unoccupied space the ultroloth can see that isn’t in the air.",
+      "Hypnotic Gaze. Wisdom Saving Throw: DC 17, each creature in a 30-foot Cone . Failure: 10 ( 3d6 ) Psychic damage, and the target has the Stunned condition until the start of the ultroloth’s next turn. Success: The target is immune to this ultroloth’s Hypnotic Gaze for 24 hours.",
+      "Spellcasting. The ultroloth casts one of the following spells, requiring no Material components and using Intelligence as the spellcasting ability (spell save DC 17):",
+      "At Will: Alter Self , Clairvoyance , Detect Magic",
+      "1/Day Each: Dimension Door , Fireball (level 5 version), Wall of Fire"
+    ],
+    "alignment": "Neutral Evil",
+    "armorClass": 19,
+    "bonusActions": [
+      "Fiendish Guile (Recharge 4–6). The ultroloth casts Dispel Magic , Invisibility (self only), Misty Step , or Suggestion , requiring no Material components and using the same spellcasting ability as Spellcasting."
+    ],
+    "challengeRating": "13",
+    "charisma": 18,
+    "charismaSave": 4,
+    "constitution": 18,
+    "constitutionSave": 4,
+    "creatureType": "Fiend",
+    "descriptiveTags": "(Yugoloth)",
+    "dexterity": 16,
+    "dexteritySave": 3,
+    "experiencePoints": 10000,
+    "experiencePointsAlt": null,
+    "gear": null,
+    "hitPointDice": "26d8 + 104",
+    "hitPoints": 221,
+    "immunities": [
+      "Acid",
+      "Poison; Charmed",
+      "Frightened",
+      "Poisoned"
+    ],
+    "initiativeModifier": "+8",
+    "initiativeScore": 18,
+    "intelligence": 19,
+    "intelligenceSave": 4,
+    "languages": "Abyssal, Infernal; telepathy 120 ft.",
+    "legendaryActions": [],
+    "name": "Ultroloth",
+    "proficiencyBonus": 5,
+    "reactions": [],
+    "resistances": [
+      "Cold",
+      "Fire",
+      "Lightning"
+    ],
+    "senses": [
+      "Truesight 120 ft.",
+      "Passive Perception 17"
+    ],
+    "size": "Medium",
+    "skills": [
+      "Deception +9",
+      "Perception +7",
+      "Stealth +8"
+    ],
+    "speed": "30 ft.",
+    "speedBurrow": null,
+    "speedClimb": null,
+    "speedFly": "60 ft. (hover)",
+    "speedSwim": null,
+    "strength": 19,
+    "strengthSave": 4,
+    "traits": [
+      "Fiendish Restoration. If the ultroloth dies outside Gehenna, its body dissolves into ichor, and it gains a new body instantly, reviving with all its Hit Points somewhere in Gehenna .",
+      "Magic Resistance. The ultroloth has Advantage on saving throws against spells and other magical effects."
+    ],
+    "vulnerabilities": null,
+    "wisdom": 15,
+    "wisdomSave": 2
+  },
+  {
+    "actions": [
+      "Multiattack. The umber hulk makes three Rend attacks.",
+      "Rend. Melee Attack Roll: +8 , reach 10 ft. Hit: 12 ( 2d6 + 5 ) Slashing damage."
+    ],
+    "alignment": "Chaotic Evil",
+    "armorClass": 18,
+    "bonusActions": [
+      "Confusing Gaze (Recharge 5–6). Wisdom Saving Throw: DC 14, each creature in a 30-foot Cone . Failure: The target can’t take Reactions until the start of the umber hulk’s next turn, and the target rolls 1d8 to determine what it does on its next turn:",
+      "1–4. The target does nothing.",
+      "5–6. The target takes no action or Bonus Action and uses all its movement to move in a random direction.",
+      "7–8. The target makes a melee attack against a random creature within its reach or does nothing if it can’t make such an attack."
+    ],
+    "challengeRating": "5",
+    "charisma": 10,
+    "charismaSave": 0,
+    "constitution": 16,
+    "constitutionSave": 3,
+    "creatureType": "Monstrosity",
+    "descriptiveTags": null,
+    "dexterity": 13,
+    "dexteritySave": 1,
+    "experiencePoints": 1800,
+    "experiencePointsAlt": null,
+    "gear": null,
+    "hitPointDice": "11d10 + 33",
+    "hitPoints": 93,
+    "immunities": [],
+    "initiativeModifier": "+4",
+    "initiativeScore": 14,
+    "intelligence": 9,
+    "intelligenceSave": -1,
+    "languages": "Umber Hulk",
+    "legendaryActions": [],
+    "name": "Umber Hulk",
+    "proficiencyBonus": 3,
+    "reactions": [],
+    "resistances": [],
+    "senses": [
+      "Darkvision 120 ft., Tremorsense 60 ft.",
+      "Passive Perception 10"
+    ],
+    "size": "Large",
+    "skills": null,
+    "speed": "30 ft.",
+    "speedBurrow": "20 ft.",
+    "speedClimb": null,
+    "speedFly": null,
+    "speedSwim": null,
+    "strength": 20,
+    "strengthSave": 5,
+    "traits": [
+      "Tunneler. The umber hulk can burrow through solid rock at half its Burrow Speed and leaves a 10-foot-diameter tunnel in its wake."
+    ],
+    "vulnerabilities": null,
+    "wisdom": 10,
+    "wisdomSave": 0
+  },
+  {
+    "actions": [
+      "Multiattack. The unicorn makes one Hooves attack and one Radiant Horn attack.",
+      "Hooves. Melee Attack Roll: +7 , reach 5 ft. Hit: 11 ( 2d6 + 4 ) Bludgeoning damage.",
+      "Radiant Horn. Melee Attack Roll: +7 , reach 5 ft. Hit: 9 ( 1d10 + 4 ) Radiant damage.",
+      "Spellcasting. The unicorn casts one of the following spells, requiring no spell components and using Charisma as the spellcasting ability (spell save DC 14):",
+      "At Will: Detect Evil and Good , Druidcraft",
+      "1/Day Each: Calm Emotions , Dispel Evil and Good , Entangle , Pass without Trace , Word of Recall"
+    ],
+    "alignment": "Lawful Good",
+    "armorClass": 12,
+    "bonusActions": [
+      "Unicorn’s Blessing (3/Day). The unicorn touches another creature with its horn and casts Cure Wounds or Lesser Restoration on that creature, using the same spellcasting ability as Spellcasting."
+    ],
+    "challengeRating": "5",
+    "charisma": 16,
+    "charismaSave": 3,
+    "constitution": 15,
+    "constitutionSave": 2,
+    "creatureType": "Celestial",
+    "descriptiveTags": null,
+    "dexterity": 14,
+    "dexteritySave": 2,
+    "experiencePoints": 1800,
+    "experiencePointsAlt": null,
+    "gear": null,
+    "hitPointDice": "13d10 + 26",
+    "hitPoints": 97,
+    "immunities": [
+      "Poison; Charmed",
+      "Paralyzed",
+      "Poisoned"
+    ],
+    "initiativeModifier": "+8",
+    "initiativeScore": 18,
+    "intelligence": 11,
+    "intelligenceSave": 0,
+    "languages": "Celestial, Elvish, Sylvan; telepathy 120 ft.",
+    "legendaryActions": [
+      "Legendary Action Uses: 3. Immediately after another creature’s turn, the unicorn can expend a use to take one of the following actions. The unicorn regains all expended uses at the start of each of its turns.",
+      "Charging Horn. The unicorn moves up to half its Speed without provoking Opportunity Attacks , and it makes one Radiant Horn attack.",
+      "Shimmering Shield. The unicorn targets itself or one creature it can see within 60 feet of itself. The target gains 10 ( 3d6 ) Temporary Hit Points , and its AC increases by 2 until the end of the unicorn’s next turn. The unicorn can’t take this action again until the start of its next turn."
+    ],
+    "name": "Unicorn",
+    "proficiencyBonus": 3,
+    "reactions": [],
+    "resistances": [],
+    "senses": [
+      "Darkvision 60 ft.",
+      "Passive Perception 13"
+    ],
+    "size": "Large",
+    "skills": null,
+    "speed": "50 ft.",
+    "speedBurrow": null,
+    "speedClimb": null,
+    "speedFly": null,
+    "speedSwim": null,
+    "strength": 18,
+    "strengthSave": 4,
+    "traits": [
+      "Legendary Resistance (3/Day). If the unicorn fails a saving throw, it can choose to succeed instead.",
+      "Magic Resistance. The unicorn has Advantage on saving throws against spells and other magical effects."
+    ],
+    "vulnerabilities": null,
+    "wisdom": 17,
+    "wisdomSave": 3
+  }
+]

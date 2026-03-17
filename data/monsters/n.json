@@ -1,0 +1,434 @@
+[
+  {
+    "actions": [
+      "Multiattack. The nalfeshnee makes three Rend attacks.",
+      "Rend. Melee Attack Roll: +10 , reach 10 ft. Hit: 16 ( 2d10 + 5 ) Slashing damage plus 11 ( 2d10 ) Force damage.",
+      "Teleport. The nalfeshnee teleports up to 120 feet to an unoccupied space it can see."
+    ],
+    "alignment": "Chaotic Evil",
+    "armorClass": 18,
+    "bonusActions": [
+      "Horror Nimbus (Recharge 5–6). Wisdom Saving Throw: DC 15, each creature in a 15-foot Emanation originating from the nalfeshnee. Failure: 28 ( 8d6 ) Psychic damage, and the target has the Frightened condition for 1 minute, until it takes damage, or until it ends its turn with the nalfeshnee out of line of sight. Success: The target is immune to this nalfeshnee’s Horror Nimbus for 24 hours."
+    ],
+    "challengeRating": "13",
+    "charisma": 15,
+    "charismaSave": 7,
+    "constitution": 22,
+    "constitutionSave": 11,
+    "creatureType": "Fiend",
+    "descriptiveTags": "(Demon)",
+    "dexterity": 10,
+    "dexteritySave": 0,
+    "experiencePoints": 10000,
+    "experiencePointsAlt": null,
+    "gear": null,
+    "hitPointDice": "16d10 + 96",
+    "hitPoints": 184,
+    "immunities": [
+      "Poison; Frightened",
+      "Poisoned"
+    ],
+    "initiativeModifier": "+5",
+    "initiativeScore": 15,
+    "intelligence": 19,
+    "intelligenceSave": 9,
+    "languages": "Abyssal; telepathy 120 ft.",
+    "legendaryActions": [],
+    "name": "Nalfeshnee",
+    "proficiencyBonus": 5,
+    "reactions": [
+      "Pursuit. Trigger: Another creature the nalfeshnee can see ends its move within 120 feet of the nalfeshnee. Response: The nalfeshnee uses Teleport, but its destination space must be within 10 feet of the triggering creature."
+    ],
+    "resistances": [
+      "Cold",
+      "Fire",
+      "Lightning"
+    ],
+    "senses": [
+      "Truesight 120 ft.",
+      "Passive Perception 11"
+    ],
+    "size": "Large",
+    "skills": null,
+    "speed": "20 ft.",
+    "speedBurrow": null,
+    "speedClimb": null,
+    "speedFly": "30 ft.",
+    "speedSwim": null,
+    "strength": 21,
+    "strengthSave": 5,
+    "traits": [
+      "Demonic Restoration. If the nalfeshnee dies outside the Abyss, its body dissolves into ichor, and it gains a new body instantly, reviving with all its Hit Points somewhere in the Abyss .",
+      "Magic Resistance. The nalfeshnee has Advantage on saving throws against spells and other magical effects."
+    ],
+    "vulnerabilities": null,
+    "wisdom": 12,
+    "wisdomSave": 6
+  },
+  {
+    "actions": [
+      "Multiattack. The hag makes two Claw attacks.",
+      "Claw. Melee Attack Roll: +7 , reach 5 ft. Hit: 13 ( 2d8 + 4 ) Slashing damage.",
+      "Nightmare Haunting (1/Day; Requires Soul Bag). While on the Ethereal Plane, the hag casts Dream , using the same spellcasting ability as Spellcasting. Only the hag can serve as the spell’s messenger, and the target must be a creature the hag can see on the Material Plane. The spell fails and is wasted if the target is under the effect of the Protection from Evil and Good spell or within a Magic Circle spell.",
+      "If the target takes damage from the Dream spell, the target’s Hit Point maximum decreases by an amount equal to that damage. If the spell kills the target, its soul is trapped in the hag’s soul bag, and the target can’t be raised from the dead until its soul is released.",
+      "Spellcasting. The hag casts one of the following spells, requiring no Material components and using Intelligence as the spellcasting ability (spell save DC 14):",
+      "At Will: Detect Magic , Etherealness , Magic Missile (level 4 version)",
+      "2/Day Each: Phantasmal Killer , Plane Shift (self only)"
+    ],
+    "alignment": "Neutral Evil",
+    "armorClass": 17,
+    "bonusActions": [
+      "Shape-Shift. The hag shape-shifts into a Small or Medium Humanoid, or it returns to its true form. Other than its size, its game statistics are the same in each form. Any equipment it is wearing or carrying isn’t transformed."
+    ],
+    "challengeRating": "5",
+    "charisma": 16,
+    "charismaSave": 3,
+    "constitution": 16,
+    "constitutionSave": 3,
+    "creatureType": "Fiend",
+    "descriptiveTags": null,
+    "dexterity": 15,
+    "dexteritySave": 2,
+    "experiencePoints": 1800,
+    "experiencePointsAlt": null,
+    "gear": null,
+    "hitPointDice": "15d8 + 45",
+    "hitPoints": 112,
+    "immunities": [
+      "Charmed"
+    ],
+    "initiativeModifier": "+5",
+    "initiativeScore": 15,
+    "intelligence": 16,
+    "intelligenceSave": 3,
+    "languages": "Abyssal, Common, Infernal, Primordial",
+    "legendaryActions": [],
+    "name": "Night Hag",
+    "proficiencyBonus": 3,
+    "reactions": [],
+    "resistances": [
+      "Cold",
+      "Fire"
+    ],
+    "senses": [
+      "Darkvision 120 ft.",
+      "Passive Perception 15"
+    ],
+    "size": "Medium",
+    "skills": [
+      "Deception +6",
+      "Insight +5",
+      "Perception +5",
+      "Stealth +5"
+    ],
+    "speed": "30 ft.",
+    "speedBurrow": null,
+    "speedClimb": null,
+    "speedFly": null,
+    "speedSwim": null,
+    "strength": 18,
+    "strengthSave": 4,
+    "traits": [
+      "Coven Magic. While within 30 feet of at least two hag allies, the hag can cast one of the following spells, requiring no Material components, using the spell’s normal casting time, and using Intelligence as the spellcasting ability (spell save DC 14): Augury , Find Familiar , Identify , Locate Object , Scrying , or Unseen Servant . The hag must finish a Long Rest before using this trait to cast that spell again.",
+      "Magic Resistance. The hag has Advantage on saving throws against spells and other magical effects.",
+      "Soul Bag. The hag has a soul bag. While holding or carrying the bag, the hag can use its Nightmare Haunting action.",
+      "The bag has AC 15, HP 20, and Resistance to all damage. The bag turns to dust if reduced to 0 Hit Points. If the bag is destroyed, any souls the bag is holding are released. The hag can create a new bag after 7 days."
+    ],
+    "vulnerabilities": null,
+    "wisdom": 14,
+    "wisdomSave": 2
+  },
+  {
+    "actions": [
+      "Hooves. Melee Attack Roll: +6 , reach 5 ft. Hit: 13 ( 2d8 + 4 ) Bludgeoning damage plus 10 ( 3d6 ) Fire damage.",
+      "Ethereal Stride. The nightmare and up to three willing creatures within 5 feet of it teleport to the Ethereal Plane from the Material Plane or vice versa."
+    ],
+    "alignment": "Neutral Evil",
+    "armorClass": 13,
+    "bonusActions": [],
+    "challengeRating": "3",
+    "charisma": 15,
+    "charismaSave": 2,
+    "constitution": 16,
+    "constitutionSave": 3,
+    "creatureType": "Fiend",
+    "descriptiveTags": null,
+    "dexterity": 15,
+    "dexteritySave": 2,
+    "experiencePoints": 700,
+    "experiencePointsAlt": null,
+    "gear": null,
+    "hitPointDice": "8d10 + 24",
+    "hitPoints": 68,
+    "immunities": [
+      "Fire"
+    ],
+    "initiativeModifier": "+2",
+    "initiativeScore": 12,
+    "intelligence": 10,
+    "intelligenceSave": 0,
+    "languages": "Understands Abyssal, Common, and Infernal but can’t speak",
+    "legendaryActions": [],
+    "name": "Nightmare",
+    "proficiencyBonus": 2,
+    "reactions": [],
+    "resistances": [],
+    "senses": [
+      "Passive Perception 11"
+    ],
+    "size": "Large",
+    "skills": null,
+    "speed": "60 ft.",
+    "speedBurrow": null,
+    "speedClimb": null,
+    "speedFly": "90 ft. (hover)",
+    "speedSwim": null,
+    "strength": 18,
+    "strengthSave": 4,
+    "traits": [
+      "Confer Fire Resistance. The nightmare can grant Resistance to Fire damage to a rider while it is on the nightmare.",
+      "Illumination. The nightmare sheds Bright Light in a 10-foot radius and Dim Light for an additional 10 feet."
+    ],
+    "vulnerabilities": null,
+    "wisdom": 13,
+    "wisdomSave": 1
+  },
+  {
+    "actions": [
+      "Rapier. Melee Attack Roll: +3 , reach 5 ft. Hit: 5 ( 1d8 + 1 ) Piercing damage."
+    ],
+    "alignment": "Neutral",
+    "armorClass": 15,
+    "bonusActions": [],
+    "challengeRating": "1/8",
+    "charisma": 16,
+    "charismaSave": 3,
+    "constitution": 11,
+    "constitutionSave": 0,
+    "creatureType": "Humanoid",
+    "descriptiveTags": null,
+    "dexterity": 12,
+    "dexteritySave": 1,
+    "experiencePoints": 25,
+    "experiencePointsAlt": null,
+    "gear": "Breastplate , Rapier",
+    "hitPointDice": "2d8",
+    "hitPoints": 9,
+    "immunities": [],
+    "initiativeModifier": "+1",
+    "initiativeScore": 11,
+    "intelligence": 12,
+    "intelligenceSave": 1,
+    "languages": "Common plus two other languages",
+    "legendaryActions": [],
+    "name": "Noble",
+    "proficiencyBonus": 2,
+    "reactions": [
+      "Parry. Trigger: The noble is hit by a melee attack roll while holding a weapon. Response: The noble adds 2 to its AC against that attack, possibly causing it to miss."
+    ],
+    "resistances": [],
+    "senses": [
+      "Passive Perception 12"
+    ],
+    "size": "Medium or Small",
+    "skills": [
+      "Deception +5",
+      "Insight +4",
+      "Persuasion +5"
+    ],
+    "speed": "30 ft.",
+    "speedBurrow": null,
+    "speedClimb": null,
+    "speedFly": null,
+    "speedSwim": null,
+    "strength": 11,
+    "strengthSave": 0,
+    "traits": [],
+    "vulnerabilities": null,
+    "wisdom": 14,
+    "wisdomSave": 2
+  },
+  {
+    "actions": [
+      "Multiattack. The noble makes three Beguiling Strike attacks.",
+      "Beguiling Strike. Melee or Ranged Attack Roll: +8 , reach 5 ft. or range 60 ft. Hit: 18 ( 4d6 + 4 ) Psychic damage, and the target has the Charmed condition until the start of the noble’s next turn.",
+      "Spellcasting. The noble casts one of the following spells, requiring no Material components and using Charisma as the spellcasting ability (spell save DC 16):",
+      "At Will: Mage Armor (included in AC), Mage Hand , Minor Illusion",
+      "1/Day Each: Befuddlement , Detect Thoughts , Fly , Scrying , Shatter (level 7 version)"
+    ],
+    "alignment": "Neutral",
+    "armorClass": 16,
+    "bonusActions": [],
+    "challengeRating": "10",
+    "charisma": 19,
+    "charismaSave": 8,
+    "constitution": 12,
+    "constitutionSave": 5,
+    "creatureType": "Humanoid",
+    "descriptiveTags": null,
+    "dexterity": 16,
+    "dexteritySave": 7,
+    "experiencePoints": 5900,
+    "experiencePointsAlt": null,
+    "gear": null,
+    "hitPointDice": "27d8 + 27",
+    "hitPoints": 148,
+    "immunities": [],
+    "initiativeModifier": "+7",
+    "initiativeScore": 17,
+    "intelligence": 15,
+    "intelligenceSave": 2,
+    "languages": "Common plus two other languages",
+    "legendaryActions": [],
+    "name": "Noble Prodigy",
+    "proficiencyBonus": 4,
+    "reactions": [
+      "Shield (2/Day). The noble casts Shield in response to that spell’s trigger, using the same spellcasting ability as Spellcasting."
+    ],
+    "resistances": [],
+    "senses": [
+      "Passive Perception 16"
+    ],
+    "size": "Medium or Small",
+    "skills": [
+      "Perception +6",
+      "Persuasion +8"
+    ],
+    "speed": "30 ft.",
+    "speedBurrow": null,
+    "speedClimb": null,
+    "speedFly": null,
+    "speedSwim": null,
+    "strength": 8,
+    "strengthSave": -1,
+    "traits": [],
+    "vulnerabilities": null,
+    "wisdom": 14,
+    "wisdomSave": 6
+  },
+  {
+    "actions": [
+      "Multiattack. The nothic makes two Claw attacks.",
+      "Claw. Melee Attack Roll: +5 , reach 5 ft. Hit: 8 ( 1d10 + 3 ) Slashing damage.",
+      "Rotting Gaze. Constitution Saving Throw: DC 13, one creature the nothic can see within 120 feet. Failure: 17 ( 5d6 ) Necrotic damage. Success: Half damage."
+    ],
+    "alignment": "Neutral Evil",
+    "armorClass": 15,
+    "bonusActions": [
+      "Weird Insight (Recharge 6). Wisdom Saving Throw: DC 14, one creature the nothic can see within 120 feet. Failure: The nothic magically learns one fact or secret about the target."
+    ],
+    "challengeRating": "2",
+    "charisma": 8,
+    "charismaSave": -1,
+    "constitution": 16,
+    "constitutionSave": 3,
+    "creatureType": "Aberration",
+    "descriptiveTags": null,
+    "dexterity": 16,
+    "dexteritySave": 3,
+    "experiencePoints": 450,
+    "experiencePointsAlt": null,
+    "gear": null,
+    "hitPointDice": "6d8 + 18",
+    "hitPoints": 45,
+    "immunities": [],
+    "initiativeModifier": "+3",
+    "initiativeScore": 13,
+    "intelligence": 13,
+    "intelligenceSave": 1,
+    "languages": "Undercommon",
+    "legendaryActions": [],
+    "name": "Nothic",
+    "proficiencyBonus": 2,
+    "reactions": [],
+    "resistances": [],
+    "senses": [
+      "Truesight 120 ft.",
+      "Passive Perception 14"
+    ],
+    "size": "Medium",
+    "skills": [
+      "Arcana +3",
+      "Insight +4",
+      "Perception +4",
+      "Stealth +5"
+    ],
+    "speed": "30 ft.",
+    "speedBurrow": null,
+    "speedClimb": null,
+    "speedFly": null,
+    "speedSwim": null,
+    "strength": 14,
+    "strengthSave": 2,
+    "traits": [],
+    "vulnerabilities": null,
+    "wisdom": 10,
+    "wisdomSave": 0
+  },
+  {
+    "actions": [
+      "Multiattack. The nycaloth makes two Mercurial Axe attacks.",
+      "Mercurial Axe. Melee or Ranged Attack Roll: +9 , reach 10 ft. or range 30/90 ft. Hit: 18 ( 2d12 + 5 ) Slashing damage plus 10 ( 3d6 ) Force damage. Hit or Miss: The axe magically returns to the nycaloth’s hand immediately after a ranged attack."
+    ],
+    "alignment": "Neutral Evil",
+    "armorClass": 18,
+    "bonusActions": [
+      "Shadowy Teleport. The nycaloth has the Invisible condition for 1 minute, and it teleports up to 30 feet to an unoccupied space it can see. The condition ends early immediately after it deals damage."
+    ],
+    "challengeRating": "9",
+    "charisma": 15,
+    "charismaSave": 2,
+    "constitution": 19,
+    "constitutionSave": 4,
+    "creatureType": "Fiend",
+    "descriptiveTags": "(Yugoloth)",
+    "dexterity": 11,
+    "dexteritySave": 0,
+    "experiencePoints": 5000,
+    "experiencePointsAlt": null,
+    "gear": null,
+    "hitPointDice": "16d10 + 64",
+    "hitPoints": 152,
+    "immunities": [
+      "Acid",
+      "Poison; Poisoned"
+    ],
+    "initiativeModifier": "+4",
+    "initiativeScore": 14,
+    "intelligence": 12,
+    "intelligenceSave": 1,
+    "languages": "Abyssal, Infernal; telepathy 60 ft.",
+    "legendaryActions": [],
+    "name": "Nycaloth",
+    "proficiencyBonus": 4,
+    "reactions": [],
+    "resistances": [
+      "Cold",
+      "Fire",
+      "Lightning"
+    ],
+    "senses": [
+      "Blindsight 60 ft.",
+      "Passive Perception 14"
+    ],
+    "size": "Large",
+    "skills": [
+      "Perception +4",
+      "Stealth +4"
+    ],
+    "speed": "40 ft.",
+    "speedBurrow": null,
+    "speedClimb": null,
+    "speedFly": "60 ft.",
+    "speedSwim": null,
+    "strength": 20,
+    "strengthSave": 5,
+    "traits": [
+      "Fiendish Restoration. If the nycaloth dies outside Gehenna, its body dissolves into ichor, and it gains a new body instantly, reviving with all its Hit Points somewhere in Gehenna .",
+      "Magic Resistance. The nycaloth has Advantage on saving throws against spells and other magical effects."
+    ],
+    "vulnerabilities": null,
+    "wisdom": 10,
+    "wisdomSave": 0
+  }
+]
