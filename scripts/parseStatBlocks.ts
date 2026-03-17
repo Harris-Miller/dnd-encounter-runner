@@ -76,14 +76,17 @@ const stripHtml = (html: string): string => html.replace(/<[^>]+>/g, ' ').trim()
 
 const parseSizeTypeAlign = (text: string): [string | null, string | null, string | null, string | null] => {
   const trimmed = text.trim();
+
   if (trimmed === '') return [null, null, null, null];
+
   const match = trimmed.match(SIZE_TYPE_ALIGN_RE);
+
   if (!match) return [null, null, null, null];
-  const [, g1, g2, g3] = match;
-  if (g1 === undefined || g2 === undefined || g3 === undefined) return [null, null, null, null];
-  const size = g1.trim();
-  const typeAndTags = g2.trim();
-  const alignment = g3.trim();
+
+  const [, size, typeAndTags, alignment] = match.map((m: string | undefined) => m?.trim());
+
+  if (size == null || typeAndTags == null || alignment == null) return [null, null, null, null];
+
   const paren = typeAndTags.indexOf('(');
   const creatureType = paren >= 0 ? typeAndTags.slice(0, paren).trim() : typeAndTags;
   const descriptiveTags = paren >= 0 ? typeAndTags.slice(paren).trim() : null;
@@ -95,7 +98,7 @@ const parseSkills = (raw: string | null | undefined): string[] | null => {
   return raw
     .split(',')
     .map(p => p.trim())
-    .filter(Boolean);
+    .filter(p => p !== '');
 };
 
 const parseSenses = (raw: string | null | undefined): string[] | null => {
@@ -103,7 +106,7 @@ const parseSenses = (raw: string | null | undefined): string[] | null => {
   return raw
     .split(';')
     .map(p => p.trim())
-    .filter(Boolean);
+    .filter(p => p !== '');
 };
 
 const parseCommaSeparatedList = (raw: string | null | undefined): string[] => {
@@ -111,24 +114,25 @@ const parseCommaSeparatedList = (raw: string | null | undefined): string[] => {
   return raw
     .split(',')
     .map(p => p.trim())
-    .filter(Boolean);
+    .filter(p => p !== '');
 };
 
 const parseSpeed = (
   raw: string | null | undefined,
 ): [string | null, string | null, string | null, string | null, string | null] => {
-  if (raw === null || raw === undefined || raw.trim() === '') return [null, null, null, null, null];
-  const text = raw.trim();
+  const text = raw?.trim() ?? '';
+  if (text === '') return [null, null, null, null, null];
+
   const burrowM = text.match(/Burrow\s+([^,;]+?)(?=\s*[,;]|$)/i);
   const climbM = text.match(/Climb\s+([^,;]+?)(?=\s*[,;]|$)/i);
   const flyM = text.match(/Fly\s+([^,;]+?)(?=\s*[,;]|$)/i);
   const swimM = text.match(/Swim\s+([^,;]+?)(?=\s*[,;]|$)/i);
-  const burrow = burrowM?.[1] !== undefined ? burrowM[1].trim() : null;
-  const climb = climbM?.[1] !== undefined ? climbM[1].trim() : null;
-  const fly = flyM?.[1] !== undefined ? flyM[1].trim() : null;
-  const swim = swimM?.[1] !== undefined ? swimM[1].trim() : null;
+  const burrow = burrowM?.[1]?.trim() ?? null;
+  const climb = climbM?.[1]?.trim() ?? null;
+  const fly = flyM?.[1]?.trim() ?? null;
+  const swim = swimM?.[1]?.trim() ?? null;
   const [firstSeg] = text.split(',');
-  const first = firstSeg !== undefined ? firstSeg.trim() : '';
+  const first = firstSeg?.trim() ?? '';
   const isKeywordFirst = /^(Burrow|Climb|Fly|Swim)\s/i.test(first);
   const speed = isKeywordFirst ? null : first;
   return [speed, burrow, climb, fly, swim];
@@ -136,15 +140,18 @@ const parseSpeed = (
 
 const parseCrLine = (text: string): [string | null, number | null, string | null, number | null] => {
   const trimmed = text.trim();
+
   if (trimmed === '') return [null, null, null, null];
+
   const crMatch = trimmed.match(/^(\d+(?:\/\d+)?)\s*\(?/);
   const challengeRating = crMatch?.[1] ?? null;
   const xpMatch = trimmed.match(/XP\s*([\d,]+)/);
-  const experiencePoints = xpMatch?.[1] !== undefined ? Number.parseInt(xpMatch[1].replace(/,/g, ''), 10) : null;
+  const experiencePoints = xpMatch?.[1] != null ? Number.parseInt(xpMatch[1].replace(/,/g, ''), 10) : null;
   const altMatch = trimmed.match(/or\s+([\d,]+)\s+in\s+lair/i);
-  const experiencePointsAlt = altMatch?.[1] !== undefined ? altMatch[1].trim() : null;
+  const experiencePointsAlt = altMatch?.[1]?.trim() ?? null;
   const pbMatch = trimmed.match(/PB\s*([+-]?\d+)/);
-  const proficiencyBonus = pbMatch?.[1] !== undefined ? Number.parseInt(pbMatch[1], 10) : null;
+  const proficiencyBonus = pbMatch?.[1] != null ? Number.parseInt(pbMatch[1], 10) : null;
+
   return [challengeRating, experiencePoints, experiencePointsAlt, proficiencyBonus];
 };
 
@@ -152,6 +159,7 @@ const ABILITY_NAMES = ['Str', 'Dex', 'Con', 'Int', 'Wis', 'Cha'] as const;
 
 const parseAbilities = (html: string): Record<string, AbilityEntry> => {
   const out: Record<string, AbilityEntry> = {};
+
   for (const ab of ABILITY_NAMES) {
     const pat = new RegExp(
       `<th>${ab}</th>\\s*<td>(\\d+)</td>(?:\\s*<[^>]+>)*\\s*<strong>([+-]?\\d+)</strong>(?:\\s*<[^>]+>)*\\s*<strong>([+-]?\\d+)</strong>`,
@@ -166,6 +174,7 @@ const parseAbilities = (html: string): Record<string, AbilityEntry> => {
       };
     }
   }
+
   return out;
 };
 
@@ -179,15 +188,14 @@ const AB_MAP: Record<string, string> = {
 };
 
 const buildFlatAbilities = (abilities: Record<string, AbilityEntry>): Record<string, number> => {
-  const flat: Record<string, number> = {};
-  for (const [ab, key] of Object.entries(AB_MAP)) {
-    const entry = abilities[ab];
-    if (entry) {
-      flat[key] = entry.score;
-      flat[`${key}Save`] = entry.save;
-    }
-  }
-  return flat;
+  return Object.entries(AB_MAP)
+    .map(([ab, key]) => [abilities[ab], key] as const)
+    .filter((tuple): tuple is [AbilityEntry, string] => tuple[0] != null)
+    .reduce<Record<string, number>>((acc, [entry, key]) => {
+      acc[key] = entry.score;
+      acc[`${key}Save`] = entry.save;
+      return acc;
+    }, {});
 };
 
 interface HeaderMatch {
@@ -215,7 +223,8 @@ const extractTextsFromHtml = (s: string): string[] => {
   const pBlocks = [...s.matchAll(/<p[^>]*>([\s\S]*?)<\/p>/g)];
   return pBlocks.map(m => {
     const [, content] = m;
-    return content !== undefined ? stripHtml(content).replace(/\s+/g, ' ').trim() : '';
+    if (content == null) return '';
+    return stripHtml(content).replace(/\s+/g, ' ').trim();
   });
 };
 
