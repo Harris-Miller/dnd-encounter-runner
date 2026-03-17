@@ -10,10 +10,6 @@ const textArray = () =>
     .default(sql`ARRAY[]::text[]`);
 
 export const monsters = pgTable('monsters', {
-  id: uuidPk(),
-  createdAt: timestamp({ withTimezone: true }).defaultNow(),
-  updatedAt: timestamp({ withTimezone: true }).defaultNow(),
-
   actions: textArray(),
   alignment: text().notNull(),
   armorClass: integer().notNull(),
@@ -23,6 +19,7 @@ export const monsters = pgTable('monsters', {
   charismaSave: integer().notNull(),
   constitution: integer().notNull(),
   constitutionSave: integer().notNull(),
+  createdAt: timestamp({ withTimezone: true }).defaultNow(),
   creatureType: text().notNull(),
   descriptiveTags: text(),
   dexterity: integer().notNull(),
@@ -32,6 +29,7 @@ export const monsters = pgTable('monsters', {
   gear: text(),
   hitPointDice: text().notNull(),
   hitPoints: integer().notNull(),
+  id: uuidPk(),
   immunities: textArray(),
   initiativeModifier: text().notNull(),
   initiativeScore: integer().notNull(),
@@ -54,6 +52,9 @@ export const monsters = pgTable('monsters', {
   strength: integer().notNull(),
   strengthSave: integer().notNull(),
   traits: textArray(),
+  updatedAt: timestamp({ withTimezone: true })
+    .defaultNow()
+    .$onUpdateFn(() => sql`now()`),
   vulnerabilities: text(),
   wisdom: integer().notNull(),
   wisdomSave: integer().notNull(),

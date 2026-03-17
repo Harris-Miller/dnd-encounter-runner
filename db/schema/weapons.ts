@@ -1,3 +1,4 @@
+import { sql } from 'drizzle-orm';
 import { integer, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 
 import { uuidFk, uuidFkCascade, uuidPk } from '../column.utils';
@@ -8,7 +9,9 @@ export const mastery = pgTable('mastery', {
   createdAt: timestamp({ withTimezone: true }).defaultNow(),
   description: text().notNull(),
   id: uuidPk(),
-  updatedAt: timestamp({ withTimezone: true }).defaultNow(),
+  updatedAt: timestamp({ withTimezone: true })
+    .defaultNow()
+    .$onUpdateFn(() => sql`now()`),
 });
 
 export const weapons = pgTable('weapons', {
@@ -23,7 +26,9 @@ export const weapons = pgTable('weapons', {
   id: uuidPk(),
   masteryId: uuidFk(() => mastery.id).notNull(),
   name: text().notNull().unique(),
-  updatedAt: timestamp({ withTimezone: true }).defaultNow(),
+  updatedAt: timestamp({ withTimezone: true })
+    .defaultNow()
+    .$onUpdateFn(() => sql`now()`),
 });
 
 export const weaponProperties = pgTable('weapon_properties', {
@@ -32,13 +37,17 @@ export const weaponProperties = pgTable('weapon_properties', {
   name: text().notNull(),
   rangeLong: integer(),
   rangeShort: integer(),
-  updatedAt: timestamp({ withTimezone: true }).defaultNow(),
+  updatedAt: timestamp({ withTimezone: true })
+    .defaultNow()
+    .$onUpdateFn(() => sql`now()`),
   versatileDamageDie: text(),
 });
 
 export const weaponToWeaponProperties = pgTable('weapon_to_weapon_properties', {
   createdAt: timestamp({ withTimezone: true }).defaultNow(),
-  updatedAt: timestamp({ withTimezone: true }).defaultNow(),
+  updatedAt: timestamp({ withTimezone: true })
+    .defaultNow()
+    .$onUpdateFn(() => sql`now()`),
   weaponId: uuidFkCascade(() => weapons.id).notNull(),
   weaponPropertyId: uuidFkCascade(() => weaponProperties.id).notNull(),
 });
