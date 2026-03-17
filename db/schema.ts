@@ -2,6 +2,7 @@ export * from './schema/general';
 export * from './schema/spells';
 export * from './schema/weapons';
 export * from './schema/profile';
+export * from './schema/monsters';
 
 // export const descriptiveTags = pgTable('descriptive_tags', {
 //   id: ulidPk(),
