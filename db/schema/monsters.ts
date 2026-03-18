@@ -1,7 +1,7 @@
 import { sql } from 'drizzle-orm';
-import { integer, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
+import { integer, pgTable, text } from 'drizzle-orm/pg-core';
 
-import { uuidPk } from '../column.utils';
+import { createdAt, updatedAt, uuidPk } from '../column.utils';
 
 const textArray = () =>
   text()
@@ -19,7 +19,7 @@ export const monsters = pgTable.withRLS('monsters', {
   charismaSave: integer().notNull(),
   constitution: integer().notNull(),
   constitutionSave: integer().notNull(),
-  createdAt: timestamp({ withTimezone: true }).defaultNow(),
+  createdAt: createdAt(),
   creatureType: text().notNull(),
   descriptiveTags: text(),
   dexterity: integer().notNull(),
@@ -52,9 +52,7 @@ export const monsters = pgTable.withRLS('monsters', {
   strength: integer().notNull(),
   strengthSave: integer().notNull(),
   traits: textArray(),
-  updatedAt: timestamp({ withTimezone: true })
-    .defaultNow()
-    .$onUpdateFn(() => sql`now()`),
+  updatedAt: updatedAt(),
   vulnerabilities: text(),
   wisdom: integer().notNull(),
   wisdomSave: integer().notNull(),

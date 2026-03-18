@@ -1,11 +1,10 @@
-import { sql } from 'drizzle-orm';
-import { boolean, integer, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
+import { boolean, integer, pgTable, text } from 'drizzle-orm/pg-core';
 
-import { uuidPk } from '../column.utils';
+import { createdAt, updatedAt, uuidPk } from '../column.utils';
 
 export const spells = pgTable.withRLS('spells', {
   castingTime: text().notNull(),
-  createdAt: timestamp({ withTimezone: true }).defaultNow(),
+  createdAt: createdAt(),
   description: text(),
   duration: text().notNull(),
   id: uuidPk(),
@@ -20,7 +19,5 @@ export const spells = pgTable.withRLS('spells', {
   range: text().notNull(),
   school: text().notNull(),
   upcastDescription: text(),
-  updatedAt: timestamp({ withTimezone: true })
-    .defaultNow()
-    .$onUpdateFn(() => sql`now()`),
+  updatedAt: updatedAt(),
 });

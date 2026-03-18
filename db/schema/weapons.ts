@@ -1,17 +1,14 @@
-import { sql } from 'drizzle-orm';
-import { integer, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
+import { integer, pgTable, text } from 'drizzle-orm/pg-core';
 
-import { uuidFk, uuidFkCascade, uuidPk } from '../column.utils';
+import { createdAt, updatedAt, uuidFk, uuidFkCascade, uuidPk } from '../column.utils';
 
 // import { damageTypes } from './general';
 
 export const mastery = pgTable.withRLS('mastery', {
-  createdAt: timestamp({ withTimezone: true }).defaultNow(),
+  createdAt: createdAt(),
   description: text().notNull(),
   id: uuidPk(),
-  updatedAt: timestamp({ withTimezone: true })
-    .defaultNow()
-    .$onUpdateFn(() => sql`now()`),
+  updatedAt: updatedAt(),
 });
 
 export const weapons = pgTable.withRLS('weapons', {
@@ -19,35 +16,29 @@ export const weapons = pgTable.withRLS('weapons', {
   category: text().notNull(),
   /** melee or ranged */
   classification: text().notNull(),
-  createdAt: timestamp({ withTimezone: true }).defaultNow(),
+  createdAt: createdAt(),
   // TODO: these need to be combined and made into an array
   // damageDie: text().notNull(),
   // damageTypeId: ulidFk(() => damageTypes.id),
   id: uuidPk(),
   masteryId: uuidFk(() => mastery.id).notNull(),
   name: text().notNull().unique(),
-  updatedAt: timestamp({ withTimezone: true })
-    .defaultNow()
-    .$onUpdateFn(() => sql`now()`),
+  updatedAt: updatedAt(),
 });
 
 export const weaponProperties = pgTable.withRLS('weapon_properties', {
-  createdAt: timestamp({ withTimezone: true }).defaultNow(),
+  createdAt: createdAt(),
   id: uuidPk(),
   name: text().notNull(),
   rangeLong: integer(),
   rangeShort: integer(),
-  updatedAt: timestamp({ withTimezone: true })
-    .defaultNow()
-    .$onUpdateFn(() => sql`now()`),
+  updatedAt: updatedAt(),
   versatileDamageDie: text(),
 });
 
 export const weaponToWeaponProperties = pgTable.withRLS('weapon_to_weapon_properties', {
-  createdAt: timestamp({ withTimezone: true }).defaultNow(),
-  updatedAt: timestamp({ withTimezone: true })
-    .defaultNow()
-    .$onUpdateFn(() => sql`now()`),
+  createdAt: createdAt(),
+  updatedAt: updatedAt(),
   weaponId: uuidFkCascade(() => weapons.id).notNull(),
   weaponPropertyId: uuidFkCascade(() => weaponProperties.id).notNull(),
 });
