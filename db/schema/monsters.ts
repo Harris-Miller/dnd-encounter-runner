@@ -9,7 +9,7 @@ const textArray = () =>
     .notNull()
     .default(sql`ARRAY[]::text[]`);
 
-export const monsters = pgTable('monsters', {
+export const monsters = pgTable.withRLS('monsters', {
   actions: textArray(),
   alignment: text().notNull(),
   armorClass: integer().notNull(),

@@ -3,7 +3,7 @@ import { pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 
 import { uuidPk } from '../column.utils';
 
-export const damageTypes = pgTable('damage_types', {
+export const damageTypes = pgTable.withRLS('damage_types', {
   createdAt: timestamp({ withTimezone: true }).defaultNow(),
   id: uuidPk(),
   name: text().notNull(),

@@ -18,7 +18,7 @@ export const profiles = pgTable.withRLS('profiles', {
     .references(() => users.id, { onDelete: 'cascade' }),
 });
 
-export const encounters = pgTable('encounters', {
+export const encounters = pgTable.withRLS('encounters', {
   createdAt: timestamp({ withTimezone: true }).defaultNow(),
   id: uuidPk(),
   profileId: uuidFkCascade(() => profiles.id),

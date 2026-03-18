@@ -3,7 +3,7 @@ import { boolean, integer, pgTable, text, timestamp } from 'drizzle-orm/pg-core'
 
 import { uuidPk } from '../column.utils';
 
-export const spells = pgTable('spells', {
+export const spells = pgTable.withRLS('spells', {
   castingTime: text().notNull(),
   createdAt: timestamp({ withTimezone: true }).defaultNow(),
   description: text(),

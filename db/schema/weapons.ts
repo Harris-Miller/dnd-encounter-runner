@@ -5,7 +5,7 @@ import { uuidFk, uuidFkCascade, uuidPk } from '../column.utils';
 
 // import { damageTypes } from './general';
 
-export const mastery = pgTable('mastery', {
+export const mastery = pgTable.withRLS('mastery', {
   createdAt: timestamp({ withTimezone: true }).defaultNow(),
   description: text().notNull(),
   id: uuidPk(),
@@ -14,7 +14,7 @@ export const mastery = pgTable('mastery', {
     .$onUpdateFn(() => sql`now()`),
 });
 
-export const weapons = pgTable('weapons', {
+export const weapons = pgTable.withRLS('weapons', {
   /** simple or martial */
   category: text().notNull(),
   /** melee or ranged */
@@ -31,7 +31,7 @@ export const weapons = pgTable('weapons', {
     .$onUpdateFn(() => sql`now()`),
 });
 
-export const weaponProperties = pgTable('weapon_properties', {
+export const weaponProperties = pgTable.withRLS('weapon_properties', {
   createdAt: timestamp({ withTimezone: true }).defaultNow(),
   id: uuidPk(),
   name: text().notNull(),
@@ -43,7 +43,7 @@ export const weaponProperties = pgTable('weapon_properties', {
   versatileDamageDie: text(),
 });
 
-export const weaponToWeaponProperties = pgTable('weapon_to_weapon_properties', {
+export const weaponToWeaponProperties = pgTable.withRLS('weapon_to_weapon_properties', {
   createdAt: timestamp({ withTimezone: true }).defaultNow(),
   updatedAt: timestamp({ withTimezone: true })
     .defaultNow()
