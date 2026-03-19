@@ -3,6 +3,7 @@ export * from './schema/spells';
 export * from './schema/weapons';
 export * from './schema/profile';
 export * from './schema/monsters';
+export * from './schema/magicItems';
 
 // export const descriptiveTags = pgTable('descriptive_tags', {
 //   id: ulidPk(),
