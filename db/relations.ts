@@ -2,7 +2,14 @@ import { defineRelations } from 'drizzle-orm';
 
 import * as schema from './schema';
 
-export const relations = defineRelations(schema, _r => ({}));
+export const relations = defineRelations(schema, r => ({
+  weapons: {
+    mastery: r.one.mastery({
+      from: r.weapons.masteryId,
+      to: r.mastery.id,
+    }),
+  },
+}));
 
 // export const relations = defineRelations(schema, r => ({
 //   armor: {
