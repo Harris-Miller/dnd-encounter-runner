@@ -1,5 +1,7 @@
+import { Container } from '@mui/material';
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router';
 
+import { Header } from '../components/Header';
 import { supabase } from '../services/supabase';
 
 export const Route = createFileRoute('/home')({
@@ -20,5 +22,12 @@ export const Route = createFileRoute('/home')({
       to: '/login',
     });
   },
-  component: () => <Outlet />,
+  component: () => (
+    <>
+      <Header />
+      <Container maxWidth="lg" sx={{ marginTop: 8 }}>
+        <Outlet />
+      </Container>
+    </>
+  ),
 });
