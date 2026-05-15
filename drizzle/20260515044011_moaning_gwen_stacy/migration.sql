@@ -1,0 +1,2 @@
+CREATE TYPE "magic_item_variant_rarity" AS ENUM('Artifact', 'Legendary', 'Rare', 'Uncommon', 'Very Rare');--> statement-breakpoint
+ALTER TABLE "magic_items" ADD COLUMN "variant_rarities" "magic_item_variant_rarity"[];
