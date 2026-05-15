@@ -26,8 +26,9 @@ dist-ssr
 # Test coverage
 coverage
 
-# Vitest
+# dependency tool cache dirs
 .vitest
+.tanstack
 
 # .env
 .env*
