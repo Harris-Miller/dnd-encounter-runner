@@ -1,6 +1,14 @@
-import { boolean, pgTable, text } from 'drizzle-orm/pg-core';
+import { boolean, pgEnum, pgTable, text } from 'drizzle-orm/pg-core';
 
 import { createdAt, updatedAt, uuidPk } from '../column.utils';
+
+export const magicItemVariantRarityEnum = pgEnum('magic_item_variant_rarity', [
+  'Artifact',
+  'Legendary',
+  'Rare',
+  'Uncommon',
+  'Very Rare',
+]);
 
 export const magicItems = pgTable.withRLS('magic_items', {
   categorySpecifierText: text(),
@@ -16,4 +24,5 @@ export const magicItems = pgTable.withRLS('magic_items', {
   requiresAttunement: boolean().notNull(),
   slug: text(),
   updatedAt: updatedAt(),
+  variantRarities: magicItemVariantRarityEnum().array(),
 });
