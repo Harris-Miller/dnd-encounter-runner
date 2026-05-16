@@ -1,26 +1,12 @@
 import { Container } from '@mui/material';
-import { createFileRoute, Outlet, redirect } from '@tanstack/react-router';
+import { createFileRoute, Outlet } from '@tanstack/react-router';
 
 import { Header } from '../components/Header';
-import { supabase } from '../services/supabase';
+import { requireProfileName } from '../routing/routeGuards';
 
 export const Route = createFileRoute('/home')({
   beforeLoad: async () => {
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-
-    if (session != null) {
-      return;
-    }
-
-    const redirectPath = encodeURIComponent(window.location.pathname + window.location.search + window.location.hash);
-
-    // eslint-disable-next-line @typescript-eslint/only-throw-error -- TanStack Router redirect API
-    throw redirect({
-      search: { redirect: redirectPath },
-      to: '/login',
-    });
+    await requireProfileName();
   },
   component: () => (
     <>

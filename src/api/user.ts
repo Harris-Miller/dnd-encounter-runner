@@ -11,4 +11,7 @@ export const queryUser = queryOptions({
     return data.user;
   },
   queryKey: ['user'],
+  refetchOnMount: false,
+  refetchOnWindowFocus: false,
+  staleTime: Infinity,
 });

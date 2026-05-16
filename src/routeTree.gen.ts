@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as LogoutRouteImport } from './routes/logout'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as HomeRouteImport } from './routes/home'
+import { Route as CreateProfileRouteImport } from './routes/createProfile'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as HomeIndexRouteImport } from './routes/home/index'
 
@@ -30,6 +31,11 @@ const HomeRoute = HomeRouteImport.update({
   path: '/home',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CreateProfileRoute = CreateProfileRouteImport.update({
+  id: '/createProfile',
+  path: '/createProfile',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -43,6 +49,7 @@ const HomeIndexRoute = HomeIndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/createProfile': typeof CreateProfileRoute
   '/home': typeof HomeRouteWithChildren
   '/login': typeof LoginRoute
   '/logout': typeof LogoutRoute
@@ -50,6 +57,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/createProfile': typeof CreateProfileRoute
   '/login': typeof LoginRoute
   '/logout': typeof LogoutRoute
   '/home': typeof HomeIndexRoute
@@ -57,6 +65,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/createProfile': typeof CreateProfileRoute
   '/home': typeof HomeRouteWithChildren
   '/login': typeof LoginRoute
   '/logout': typeof LogoutRoute
@@ -64,14 +73,22 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/home' | '/login' | '/logout' | '/home/'
+  fullPaths: '/' | '/createProfile' | '/home' | '/login' | '/logout' | '/home/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/logout' | '/home'
-  id: '__root__' | '/' | '/home' | '/login' | '/logout' | '/home/'
+  to: '/' | '/createProfile' | '/login' | '/logout' | '/home'
+  id:
+    | '__root__'
+    | '/'
+    | '/createProfile'
+    | '/home'
+    | '/login'
+    | '/logout'
+    | '/home/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CreateProfileRoute: typeof CreateProfileRoute
   HomeRoute: typeof HomeRouteWithChildren
   LoginRoute: typeof LoginRoute
   LogoutRoute: typeof LogoutRoute
@@ -98,6 +115,13 @@ declare module '@tanstack/react-router' {
       path: '/home'
       fullPath: '/home'
       preLoaderRoute: typeof HomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/createProfile': {
+      id: '/createProfile'
+      path: '/createProfile'
+      fullPath: '/createProfile'
+      preLoaderRoute: typeof CreateProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -129,6 +153,7 @@ const HomeRouteWithChildren = HomeRoute._addFileChildren(HomeRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CreateProfileRoute: CreateProfileRoute,
   HomeRoute: HomeRouteWithChildren,
   LoginRoute: LoginRoute,
   LogoutRoute: LogoutRoute,

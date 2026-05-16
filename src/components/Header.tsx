@@ -21,7 +21,10 @@ import { useState } from 'react';
 import type { FC, MouseEvent } from 'react';
 import { match } from 'ts-pattern';
 
+import { queryProfile } from '../api/profile';
 import { queryUser } from '../api/user';
+
+import { ProfileEditDialog } from './ProfileEditDialog';
 
 export const Header: FC = () => {
   const { mode, setMode } = useColorScheme();
@@ -29,10 +32,13 @@ export const Header: FC = () => {
 
   const [themeAnchorEl, setThemeAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [avatarAnchorEl, setAvatarAnchorEl] = useState<HTMLElement | null>(null);
+  const [profileDialogOpen, setProfileDialogOpen] = useState(false);
 
   const user = useQuery(queryUser);
+  const profile = useQuery(queryProfile);
 
-  const avatarUrl = user.data?.user_metadata.avatar_url as string | undefined;
+  const avatarUrl = profile.data?.avatar_url ?? (user.data?.user_metadata.avatar_url as string | undefined);
+  const avatarAlt = profile.data?.name ?? '';
 
   const handleThemeOpen = (event: MouseEvent<HTMLButtonElement>) => {
     setThemeAnchorEl(event.currentTarget);
@@ -48,6 +54,15 @@ export const Header: FC = () => {
 
   const handleAvatarClose = () => {
     setAvatarAnchorEl(null);
+  };
+
+  const handleProfileOpen = () => {
+    handleAvatarClose();
+    setProfileDialogOpen(true);
+  };
+
+  const handleProfileDialogClose = () => {
+    setProfileDialogOpen(false);
   };
 
   const handleLogout = () => {
@@ -114,7 +129,7 @@ export const Header: FC = () => {
             </Popover>
             <Tooltip title="Account">
               <IconButton onClick={handleAvatarOpen} sx={{ p: 0 }}>
-                <Avatar alt="Name goes Here" src={avatarUrl} />
+                <Avatar alt={avatarAlt} src={avatarUrl} />
               </IconButton>
             </Tooltip>
             <Menu
@@ -130,11 +145,13 @@ export const Header: FC = () => {
                 vertical: 'top',
               }}
             >
+              <MenuItem onClick={handleProfileOpen}>Profile</MenuItem>
               <MenuItem onClick={handleLogout}>Logout</MenuItem>
             </Menu>
           </Box>
         </Toolbar>
       </AppBar>
+      <ProfileEditDialog onClose={handleProfileDialogClose} open={profileDialogOpen} />
       <Toolbar />
     </>
   );

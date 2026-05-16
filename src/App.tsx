@@ -1,6 +1,7 @@
 import CssBaseline from '@mui/material/CssBaseline';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import type { FC } from 'react';
 
 import { queryClient } from './queryClient';
@@ -18,6 +19,7 @@ export const App: FC = () => {
       <CssBaseline />
       <QueryClientProvider client={queryClient}>
         <Router />
+        <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </ThemeProvider>
   );

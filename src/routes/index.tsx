@@ -3,8 +3,10 @@ import { createFileRoute, redirect } from '@tanstack/react-router';
 import type { FC } from 'react';
 
 // import dndLogo from '../assets/dnd-logo.svg';
+import { hasProfileName, queryProfile } from '../api/profile';
 import { FullScreenCenter } from '../components/FullScreenCenter';
 import { RouterLink } from '../components/RouterLink';
+import { queryClient } from '../queryClient';
 import { supabase } from '../services/supabase';
 
 // const Img = styled('img')();
@@ -33,15 +35,16 @@ export const Route = createFileRoute('/')({
       data: { session },
     } = await supabase.auth.getSession();
 
-    console.log(session);
-
-    // when a session exists, redirect to `/home`
-    if (session != null) {
-      // eslint-disable-next-line @typescript-eslint/only-throw-error -- TanStack Router redirect API
-      throw redirect({
-        to: '/home',
-      });
+    if (session == null) {
+      return;
     }
+
+    const profile = await queryClient.fetchQuery(queryProfile);
+
+    // eslint-disable-next-line @typescript-eslint/only-throw-error -- TanStack Router redirect API
+    throw redirect({
+      to: hasProfileName(profile.name) ? '/home' : '/createProfile',
+    });
   },
   component: IndexComponent,
 });
