@@ -39,7 +39,12 @@ export const RemindersDisplay: FC = () => {
         </Box>
 
         {sortedReminders.length === 0 ? (
-          <Typography color="text.secondary" variant="body2">
+          <Typography
+            sx={{
+              color: 'text.secondary',
+            }}
+            variant="body2"
+          >
             No reminders yet. Record actions to generate reminders.
           </Typography>
         ) : (

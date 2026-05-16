@@ -89,7 +89,12 @@ export const ConditionManager: FC = () => {
                 {character.name}
               </Typography>
               {character.activeEffects.length === 0 ? (
-                <Typography color="text.secondary" variant="body2">
+                <Typography
+                  sx={{
+                    color: 'text.secondary',
+                  }}
+                  variant="body2"
+                >
                   No active conditions
                 </Typography>
               ) : (

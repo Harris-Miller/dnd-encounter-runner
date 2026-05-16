@@ -75,7 +75,12 @@ const HomeComponentOld: FC = () => {
             </Button>
           </Box>
           {encounterList.length === 0 ? (
-            <Typography color="text.secondary" variant="body2">
+            <Typography
+              sx={{
+                color: 'text.secondary',
+              }}
+              variant="body2"
+            >
               No encounters created yet. Create an encounter to get started.
             </Typography>
           ) : (
@@ -121,7 +126,13 @@ const HomeComponentOld: FC = () => {
                               </Typography>
                             </Box>
                           ) : (
-                            <Typography color="text.secondary" component="span" variant="body2">
+                            <Typography
+                              component="span"
+                              sx={{
+                                color: 'text.secondary',
+                              }}
+                              variant="body2"
+                            >
                               None
                             </Typography>
                           )}

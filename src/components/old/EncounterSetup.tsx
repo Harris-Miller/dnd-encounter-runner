@@ -134,7 +134,13 @@ export const EncounterSetup: FC = () => {
           <Typography gutterBottom variant="h5">
             Create Encounter
           </Typography>
-          <Typography color="text.secondary" component="p" variant="body2">
+          <Typography
+            component="p"
+            sx={{
+              color: 'text.secondary',
+            }}
+            variant="body2"
+          >
             Start a new encounter to begin tracking characters and conditions.
           </Typography>
           <Button onClick={handleCreateEncounter} startIcon={<AddIcon />} variant="contained">

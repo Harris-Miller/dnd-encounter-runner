@@ -27,7 +27,12 @@ export const CharacterList: FC = () => {
     return (
       <Card>
         <CardContent>
-          <Typography color="text.secondary" variant="body2">
+          <Typography
+            sx={{
+              color: 'text.secondary',
+            }}
+            variant="body2"
+          >
             No characters in encounter. Add players or monsters to get started.
           </Typography>
         </CardContent>
@@ -78,7 +83,12 @@ export const CharacterList: FC = () => {
 
                 {character.activeEffects.length > 0 && (
                   <Box sx={{ mb: 1 }}>
-                    <Typography color="text.secondary" variant="caption">
+                    <Typography
+                      sx={{
+                        color: 'text.secondary',
+                      }}
+                      variant="caption"
+                    >
                       Conditions:
                     </Typography>
                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mt: 0.5 }}>
@@ -102,7 +112,12 @@ export const CharacterList: FC = () => {
                   character.damageVulnerabilities.length > 0 ||
                   character.damageImmunities.length > 0) && (
                   <Box>
-                    <Typography color="text.secondary" variant="caption">
+                    <Typography
+                      sx={{
+                        color: 'text.secondary',
+                      }}
+                      variant="caption"
+                    >
                       Damage Modifiers:
                     </Typography>
                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mt: 0.5 }}>
