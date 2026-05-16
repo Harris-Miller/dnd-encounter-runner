@@ -1,9 +1,22 @@
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import SettingsBrightnessIcon from '@mui/icons-material/SettingsBrightness';
-import { AppBar, Avatar, Box, ButtonGroup, IconButton, Popover, Toolbar, Tooltip, Typography } from '@mui/material';
+import {
+  AppBar,
+  Avatar,
+  Box,
+  ButtonGroup,
+  IconButton,
+  Menu,
+  MenuItem,
+  Popover,
+  Toolbar,
+  Tooltip,
+  Typography,
+} from '@mui/material';
 import { useColorScheme } from '@mui/material/styles';
 import { useQuery } from '@tanstack/react-query';
+import { useNavigate } from '@tanstack/react-router';
 import { useState } from 'react';
 import type { FC, MouseEvent } from 'react';
 import { match } from 'ts-pattern';
@@ -12,22 +25,38 @@ import { queryUser } from '../api/user';
 
 export const Header: FC = () => {
   const { mode, setMode } = useColorScheme();
+  const navigate = useNavigate();
 
-  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+  const [themeAnchorEl, setThemeAnchorEl] = useState<HTMLButtonElement | null>(null);
+  const [avatarAnchorEl, setAvatarAnchorEl] = useState<HTMLElement | null>(null);
 
   const user = useQuery(queryUser);
 
   const avatarUrl = user.data?.user_metadata.avatar_url as string | undefined;
 
-  const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
+  const handleThemeOpen = (event: MouseEvent<HTMLButtonElement>) => {
+    setThemeAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
-    setAnchorEl(null);
+  const handleThemeClose = () => {
+    setThemeAnchorEl(null);
   };
 
-  const open = Boolean(anchorEl);
+  const handleAvatarOpen = (event: MouseEvent<HTMLButtonElement>) => {
+    setAvatarAnchorEl(event.currentTarget);
+  };
+
+  const handleAvatarClose = () => {
+    setAvatarAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    handleAvatarClose();
+    navigate({ to: '/logout' });
+  };
+
+  const themeOpen = Boolean(themeAnchorEl);
+  const avatarMenuOpen = Boolean(avatarAnchorEl);
 
   return (
     <>
@@ -39,7 +68,7 @@ export const Header: FC = () => {
             </Typography>
           </Box>
           <Box sx={{ flexGrow: 0 }}>
-            <IconButton color="inherit" onClick={handleClick}>
+            <IconButton color="inherit" onClick={handleThemeOpen}>
               {match(mode!)
                 .with('light', () => <LightModeIcon />)
                 .with('system', () => <SettingsBrightnessIcon />)
@@ -47,13 +76,13 @@ export const Header: FC = () => {
                 .exhaustive()}
             </IconButton>
             <Popover
-              anchorEl={anchorEl}
+              anchorEl={themeAnchorEl}
               anchorOrigin={{
                 horizontal: 'center',
                 vertical: 'bottom',
               }}
-              onClose={handleClose}
-              open={open}
+              onClose={handleThemeClose}
+              open={themeOpen}
               transformOrigin={{
                 horizontal: 'center',
                 vertical: 'top',
@@ -83,11 +112,26 @@ export const Header: FC = () => {
                 </IconButton>
               </ButtonGroup>
             </Popover>
-            <Tooltip title="Open settings">
-              <IconButton sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src={avatarUrl} />
+            <Tooltip title="Account">
+              <IconButton onClick={handleAvatarOpen} sx={{ p: 0 }}>
+                <Avatar alt="Name goes Here" src={avatarUrl} />
               </IconButton>
             </Tooltip>
+            <Menu
+              anchorEl={avatarAnchorEl}
+              anchorOrigin={{
+                horizontal: 'right',
+                vertical: 'bottom',
+              }}
+              onClose={handleAvatarClose}
+              open={avatarMenuOpen}
+              transformOrigin={{
+                horizontal: 'right',
+                vertical: 'top',
+              }}
+            >
+              <MenuItem onClick={handleLogout}>Logout</MenuItem>
+            </Menu>
           </Box>
         </Toolbar>
       </AppBar>
