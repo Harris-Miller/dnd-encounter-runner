@@ -1,6 +1,6 @@
 import { boolean, pgEnum, pgTable, text } from 'drizzle-orm/pg-core';
 
-import { createdAt, updatedAt, uuidPk } from '../column.utils';
+import { createdAt, updatedAt, uuidPk } from '../column.utils.ts';
 
 export const magicItemVariantRarityEnum = pgEnum('magic_item_variant_rarity', [
   'Artifact',

@@ -1,6 +1,6 @@
 import { integer, pgTable, text } from 'drizzle-orm/pg-core';
 
-import { createdAt, updatedAt, uuidFk, uuidFkCascade, uuidPk } from '../column.utils';
+import { createdAt, updatedAt, uuidFk, uuidFkCascade, uuidPk } from '../column.utils.ts';
 
 // import { damageTypes } from './general';
 

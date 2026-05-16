@@ -1,6 +1,6 @@
 import { boolean, integer, pgTable, text } from 'drizzle-orm/pg-core';
 
-import { createdAt, updatedAt, uuidPk } from '../column.utils';
+import { createdAt, updatedAt, uuidPk } from '../column.utils.ts';
 
 export const spells = pgTable.withRLS('spells', {
   castingTime: text().notNull(),

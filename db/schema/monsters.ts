@@ -1,7 +1,7 @@
 import { sql } from 'drizzle-orm';
 import { integer, pgTable, text } from 'drizzle-orm/pg-core';
 
-import { createdAt, updatedAt, uuidPk } from '../column.utils';
+import { createdAt, updatedAt, uuidPk } from '../column.utils.ts';
 
 const textArray = () =>
   text()

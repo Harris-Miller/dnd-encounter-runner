@@ -1,9 +1,9 @@
-export * from './schema/general';
-export * from './schema/spells';
-export * from './schema/weapons';
-export * from './schema/profile';
-export * from './schema/monsters';
-export * from './schema/magicItems';
+export * from './schema/general.ts';
+export * from './schema/spells.ts';
+export * from './schema/weapons.ts';
+export * from './schema/profile.ts';
+export * from './schema/monsters.ts';
+export * from './schema/magicItems.ts';
 
 // export const descriptiveTags = pgTable('descriptive_tags', {
 //   id: ulidPk(),

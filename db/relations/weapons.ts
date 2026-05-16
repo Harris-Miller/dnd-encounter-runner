@@ -1,6 +1,6 @@
 import { defineRelationsPart } from 'drizzle-orm';
 
-import * as schema from '../schema';
+import * as schema from '../schema.ts';
 
 export const weaponsRelations = defineRelationsPart(schema, r => ({
   weaponProperties: {

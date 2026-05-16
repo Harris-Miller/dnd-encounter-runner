@@ -21,6 +21,15 @@ const eslintConfig = defineConfig([
     },
   },
   {
+    files: ['db/**'],
+    languageOptions: {
+      globals: globals.nodeBuiltin,
+    },
+    rules: {
+      'no-await-in-loop': 'off',
+    },
+  },
+  {
     rules: {
       'no-console': 'off',
       'prefer-arrow/prefer-arrow-functions': 'off',

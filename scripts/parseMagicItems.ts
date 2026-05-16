@@ -2,7 +2,7 @@
  * Parse stuff/magicItems.html (D&D Beyond magic items) into a flat JSON array
  * written to data/magicItems.json.
  *
- * Run: pnpm run parse:magic-items
+ * Run: pnpm run parse:magic-items (Node runs this file as TypeScript; see tsconfig.node.json)
  */
 
 import { parse } from 'node-html-parser';

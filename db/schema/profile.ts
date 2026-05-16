@@ -1,7 +1,7 @@
 import { pgTable, text, uuid } from 'drizzle-orm/pg-core';
 
-import { createdAt, updatedAt, uuidFkCascade, uuidPk } from '../column.utils';
-import { users } from '../transient/auth';
+import { createdAt, updatedAt, uuidFkCascade, uuidPk } from '../column.utils.ts';
+import { users } from '../transient/auth.ts';
 
 export const profiles = pgTable.withRLS('profiles', {
   avatarUrl: text(),
