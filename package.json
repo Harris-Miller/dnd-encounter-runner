@@ -9,6 +9,7 @@
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio",
     "db:seed": "node db/seeds/run.ts",
+    "db:gen-types": "supabase gen types typescript --local > src/types/database.gen.ts",
     "parse:magic-items": "node scripts/parseMagicItems.ts",
     "dev": "vite",
     "build": "tsc -b && vite build",
@@ -33,6 +34,7 @@
     "ramda": "^0.32.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
+    "try": "^1.0.3",
     "ts-pattern": "^5.9.0",
     "ulid": "^3.0.2",
     "zustand": "^5.0.13"
@@ -56,6 +58,7 @@
     "eslint-config-harris": "^5.1.2",
     "node-html-parser": "^7.1.0",
     "postgres": "^3.4.9",
+    "supabase": "2.92.0",
     "typescript": "^5.9.3",
     "vite": "^8.0.13",
     "vitest": "^4.1.6"

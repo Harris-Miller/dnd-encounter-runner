@@ -9,10 +9,34 @@ import { FullScreenCenter } from '../components/FullScreenCenter';
 import { queryClient } from '../queryClient';
 import { requireSession } from '../routing/routeGuards';
 
+// CRITICAL: Generate the SHA256 hash correctly for all Gravatar operations
+const getGravatarHash = async (email: string): Promise<string> => {
+  const normalizedEmail = email.trim().toLowerCase();
+  const hashBuffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(normalizedEmail));
+
+  return Array.from(new Uint8Array(hashBuffer))
+    .map(byte => byte.toString(16).padStart(2, '0'))
+    .join('');
+};
+
 const CreateProfileComponent: FC = () => {
   const navigate = useNavigate();
-  const profile = useQuery(queryProfile);
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
+  const { profile } = Route.useRouteContext();
   const [draftName, setDraftName] = useState('');
+
+  const gravatarQuery = useQuery({
+    queryFn: async () => {
+      const gravatarHash = await getGravatarHash(profile.email);
+      const response = await fetch(`https://api.gravatar.com/v3/profiles/${gravatarHash}`, {
+        headers: {
+          Authorization: `Bearer ${import.meta.env.VITE_GRAVATAR_API_KEY}`,
+        },
+      });
+      return response.json() as Promise<unknown>;
+    },
+    queryKey: ['gravatar', draftName],
+  });
 
   const updateMutation = useMutation({
     ...mutateUpdateProfile,
@@ -25,27 +49,14 @@ const CreateProfileComponent: FC = () => {
   const isNameValid = trimmedName !== '';
 
   const handleContinue = () => {
-    if (!isNameValid || profile.data == null) {
+    if (!isNameValid) {
       return;
     }
 
     updateMutation.mutate({
-      avatarUrl: profile.data.avatar_url ?? '',
       name: trimmedName,
     });
   };
-
-  if (profile.isError) {
-    return (
-      <FullScreenCenter>
-        <Container maxWidth="sm">
-          <Paper elevation={6} sx={{ alignItems: 'center', display: 'flex', flexDirection: 'column', padding: '24px' }}>
-            <Typography color="error">{profile.error.message}</Typography>
-          </Paper>
-        </Container>
-      </FullScreenCenter>
-    );
-  }
 
   return (
     <FullScreenCenter>
@@ -72,7 +83,7 @@ const CreateProfileComponent: FC = () => {
             variant="standard"
           />
           <Button
-            disabled={!isNameValid || updateMutation.isPending || profile.isPending}
+            disabled={!isNameValid || updateMutation.isPending}
             fullWidth
             onClick={handleContinue}
             variant="contained"
@@ -89,12 +100,14 @@ export const Route = createFileRoute('/createProfile')({
   beforeLoad: async () => {
     await requireSession();
 
-    const profile = await queryClient.fetchQuery(queryProfile);
+    const profile = await queryClient.ensureQueryData(queryProfile);
 
     if (hasProfileName(profile.name)) {
       // eslint-disable-next-line @typescript-eslint/only-throw-error -- TanStack Router redirect API
       throw redirect({ to: '/home' });
     }
+
+    return { profile };
   },
   component: CreateProfileComponent,
 });

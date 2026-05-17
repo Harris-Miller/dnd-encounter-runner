@@ -23,6 +23,7 @@ import { match } from 'ts-pattern';
 
 import { queryProfile } from '../api/profile';
 import { queryUser } from '../api/user';
+import { resolveProfileAvatarUrl } from '../lib/resolveProfileAvatarUrl';
 
 import { ProfileEditDialog } from './ProfileEditDialog';
 
@@ -37,7 +38,8 @@ export const Header: FC = () => {
   const user = useQuery(queryUser);
   const profile = useQuery(queryProfile);
 
-  const avatarUrl = profile.data?.avatar_url ?? (user.data?.user_metadata.avatar_url as string | undefined);
+  const avatarUrl =
+    profile.data != null && user.data != null ? resolveProfileAvatarUrl(profile.data, user.data) : undefined;
   const avatarAlt = profile.data?.name ?? '';
 
   const handleThemeOpen = (event: MouseEvent<HTMLButtonElement>) => {

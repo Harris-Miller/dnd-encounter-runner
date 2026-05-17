@@ -1,8 +1,10 @@
 import type { Session } from '@supabase/supabase-js';
 import { redirect } from '@tanstack/react-router';
+import { t } from 'try';
 
 import type { Profile } from '../api/profile';
 import { queryProfile } from '../api/profile';
+import { queryUser } from '../api/user';
 import { queryClient } from '../queryClient';
 import { supabase } from '../services/supabase';
 
@@ -32,6 +34,12 @@ export const requireSession = async (): Promise<Session> => {
 
 export const requireProfileName = async (): Promise<Profile> => {
   await requireSession();
+
+  const userResult = await t(queryClient.prefetchQuery(queryUser));
+
+  if (!userResult.ok) {
+    return redirectToLogin();
+  }
 
   const profile = await queryClient.fetchQuery(queryProfile);
 

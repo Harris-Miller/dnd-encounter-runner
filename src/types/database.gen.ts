@@ -311,30 +311,33 @@ export type Database = {
       }
       profiles: {
         Row: {
-          avatar_url: string | null
+          avatar_source: Database["public"]["Enums"]["profile_avatar_source"]
           created_at: string | null
-          email: string | null
+          email: string
           id: string
           name: string | null
           updated_at: string | null
+          uploaded_avatar_id: string | null
           user_id: string
         }
         Insert: {
-          avatar_url?: string | null
+          avatar_source?: Database["public"]["Enums"]["profile_avatar_source"]
           created_at?: string | null
-          email?: string | null
+          email: string
           id?: string
           name?: string | null
           updated_at?: string | null
+          uploaded_avatar_id?: string | null
           user_id: string
         }
         Update: {
-          avatar_url?: string | null
+          avatar_source?: Database["public"]["Enums"]["profile_avatar_source"]
           created_at?: string | null
-          email?: string | null
+          email?: string
           id?: string
           name?: string | null
           updated_at?: string | null
+          uploaded_avatar_id?: string | null
           user_id?: string
         }
         Relationships: []
@@ -517,6 +520,7 @@ export type Database = {
         | "Rare"
         | "Uncommon"
         | "Very Rare"
+      profile_avatar_source: "oauth" | "uploaded"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -654,6 +658,7 @@ export const Constants = {
         "Uncommon",
         "Very Rare",
       ],
+      profile_avatar_source: ["oauth", "uploaded"],
     },
   },
 } as const

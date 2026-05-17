@@ -25,3 +25,4 @@
 - silently return early on invalid state - throw descriptive errors instead
 - wrap `R.assocPath` calls in objects when updating Zustand state - pass the result directly to `set()`
 - use `R.map` to update a single item when `findIndex` + direct update is more efficient
+- NEVER manually edit `src/types/database.gen.ts`. run `pnpm run db:gen-types` to update that file _after_ anytime after a `pnpm run db:migrate` has been performed

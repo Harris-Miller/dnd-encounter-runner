@@ -1,5 +1,7 @@
+import type { User } from '@supabase/supabase-js';
 import { queryOptions } from '@tanstack/react-query';
 
+import { queryClient } from '../queryClient';
 import { supabase } from '../services/supabase';
 
 export const queryUser = queryOptions({
@@ -15,3 +17,5 @@ export const queryUser = queryOptions({
   refetchOnWindowFocus: false,
   staleTime: Infinity,
 });
+
+export const getCachedUser = () => queryClient.getQueryCache().find<unknown, Error, User>(queryUser)?.state.data;

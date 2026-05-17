@@ -4,6 +4,7 @@ import type { FC } from 'react';
 
 // import dndLogo from '../assets/dnd-logo.svg';
 import { hasProfileName, queryProfile } from '../api/profile';
+import { queryUser } from '../api/user';
 import { FullScreenCenter } from '../components/FullScreenCenter';
 import { RouterLink } from '../components/RouterLink';
 import { queryClient } from '../queryClient';
@@ -37,6 +38,12 @@ export const Route = createFileRoute('/')({
 
     if (session == null) {
       return;
+    }
+
+    try {
+      await queryClient.prefetchQuery(queryUser);
+    } catch (_e) {
+      // do nothing, this is expected if the user is not authenticated
     }
 
     const profile = await queryClient.fetchQuery(queryProfile);
