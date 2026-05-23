@@ -1,4 +1,4 @@
-import { pgEnum, pgTable, text, uuid } from 'drizzle-orm/pg-core';
+import { char, pgEnum, pgTable, text, uuid } from 'drizzle-orm/pg-core';
 
 import { createdAt, updatedAt, uuidFkCascade, uuidPk } from '../column.utils.ts';
 import { users } from '../transient/auth.ts';
@@ -9,6 +9,7 @@ export const profiles = pgTable.withRLS('profiles', {
   avatarSource: profileAvatarSourceEnum().notNull().default('oauth'),
   createdAt: createdAt(),
   email: text().unique().notNull(),
+  gravatarId: char({ length: 64 }),
   id: uuidPk(),
   name: text(),
   updatedAt: updatedAt(),

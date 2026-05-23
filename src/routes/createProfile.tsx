@@ -1,15 +1,25 @@
 import { Button, Container, Paper, TextField, Typography } from '@mui/material';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { createFileRoute, redirect, useNavigate } from '@tanstack/react-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { FC } from 'react';
 
-import { hasProfileName, mutateUpdateProfile, queryProfile } from '../api/profile';
+import { hasProfileName, mutateUpdateProfile, mutateUpdateProfileGravatarId, queryProfile } from '../api/profile';
 import { FullScreenCenter } from '../components/FullScreenCenter';
 import { queryClient } from '../queryClient';
 import { requireSession } from '../routing/routeGuards';
 
 // CRITICAL: Generate the SHA256 hash correctly for all Gravatar operations
+type GravatarProfileResponse = {
+  hash: string;
+};
+
+const isGravatarProfileResponse = (data: unknown): data is GravatarProfileResponse =>
+  typeof data === 'object' &&
+  data !== null &&
+  'hash' in data &&
+  typeof (data as GravatarProfileResponse).hash === 'string';
+
 const getGravatarHash = async (email: string): Promise<string> => {
   const normalizedEmail = email.trim().toLowerCase();
   const hashBuffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(normalizedEmail));
@@ -32,8 +42,12 @@ const CreateProfileComponent: FC = () => {
         headers: {
           Authorization: `Bearer ${import.meta.env.VITE_GRAVATAR_API_KEY}`,
         },
+      }).then(async res => {
+        const data = (await res.json()) as unknown;
+        // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
+        return res.ok ? data : Promise.reject(data);
       });
-      return response.json() as Promise<unknown>;
+      return response;
     },
     queryKey: ['gravatar', draftName],
   });
@@ -44,6 +58,22 @@ const CreateProfileComponent: FC = () => {
       navigate({ to: '/home' });
     },
   });
+
+  const gravatarIdMutation = useMutation({
+    ...mutateUpdateProfileGravatarId,
+  });
+
+  useEffect(() => {
+    if (!gravatarQuery.isSuccess || gravatarIdMutation.isPending || gravatarIdMutation.isSuccess) {
+      return;
+    }
+
+    if (!isGravatarProfileResponse(gravatarQuery.data)) {
+      return;
+    }
+
+    gravatarIdMutation.mutate({ gravatarId: gravatarQuery.data.hash });
+  }, [gravatarQuery.data, gravatarQuery.isSuccess, gravatarIdMutation]);
 
   const trimmedName = draftName.trim();
   const isNameValid = trimmedName !== '';
@@ -57,6 +87,20 @@ const CreateProfileComponent: FC = () => {
       name: trimmedName,
     });
   };
+
+  if (gravatarQuery.isPending) {
+    return (
+      <FullScreenCenter>
+        <Container maxWidth="sm">
+          <Paper elevation={6} sx={{ alignItems: 'center', display: 'flex', flexDirection: 'column', padding: '24px' }}>
+            <Typography sx={{ marginBottom: '24px' }} variant="h5">
+              Loading...
+            </Typography>
+          </Paper>
+        </Container>
+      </FullScreenCenter>
+    );
+  }
 
   return (
     <FullScreenCenter>

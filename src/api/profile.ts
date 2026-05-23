@@ -9,7 +9,7 @@ import { getCachedUser } from './user';
 
 export type Profile = Pick<
   Database['public']['Tables']['profiles']['Row'],
-  'avatar_source' | 'id' | 'name' | 'uploaded_avatar_id' | 'user_id'
+  'avatar_source' | 'email' | 'gravatar_id' | 'id' | 'name' | 'uploaded_avatar_id' | 'user_id'
 >;
 
 export type ProfileAvatarSource = Profile['avatar_source'];
@@ -25,6 +25,10 @@ export type UpdateProfileAvatarSourceInput = {
 export type UpdateProfileAfterUploadInput = {
   avatarSource: 'uploaded';
   uploadedAvatarId: string;
+};
+
+export type UpdateProfileGravatarIdInput = {
+  gravatarId: string;
 };
 
 export { hasProfileName } from '../routing/profileName';
@@ -103,6 +107,32 @@ const updateProfileAvatarSourceFn = async ({ avatarSource }: UpdateProfileAvatar
   return data;
 };
 
+const updateProfileGravatarIdFn = async ({ gravatarId }: UpdateProfileGravatarIdInput): Promise<Profile> => {
+  const trimmedGravatarId = gravatarId.trim();
+
+  if (trimmedGravatarId.length !== 64) {
+    throw new Error('Gravatar ID must be 64 characters');
+  }
+
+  const user = getCachedUser();
+
+  if (user == null) {
+    throw new Error('Not authenticated');
+  }
+
+  const { data, error } = await supabase
+    .from('profiles')
+    .update({ gravatar_id: trimmedGravatarId })
+    .eq('user_id', user.id)
+    .single();
+
+  if (error != null) {
+    throw error;
+  }
+
+  return data;
+};
+
 const updateProfileAfterUploadFn = async ({
   avatarSource,
   uploadedAvatarId,
@@ -150,6 +180,13 @@ export const mutateUpdateProfileAvatarSource = mutationOptions({
 
 export const mutateUpdateProfileAfterUpload = mutationOptions({
   mutationFn: updateProfileAfterUploadFn,
+  onSuccess: (updatedProfile, _variables, _onMutateResult, { client }) => {
+    client.setQueryData(queryProfile.queryKey, updatedProfile);
+  },
+});
+
+export const mutateUpdateProfileGravatarId = mutationOptions({
+  mutationFn: updateProfileGravatarIdFn,
   onSuccess: (updatedProfile, _variables, _onMutateResult, { client }) => {
     client.setQueryData(queryProfile.queryKey, updatedProfile);
   },

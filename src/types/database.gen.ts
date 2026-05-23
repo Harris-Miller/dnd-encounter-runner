@@ -314,6 +314,7 @@ export type Database = {
           avatar_source: Database["public"]["Enums"]["profile_avatar_source"]
           created_at: string | null
           email: string
+          gravatar_id: string | null
           id: string
           name: string | null
           updated_at: string | null
@@ -324,6 +325,7 @@ export type Database = {
           avatar_source?: Database["public"]["Enums"]["profile_avatar_source"]
           created_at?: string | null
           email: string
+          gravatar_id?: string | null
           id?: string
           name?: string | null
           updated_at?: string | null
@@ -334,6 +336,7 @@ export type Database = {
           avatar_source?: Database["public"]["Enums"]["profile_avatar_source"]
           created_at?: string | null
           email?: string
+          gravatar_id?: string | null
           id?: string
           name?: string | null
           updated_at?: string | null
