@@ -1,0 +1,18 @@
+import { sql } from 'drizzle-orm';
+import { boolean, jsonb, pgTable, text } from 'drizzle-orm/pg-core';
+
+import { createdAt, updatedAt, uuidFkCascade, uuidPk } from '../column.utils.ts';
+
+import { profiles } from './profile.ts';
+
+export const encounters = pgTable.withRLS('encounters', {
+  active: boolean().notNull().default(false),
+  createdAt: createdAt(),
+  id: uuidPk(),
+  name: text().notNull().default('Untitled Encounter'),
+  profileId: uuidFkCascade(() => profiles.id),
+  state: jsonb()
+    .notNull()
+    .default(sql`'{}'::jsonb`),
+  updatedAt: updatedAt(),
+});
