@@ -56,22 +56,6 @@ Run tests once with coverage:
 pnpm test:coverage
 ```
 
-### Lint and typecheck
-
-Run ESLint (fails on warnings):
-
-```bash
-pnpm lint
-```
-
-Run TypeScript project references build check:
-
-```bash
-pnpm typecheck
-```
-
-Run both before opening a PR or after substantive changes.
-
 ### Database
 
 Generate a new Drizzle migration from schema changes:
@@ -86,12 +70,6 @@ Apply pending migrations:
 pnpm db:migrate
 ```
 
-Open Drizzle Studio to browse the local database:
-
-```bash
-pnpm db:studio
-```
-
 Seed the database with development data:
 
 ```bash
@@ -102,12 +80,4 @@ Regenerate Supabase TypeScript types from the local database (run after `db:migr
 
 ```bash
 pnpm db:gen-types
-```
-
-### Data scripts
-
-Parse magic item source data into the project:
-
-```bash
-pnpm parse:magic-items
 ```
