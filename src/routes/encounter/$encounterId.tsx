@@ -27,6 +27,7 @@ import {
   useApplyTransform,
 } from '../../api/encounters';
 import { AddCombatantDialog } from '../../components/encounter/AddCombatantDialog';
+import { ApplyEffectDialog } from '../../components/encounter/ApplyEffectDialog';
 import { CombatantDetailDrawer } from '../../components/encounter/CombatantDetailDrawer';
 import { InitiativeTracker } from '../../components/encounter/InitiativeTracker';
 import { RecordEventToolbar } from '../../components/encounter/RecordEventToolbar';
@@ -50,6 +51,7 @@ const EncounterPage: FC = () => {
   const renameOpen = renameDraft !== null;
   const [selectedCombatantId, setSelectedCombatantId] = useState<string | null>(null);
   const [addCombatantOpen, setAddCombatantOpen] = useState(false);
+  const [applyEffectForCombatantId, setApplyEffectForCombatantId] = useState<string | null>(null);
   const applyTransform = useApplyTransform(encounterId);
 
   const handleAdvanceTurn = () => {
@@ -181,13 +183,32 @@ const EncounterPage: FC = () => {
         open={addCombatantOpen}
       />
 
+      <ApplyEffectDialog
+        buildId={() => crypto.randomUUID()}
+        combatantName={
+          applyEffectForCombatantId == null ? '' : (data.state.combatants[applyEffectForCombatantId]?.name ?? '')
+        }
+        onClose={() => {
+          setApplyEffectForCombatantId(null);
+        }}
+        onConfirm={effect => {
+          if (applyEffectForCombatantId == null) return;
+          applyTransform.mutate({
+            input: { combatantId: applyEffectForCombatantId, effect },
+            type: 'applyEffect',
+          });
+          setApplyEffectForCombatantId(null);
+        }}
+        open={applyEffectForCombatantId !== null}
+      />
+
       <CombatantDetailDrawer
         combatant={selectedCombatantId == null ? null : (data.state.combatants[selectedCombatantId] ?? null)}
         onAdjustHp={(combatantId, delta) => {
           applyTransform.mutate({ input: { combatantId, delta }, type: 'adjustHp' });
         }}
-        onApplyEffect={() => {
-          // ApplyEffectDialog lands in a follow-up step
+        onApplyEffect={combatantId => {
+          setApplyEffectForCombatantId(combatantId);
         }}
         onClose={() => {
           setSelectedCombatantId(null);
