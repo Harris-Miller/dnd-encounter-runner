@@ -34,6 +34,50 @@ export type Database = {
   }
   public: {
     Tables: {
+      characters: {
+        Row: {
+          armor_class: number
+          created_at: string | null
+          id: string
+          level: number
+          max_hit_points: number
+          name: string
+          notes: string | null
+          profile_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          armor_class: number
+          created_at?: string | null
+          id?: string
+          level?: number
+          max_hit_points: number
+          name: string
+          notes?: string | null
+          profile_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          armor_class?: number
+          created_at?: string | null
+          id?: string
+          level?: number
+          max_hit_points?: number
+          name?: string
+          notes?: string | null
+          profile_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "characters_profile_id_profiles_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       damage_types: {
         Row: {
           created_at: string | null
@@ -57,21 +101,30 @@ export type Database = {
       }
       encounters: {
         Row: {
+          active: boolean
           created_at: string | null
           id: string
+          name: string
           profile_id: string
+          state: Json
           updated_at: string | null
         }
         Insert: {
+          active?: boolean
           created_at?: string | null
           id?: string
+          name?: string
           profile_id: string
+          state?: Json
           updated_at?: string | null
         }
         Update: {
+          active?: boolean
           created_at?: string | null
           id?: string
+          name?: string
           profile_id?: string
+          state?: Json
           updated_at?: string | null
         }
         Relationships: [
