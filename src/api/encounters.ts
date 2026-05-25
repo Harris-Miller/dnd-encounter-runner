@@ -7,7 +7,7 @@ import type { Transform } from '../services/encounterReducer';
 import { supabase } from '../services/supabase';
 import type { Database } from '../types/database.gen';
 import type { EncounterState } from '../types/encounterState';
-import { emptyEncounterState, encounterStateSchema } from '../types/encounterState';
+import { encounterStateSchema } from '../types/encounterState';
 
 import { getCachedProfile } from './profile';
 
@@ -32,25 +32,17 @@ export interface EncounterDetail {
   updatedAt: string;
 }
 
-const parseEncounterState = (raw: unknown): EncounterState => {
-  if (raw == null || (typeof raw === 'object' && Object.keys(raw).length === 0)) {
-    return emptyEncounterState();
-  }
-
-  return encounterStateSchema.parse(raw);
-};
-
 const rowToDetail = (row: EncounterRow): EncounterDetail => ({
   active: row.active,
   createdAt: row.created_at ?? '',
   id: row.id,
   name: row.name,
-  state: parseEncounterState(row.state),
+  state: encounterStateSchema.parse(row.state),
   updatedAt: row.updated_at ?? '',
 });
 
 const rowToListItem = (row: EncounterRow): EncounterListItem => {
-  const state = parseEncounterState(row.state);
+  const state = encounterStateSchema.parse(row.state);
 
   return {
     active: row.active,
@@ -105,18 +97,7 @@ const createEncounterFn = async ({ name = 'Untitled Encounter' }: CreateEncounte
     throw new Error('No profile loaded; cannot create encounter');
   }
 
-  const encounterId = crypto.randomUUID();
-  const initialState = emptyEncounterState();
-
-  const { data, error } = await supabase
-    .rpc('encounter_create', {
-      p_encounter_id: encounterId,
-      p_name: name,
-      p_profile_id: profile.id,
-      p_state: initialState,
-    })
-    .select()
-    .single();
+  const { data, error } = await supabase.from('encounters').insert({ name, profile_id: profile.id }).select().single();
 
   if (error != null) {
     throw error;
@@ -282,7 +263,7 @@ const dispatchTransform = async (
     throw result.error;
   }
 
-  return parseEncounterState(result.data);
+  return encounterStateSchema.parse(result.data);
 };
 
 export interface ApplyTransformContext {

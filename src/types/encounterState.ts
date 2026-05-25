@@ -257,12 +257,3 @@ export const encounterStateSchema = z.object({
   turnIndex: z.number().int().nonnegative(),
 });
 export type EncounterState = z.infer<typeof encounterStateSchema>;
-
-export const emptyEncounterState = (): EncounterState => ({
-  combatants: {},
-  events: [],
-  initiativeOrder: [],
-  reminders: [],
-  round: 1,
-  turnIndex: 0,
-});

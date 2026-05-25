@@ -5,7 +5,7 @@ import type {
   EffectDescriptor,
   EncounterState,
 } from '../../types/encounterState';
-import { DEFAULT_ACTION_ECONOMY, emptyEncounterState } from '../../types/encounterState';
+import { DEFAULT_ACTION_ECONOMY } from '../../types/encounterState';
 
 let counter = 0;
 
@@ -58,17 +58,19 @@ export const buildEffect = (
 });
 
 export const buildState = (combatants: Combatant[]): EncounterState => {
-  const base = emptyEncounterState();
   const combatantsMap: Record<string, Combatant> = {};
   combatants.forEach(combatant => {
     combatantsMap[combatant.id] = combatant;
   });
 
   return {
-    ...base,
     combatants: combatantsMap,
+    events: [],
     initiativeOrder: [...combatants]
       .sort((left, right) => (right.initiative ?? 0) - (left.initiative ?? 0))
       .map(combatant => combatant.id),
+    reminders: [],
+    round: 1,
+    turnIndex: 0,
   };
 };

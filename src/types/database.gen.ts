@@ -595,29 +595,6 @@ export type Database = {
         Args: { p_combatant_id: string; p_effect: Json; p_encounter_id: string }
         Returns: Json
       }
-      encounter_create: {
-        Args: {
-          p_encounter_id: string
-          p_name: string
-          p_profile_id: string
-          p_state: Json
-        }
-        Returns: {
-          active: boolean
-          created_at: string | null
-          id: string
-          name: string
-          profile_id: string
-          state: Json
-          updated_at: string | null
-        }[]
-        SetofOptions: {
-          from: "*"
-          to: "encounters"
-          isOneToOne: false
-          isSetofReturn: true
-        }
-      }
       encounter_dismiss_reminder: {
         Args: { p_encounter_id: string; p_reminder_id: string }
         Returns: Json

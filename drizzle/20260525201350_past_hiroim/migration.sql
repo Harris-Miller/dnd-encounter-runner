@@ -1,0 +1,1 @@
+ALTER TABLE "encounters" ALTER COLUMN "state" SET DEFAULT '{"combatants":{},"events":[],"initiativeOrder":[],"reminders":[],"round":1,"turnIndex":0}';

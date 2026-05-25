@@ -1,6 +1,6 @@
 # AGENTS.md
 
-## Do
+## Rules
 - use `pnpm`, not `npm` for relevant CLI commands
 - place test files in `__tests__` folders
 - respect all rules defined in `eslint.config.js` when generating code, making sure never to generate any code that would break a rule. There should not be any eslint errors or warnings in any code you generate
@@ -22,12 +22,10 @@
 - after `pnpm run db:migrate` (schema or RPC SQL), run `pnpm run db:gen-types`; when adding encounter transforms, update the reducer, `Transform` union, RPC migration, and `rpcParity.test.ts`
 - use `src/services/__tests__/fixtures.ts` (`buildId`, `FIXED_NOW`, `buildState`) for deterministic reducer/engine tests; RPC parity tests need `DATABASE_URL` in `.env.development` and skip when unset
 
-## Don't
-- use barrel exports
-- use default exports, unless explicitly told otherwise
-- start with empty arrays and add to them via conditionals
-- silently return early on invalid state - throw descriptive errors instead
-- store encounter/combat state in Zustand
-- apply encounter `state` mutations from the UI without `useApplyTransform`
+- NEVER use barrel exports
+- NEVER use default exports, unless explicitly told otherwise
+- NEVER start with empty arrays and add to them via conditionals
+- NEVER silently return early on invalid state - throw descriptive errors instead
+- NEVER apply encounter `state` mutations from the UI without `useApplyTransform`
 - NEVER manually edit `src/types/database.gen.ts`. run `pnpm run db:gen-types` after `pnpm run db:migrate`
 - NEVER manually edit `src/routeTree.gen.ts`. run `pnpm run routes:gen` after updates in `src/routes/`
