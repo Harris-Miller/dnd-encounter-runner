@@ -1,6 +1,7 @@
 import { mutationOptions, queryOptions } from '@tanstack/react-query';
 import type { QueryClient } from '@tanstack/react-query';
 
+import { queryClient } from '../queryClient';
 import { hasProfileName } from '../routing/profileName';
 import { supabase } from '../services/supabase';
 import type { Database } from '../types/database.gen';
@@ -195,3 +196,6 @@ export const mutateUpdateProfileGravatarId = mutationOptions({
 export const clearProfileQuery = (client: QueryClient): void => {
   client.removeQueries({ queryKey: queryProfile.queryKey });
 };
+
+export const getCachedProfile = (): Profile | undefined =>
+  queryClient.getQueryCache().find<unknown, Error, Profile>(queryProfile)?.state.data;
