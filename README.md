@@ -44,20 +44,70 @@ pnpm preview
 
 ### Testing
 
-Run tests:
+Run tests (watch mode by default):
 
 ```bash
 pnpm test
 ```
 
-Run tests with UI:
-
-```bash
-pnpm test:ui
-```
-
-Run tests with coverage:
+Run tests once with coverage:
 
 ```bash
 pnpm test:coverage
+```
+
+### Lint and typecheck
+
+Run ESLint (fails on warnings):
+
+```bash
+pnpm lint
+```
+
+Run TypeScript project references build check:
+
+```bash
+pnpm typecheck
+```
+
+Run both before opening a PR or after substantive changes.
+
+### Database
+
+Generate a new Drizzle migration from schema changes:
+
+```bash
+pnpm db:generate
+```
+
+Apply pending migrations:
+
+```bash
+pnpm db:migrate
+```
+
+Open Drizzle Studio to browse the local database:
+
+```bash
+pnpm db:studio
+```
+
+Seed the database with development data:
+
+```bash
+pnpm db:seed
+```
+
+Regenerate Supabase TypeScript types from the local database (run after `db:migrate` when schema changes):
+
+```bash
+pnpm db:gen-types
+```
+
+### Data scripts
+
+Parse magic item source data into the project:
+
+```bash
+pnpm parse:magic-items
 ```
