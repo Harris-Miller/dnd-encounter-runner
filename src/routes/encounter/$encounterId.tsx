@@ -19,7 +19,13 @@ import { createFileRoute, getRouteApi } from '@tanstack/react-router';
 import { useState } from 'react';
 import type { FC } from 'react';
 
-import { mutateSetEncounterActive, mutateSetEncounterName, queryEncounter } from '../../api/encounters';
+import {
+  mutateSetEncounterActive,
+  mutateSetEncounterName,
+  queryEncounter,
+  useApplyTransform,
+} from '../../api/encounters';
+import { InitiativeTracker } from '../../components/encounter/InitiativeTracker';
 import { RouterLink } from '../../components/RouterLink';
 import { queryClient } from '../../queryClient';
 
@@ -38,6 +44,15 @@ const EncounterPage: FC = () => {
   });
   const [renameDraft, setRenameDraft] = useState<string | null>(null);
   const renameOpen = renameDraft !== null;
+  const [selectedCombatantId, setSelectedCombatantId] = useState<string | null>(null);
+  const applyTransform = useApplyTransform(encounterId);
+
+  const handleAdvanceTurn = () => {
+    applyTransform.mutate({
+      input: { buildId: () => crypto.randomUUID(), now: new Date().toISOString() },
+      type: 'advanceTurn',
+    });
+  };
 
   if (isLoading) {
     return (
@@ -104,9 +119,17 @@ const EncounterPage: FC = () => {
         </Box>
       </Box>
 
+      <InitiativeTracker
+        isAdvancing={applyTransform.isPending}
+        onAdvanceTurn={handleAdvanceTurn}
+        onSelectCombatant={setSelectedCombatantId}
+        selectedCombatantId={selectedCombatantId}
+        state={data.state}
+      />
+
       <Alert severity="info">
-        Initiative tracker, record-event toolbar, combatant details, and reminder panel will surface here as the
-        remaining iteration steps land.
+        Record-event toolbar, combatant detail drawer, and reminder panel will surface here as the remaining iteration
+        steps land.
       </Alert>
 
       <Dialog fullWidth maxWidth="sm" onClose={handleRenameClose} open={renameOpen}>
