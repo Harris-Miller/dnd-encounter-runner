@@ -6,12 +6,6 @@
       "sourceType": "github",
       "skillPath": "skills/supabase/SKILL.md",
       "computedHash": "45a3cdccc364a4bbd6cdf700fc069e9f24ebc0428098746cbfbf8b18a5e160d2"
-    },
-    "vitest": {
-      "source": "supabase/supabase",
-      "sourceType": "github",
-      "skillPath": ".agents/skills/vitest/SKILL.md",
-      "computedHash": "669c7275f7e1379b06b2bcfa593603aead4c983b951c7e8edbc09640aa38d0a1"
     }
   }
 }
