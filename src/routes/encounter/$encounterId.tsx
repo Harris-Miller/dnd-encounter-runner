@@ -1,3 +1,4 @@
+import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import {
   Alert,
@@ -25,6 +26,7 @@ import {
   queryEncounter,
   useApplyTransform,
 } from '../../api/encounters';
+import { AddCombatantDialog } from '../../components/encounter/AddCombatantDialog';
 import { CombatantDetailDrawer } from '../../components/encounter/CombatantDetailDrawer';
 import { InitiativeTracker } from '../../components/encounter/InitiativeTracker';
 import { RecordEventToolbar } from '../../components/encounter/RecordEventToolbar';
@@ -47,6 +49,7 @@ const EncounterPage: FC = () => {
   const [renameDraft, setRenameDraft] = useState<string | null>(null);
   const renameOpen = renameDraft !== null;
   const [selectedCombatantId, setSelectedCombatantId] = useState<string | null>(null);
+  const [addCombatantOpen, setAddCombatantOpen] = useState(false);
   const applyTransform = useApplyTransform(encounterId);
 
   const handleAdvanceTurn = () => {
@@ -141,6 +144,18 @@ const EncounterPage: FC = () => {
         </Box>
       </Box>
 
+      <Box>
+        <Button
+          onClick={() => {
+            setAddCombatantOpen(true);
+          }}
+          startIcon={<AddIcon />}
+          variant="outlined"
+        >
+          Add combatant
+        </Button>
+      </Box>
+
       <InitiativeTracker
         isAdvancing={applyTransform.isPending}
         onAdvanceTurn={handleAdvanceTurn}
@@ -152,6 +167,19 @@ const EncounterPage: FC = () => {
       <RecordEventToolbar onAdvanceRound={handleAdvanceRound} onRecordEvent={handleRecordEvent} state={data.state} />
 
       <Alert severity="info">Reminder panel will land in a follow-up step.</Alert>
+
+      <AddCombatantDialog
+        buildId={() => crypto.randomUUID()}
+        existingCombatantIds={new Set(Object.keys(data.state.combatants))}
+        onClose={() => {
+          setAddCombatantOpen(false);
+        }}
+        onConfirm={combatant => {
+          applyTransform.mutate({ input: { combatant }, type: 'addCombatant' });
+          setAddCombatantOpen(false);
+        }}
+        open={addCombatantOpen}
+      />
 
       <CombatantDetailDrawer
         combatant={selectedCombatantId == null ? null : (data.state.combatants[selectedCombatantId] ?? null)}
