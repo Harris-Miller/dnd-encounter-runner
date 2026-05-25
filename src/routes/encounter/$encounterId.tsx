@@ -31,6 +31,7 @@ import { ApplyEffectDialog } from '../../components/encounter/ApplyEffectDialog'
 import { CombatantDetailDrawer } from '../../components/encounter/CombatantDetailDrawer';
 import { InitiativeTracker } from '../../components/encounter/InitiativeTracker';
 import { RecordEventToolbar } from '../../components/encounter/RecordEventToolbar';
+import { ReminderPanel } from '../../components/encounter/ReminderPanel';
 import { RouterLink } from '../../components/RouterLink';
 import { queryClient } from '../../queryClient';
 
@@ -168,7 +169,12 @@ const EncounterPage: FC = () => {
 
       <RecordEventToolbar onAdvanceRound={handleAdvanceRound} onRecordEvent={handleRecordEvent} state={data.state} />
 
-      <Alert severity="info">Reminder panel will land in a follow-up step.</Alert>
+      <ReminderPanel
+        onDismissReminder={reminderId => {
+          applyTransform.mutate({ input: { reminderId }, type: 'dismissReminder' });
+        }}
+        state={data.state}
+      />
 
       <AddCombatantDialog
         buildId={() => crypto.randomUUID()}
