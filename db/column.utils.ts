@@ -8,9 +8,10 @@ export const uuidFk = (ref: ReferenceConfig['ref']) => uuid().notNull().referenc
 
 export const uuidFkCascade = (ref: ReferenceConfig['ref']) => uuid().notNull().references(ref, { onDelete: 'cascade' });
 
-export const createdAt = () => timestamp({ withTimezone: true }).defaultNow();
+export const createdAt = () => timestamp({ withTimezone: true }).notNull().defaultNow();
 
 export const updatedAt = () =>
   timestamp({ withTimezone: true })
+    .notNull()
     .defaultNow()
     .$onUpdateFn(() => sql`now()`);

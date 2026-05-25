@@ -29,3 +29,6 @@
 - NEVER apply encounter `state` mutations from the UI without `useApplyTransform`
 - NEVER manually edit `src/types/database.gen.ts`. run `pnpm run db:gen-types` after `pnpm run db:migrate`
 - NEVER manually edit `src/routeTree.gen.ts`. run `pnpm run routes:gen` after updates in `src/routes/`
+
+### Zod
+- Use PascalCase for variable names from `z.` constructor functions. Don't put "Schema" at the end name the type from `z.infer<>` the exact same! This way the concrete instance _and_ it's type can be represented by the same name. This overloading is a good practice in Typescript

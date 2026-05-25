@@ -21,14 +21,14 @@ export interface Character {
 
 const rowToCharacter = (row: CharacterRow): Character => ({
   armorClass: row.armor_class,
-  createdAt: row.created_at ?? '',
+  createdAt: row.created_at,
   id: row.id,
   level: row.level,
   maxHitPoints: row.max_hit_points,
   name: row.name,
   notes: row.notes,
   profileId: row.profile_id,
-  updatedAt: row.updated_at ?? '',
+  updatedAt: row.updated_at,
 });
 
 const fetchCharacters = async (): Promise<Character[]> => {

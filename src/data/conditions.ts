@@ -1,8 +1,8 @@
 import { STANDARD_CONDITION_IDS } from '../types/encounterState';
-import type { StandardCondition, TickOn, TriggerEventType } from '../types/encounterState';
+import type { StandardCondition, TickOn, TriggerEvent } from '../types/encounterState';
 
 export interface ConditionDef {
-  defaultNotifyOn: TriggerEventType[];
+  defaultNotifyOn: TriggerEvent[];
   defaultTickOn: TickOn;
   description: string;
   id: StandardCondition;

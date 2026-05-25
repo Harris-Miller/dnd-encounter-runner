@@ -19,8 +19,8 @@ export const STANDARD_CONDITION_IDS = [
   'unconscious',
 ] as const;
 
-export const standardConditionSchema = z.enum(STANDARD_CONDITION_IDS);
-export type StandardCondition = z.infer<typeof standardConditionSchema>;
+export const StandardCondition = z.enum(STANDARD_CONDITION_IDS);
+export type StandardCondition = z.infer<typeof StandardCondition>;
 
 export const TRIGGER_EVENT_TYPES = [
   'START_OF_TURN',
@@ -36,66 +36,60 @@ export const TRIGGER_EVENT_TYPES = [
   'ON_REACTION_USED',
 ] as const;
 
-export const triggerEventTypeSchema = z.enum(TRIGGER_EVENT_TYPES);
-export type TriggerEventType = z.infer<typeof triggerEventTypeSchema>;
+export const TriggerEvent = z.enum(TRIGGER_EVENT_TYPES);
+export type TriggerEvent = z.infer<typeof TriggerEvent>;
 
-export const tickOnSchema = z.enum([
-  'start_of_owner_turn',
-  'end_of_owner_turn',
-  'start_of_round',
-  'end_of_round',
-  'manual',
-]);
-export type TickOn = z.infer<typeof tickOnSchema>;
+export const TickOn = z.enum(['start_of_owner_turn', 'end_of_owner_turn', 'start_of_round', 'end_of_round', 'manual']);
+export type TickOn = z.infer<typeof TickOn>;
 
-export const effectSourceTypeSchema = z.enum(['item', 'spell', 'manual', 'concentration', 'condition']);
-export type EffectSourceType = z.infer<typeof effectSourceTypeSchema>;
+export const EffectSource = z.enum(['item', 'spell', 'manual', 'concentration', 'condition']);
+export type EffectSource = z.infer<typeof EffectSource>;
 
-export const effectDescriptorSchema = z.discriminatedUnion('kind', [
+export const EffectDescriptor = z.discriminatedUnion('kind', [
   z.object({ damageType: z.string(), kind: z.literal('damage_resistance') }),
   z.object({ damageType: z.string(), kind: z.literal('damage_immunity') }),
   z.object({ damageType: z.string(), kind: z.literal('damage_vulnerability') }),
   z.object({ kind: z.literal('crit_damage_immunity') }),
-  z.object({ conditionId: standardConditionSchema, kind: z.literal('condition') }),
+  z.object({ conditionId: StandardCondition, kind: z.literal('condition') }),
   z.object({ kind: z.literal('concentration'), spellName: z.string() }),
   z.object({
     kind: z.literal('reaction_available'),
     promptMessage: z.string(),
     reactionName: z.string(),
-    triggerEvents: z.array(triggerEventTypeSchema),
+    triggerEvents: z.array(TriggerEvent),
   }),
   z.object({ descriptor: z.string(), kind: z.literal('custom') }),
 ]);
-export type EffectDescriptor = z.infer<typeof effectDescriptorSchema>;
+export type EffectDescriptor = z.infer<typeof EffectDescriptor>;
 
-export const effectExpirySchema = z.discriminatedUnion('kind', [
+export const EffectExpiry = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('never') }),
   z.object({ kind: z.literal('end_of_combat') }),
   z.object({ kind: z.literal('after_rounds'), rounds: z.number().int().nonnegative() }),
 ]);
-export type EffectExpiry = z.infer<typeof effectExpirySchema>;
+export type EffectExpiry = z.infer<typeof EffectExpiry>;
 
-export const activeEffectSchema = z.object({
+export const ActiveEffect = z.object({
   description: z.string(),
-  expiresAt: effectExpirySchema,
+  expiresAt: EffectExpiry,
   id: z.string(),
   name: z.string(),
-  notifyOn: z.array(triggerEventTypeSchema),
-  provides: z.array(effectDescriptorSchema),
+  notifyOn: z.array(TriggerEvent),
+  provides: z.array(EffectDescriptor),
   refId: z.string().nullable(),
   remainingRounds: z.number().int().nullable(),
   source: z.string(),
-  sourceType: effectSourceTypeSchema,
-  tickOn: tickOnSchema,
+  sourceType: EffectSource,
+  tickOn: TickOn,
 });
-export type ActiveEffect = z.infer<typeof activeEffectSchema>;
+export type ActiveEffect = z.infer<typeof ActiveEffect>;
 
-export const actionEconomySchema = z.object({
+export const ActionEconomy = z.object({
   actionUsed: z.boolean(),
   bonusActionUsed: z.boolean(),
   reactionUsed: z.boolean(),
 });
-export type ActionEconomy = z.infer<typeof actionEconomySchema>;
+export type ActionEconomy = z.infer<typeof ActionEconomy>;
 
 export const DEFAULT_ACTION_ECONOMY: ActionEconomy = {
   actionUsed: false,
@@ -103,18 +97,18 @@ export const DEFAULT_ACTION_ECONOMY: ActionEconomy = {
   reactionUsed: false,
 };
 
-export const combatantTypeSchema = z.enum(['character', 'monster']);
-export type CombatantType = z.infer<typeof combatantTypeSchema>;
+export const CombatantType = z.enum(['character', 'monster']);
+export type CombatantType = z.infer<typeof CombatantType>;
 
-export const equippedItemSchema = z.object({
+export const EquippedItem = z.object({
   description: z.string().nullable(),
   id: z.string(),
   name: z.string(),
   refId: z.string().nullable(),
 });
-export type EquippedItem = z.infer<typeof equippedItemSchema>;
+export type EquippedItem = z.infer<typeof EquippedItem>;
 
-export const knownSpellSchema = z.object({
+export const KnownSpell = z.object({
   description: z.string().nullable(),
   id: z.string(),
   isConcentration: z.boolean(),
@@ -122,29 +116,29 @@ export const knownSpellSchema = z.object({
   name: z.string(),
   refId: z.string().nullable(),
 });
-export type KnownSpell = z.infer<typeof knownSpellSchema>;
+export type KnownSpell = z.infer<typeof KnownSpell>;
 
-export const combatantSchema = z.object({
-  actionEconomy: actionEconomySchema,
+export const Combatant = z.object({
+  actionEconomy: ActionEconomy,
   armorClass: z.number().int(),
   currentHp: z.number().int(),
   damageImmunities: z.array(z.string()),
   damageResistances: z.array(z.string()),
   damageVulnerabilities: z.array(z.string()),
-  effects: z.array(activeEffectSchema),
-  equippedItems: z.array(equippedItemSchema),
+  effects: z.array(ActiveEffect),
+  equippedItems: z.array(EquippedItem),
   id: z.string(),
   initiative: z.number().int().nullable(),
-  knownSpells: z.array(knownSpellSchema),
+  knownSpells: z.array(KnownSpell),
   maxHp: z.number().int(),
   name: z.string(),
   refId: z.string().nullable(),
   tempHp: z.number().int(),
-  type: combatantTypeSchema,
+  type: CombatantType,
 });
-export type Combatant = z.infer<typeof combatantSchema>;
+export type Combatant = z.infer<typeof Combatant>;
 
-export const reminderKindSchema = z.enum([
+export const ReminderKind = z.enum([
   'concentration_save',
   'damage_resistance',
   'damage_immunity',
@@ -155,7 +149,7 @@ export const reminderKindSchema = z.enum([
   'effect_expired',
   'info',
 ]);
-export type ReminderKind = z.infer<typeof reminderKindSchema>;
+export type ReminderKind = z.infer<typeof ReminderKind>;
 
 export const reminderSchema = z.object({
   combatantId: z.string().nullable(),
@@ -163,20 +157,21 @@ export const reminderSchema = z.object({
   effectId: z.string().nullable(),
   eventId: z.string().nullable(),
   id: z.string(),
-  kind: reminderKindSchema,
+  kind: ReminderKind,
   message: z.string(),
   ts: z.string(),
 });
 export type Reminder = z.infer<typeof reminderSchema>;
 
-export const damageTypeSchema = z.string();
+export const DamageType = z.string();
+export type DamageType = z.infer<typeof DamageType>;
 
 const baseEventFields = {
   id: z.string(),
   ts: z.string(),
 };
 
-export const encounterEventSchema = z.discriminatedUnion('type', [
+export const EncounterEvent = z.discriminatedUnion('type', [
   z.object({
     ...baseEventFields,
     combatantId: z.string(),
@@ -222,7 +217,7 @@ export const encounterEventSchema = z.discriminatedUnion('type', [
     ...baseEventFields,
     payload: z.object({
       amount: z.number().int().nonnegative(),
-      damageType: damageTypeSchema,
+      damageType: DamageType,
       sourceCombatantId: z.string().nullable(),
       targetCombatantId: z.string(),
     }),
@@ -244,16 +239,16 @@ export const encounterEventSchema = z.discriminatedUnion('type', [
     type: z.literal('ON_REACTION_USED'),
   }),
 ]);
-export type EncounterEvent = z.infer<typeof encounterEventSchema>;
+export type EncounterEvent = z.infer<typeof EncounterEvent>;
 
-export type EventOfType<T extends TriggerEventType> = Extract<EncounterEvent, { type: T }>;
+export type EventOfType<T extends TriggerEvent> = Extract<EncounterEvent, { type: T }>;
 
-export const encounterStateSchema = z.object({
-  combatants: z.record(z.string(), combatantSchema),
-  events: z.array(encounterEventSchema),
+export const EncounterState = z.object({
+  combatants: z.record(z.string(), Combatant),
+  events: z.array(EncounterEvent),
   initiativeOrder: z.array(z.string()),
   reminders: z.array(reminderSchema),
   round: z.number().int().nonnegative(),
   turnIndex: z.number().int().nonnegative(),
 });
-export type EncounterState = z.infer<typeof encounterStateSchema>;
+export type EncounterState = z.infer<typeof EncounterState>;

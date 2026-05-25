@@ -15,7 +15,7 @@ import {
 import { useMemo, useState } from 'react';
 import type { FC } from 'react';
 
-import type { Combatant, EncounterEvent, EncounterState, TriggerEventType } from '../../types/encounterState';
+import type { Combatant, EncounterEvent, EncounterState, TriggerEvent } from '../../types/encounterState';
 
 const DAMAGE_TYPES = [
   'acid',
@@ -33,7 +33,7 @@ const DAMAGE_TYPES = [
   'thunder',
 ];
 
-const ATTACK_EVENT_TYPES: TriggerEventType[] = ['ON_ATTACK', 'ON_HIT', 'ON_MISS', 'ON_CRIT'];
+const ATTACK_EVENT_TYPES: TriggerEvent[] = ['ON_ATTACK', 'ON_HIT', 'ON_MISS', 'ON_CRIT'];
 
 type DialogKind = 'attack' | 'damage' | 'spell' | null;
 

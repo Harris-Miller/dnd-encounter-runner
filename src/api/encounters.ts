@@ -6,8 +6,7 @@ import { applyTransform } from '../services/encounterReducer';
 import type { Transform } from '../services/encounterReducer';
 import { supabase } from '../services/supabase';
 import type { Database } from '../types/database.gen';
-import type { EncounterState } from '../types/encounterState';
-import { encounterStateSchema } from '../types/encounterState';
+import { EncounterState } from '../types/encounterState';
 
 import { getCachedProfile } from './profile';
 
@@ -34,24 +33,24 @@ export interface EncounterDetail {
 
 const rowToDetail = (row: EncounterRow): EncounterDetail => ({
   active: row.active,
-  createdAt: row.created_at ?? '',
+  createdAt: row.created_at,
   id: row.id,
   name: row.name,
-  state: encounterStateSchema.parse(row.state),
-  updatedAt: row.updated_at ?? '',
+  state: EncounterState.parse(row.state),
+  updatedAt: row.updated_at,
 });
 
 const rowToListItem = (row: EncounterRow): EncounterListItem => {
-  const state = encounterStateSchema.parse(row.state);
+  const state = EncounterState.parse(row.state);
 
   return {
     active: row.active,
     combatantCount: Object.keys(state.combatants).length,
-    createdAt: row.created_at ?? '',
+    createdAt: row.created_at,
     id: row.id,
     name: row.name,
     round: state.round,
-    updatedAt: row.updated_at ?? '',
+    updatedAt: row.updated_at,
   };
 };
 
@@ -263,7 +262,7 @@ const dispatchTransform = async (
     throw result.error;
   }
 
-  return encounterStateSchema.parse(result.data);
+  return EncounterState.parse(result.data);
 };
 
 export interface ApplyTransformContext {

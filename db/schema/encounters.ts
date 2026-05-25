@@ -1,9 +1,17 @@
 import { boolean, jsonb, pgTable, text } from 'drizzle-orm/pg-core';
 
 import { createdAt, updatedAt, uuidFkCascade, uuidPk } from '../column.utils.ts';
-import { EMPTY_ENCOUNTER_STATE } from '../encounterStateDefault.ts';
 
 import { profiles } from './profile.ts';
+
+const EMPTY_ENCOUNTER_STATE = {
+  combatants: {},
+  events: [],
+  initiativeOrder: [],
+  reminders: [],
+  round: 1,
+  turnIndex: 0,
+} as const;
 
 export const encounters = pgTable.withRLS('encounters', {
   active: boolean().notNull().default(false),

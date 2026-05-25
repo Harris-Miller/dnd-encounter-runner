@@ -37,36 +37,36 @@ export type Database = {
       characters: {
         Row: {
           armor_class: number
-          created_at: string | null
+          created_at: string
           id: string
           level: number
           max_hit_points: number
           name: string
           notes: string | null
           profile_id: string
-          updated_at: string | null
+          updated_at: string
         }
         Insert: {
           armor_class: number
-          created_at?: string | null
+          created_at?: string
           id?: string
           level?: number
           max_hit_points: number
           name: string
           notes?: string | null
           profile_id: string
-          updated_at?: string | null
+          updated_at?: string
         }
         Update: {
           armor_class?: number
-          created_at?: string | null
+          created_at?: string
           id?: string
           level?: number
           max_hit_points?: number
           name?: string
           notes?: string | null
           profile_id?: string
-          updated_at?: string | null
+          updated_at?: string
         }
         Relationships: [
           {
@@ -80,52 +80,52 @@ export type Database = {
       }
       damage_types: {
         Row: {
-          created_at: string | null
+          created_at: string
           id: string
           name: string
-          updated_at: string | null
+          updated_at: string
         }
         Insert: {
-          created_at?: string | null
+          created_at?: string
           id?: string
           name: string
-          updated_at?: string | null
+          updated_at?: string
         }
         Update: {
-          created_at?: string | null
+          created_at?: string
           id?: string
           name?: string
-          updated_at?: string | null
+          updated_at?: string
         }
         Relationships: []
       }
       encounters: {
         Row: {
           active: boolean
-          created_at: string | null
+          created_at: string
           id: string
           name: string
           profile_id: string
           state: Json
-          updated_at: string | null
+          updated_at: string
         }
         Insert: {
           active?: boolean
-          created_at?: string | null
+          created_at?: string
           id?: string
           name?: string
           profile_id: string
           state?: Json
-          updated_at?: string | null
+          updated_at?: string
         }
         Update: {
           active?: boolean
-          created_at?: string | null
+          created_at?: string
           id?: string
           name?: string
           profile_id?: string
           state?: Json
-          updated_at?: string | null
+          updated_at?: string
         }
         Relationships: [
           {
@@ -140,7 +140,7 @@ export type Database = {
       magic_items: {
         Row: {
           category_specifier_text: string | null
-          created_at: string | null
+          created_at: string
           ddb_id: string | null
           description_text: string | null
           id: string
@@ -151,14 +151,14 @@ export type Database = {
           name: string
           requires_attunement: boolean
           slug: string | null
-          updated_at: string | null
+          updated_at: string
           variant_rarities:
             | Database["public"]["Enums"]["magic_item_variant_rarity"][]
             | null
         }
         Insert: {
           category_specifier_text?: string | null
-          created_at?: string | null
+          created_at?: string
           ddb_id?: string | null
           description_text?: string | null
           id?: string
@@ -169,14 +169,14 @@ export type Database = {
           name: string
           requires_attunement: boolean
           slug?: string | null
-          updated_at?: string | null
+          updated_at?: string
           variant_rarities?:
             | Database["public"]["Enums"]["magic_item_variant_rarity"][]
             | null
         }
         Update: {
           category_specifier_text?: string | null
-          created_at?: string | null
+          created_at?: string
           ddb_id?: string | null
           description_text?: string | null
           id?: string
@@ -187,7 +187,7 @@ export type Database = {
           name?: string
           requires_attunement?: boolean
           slug?: string | null
-          updated_at?: string | null
+          updated_at?: string
           variant_rarities?:
             | Database["public"]["Enums"]["magic_item_variant_rarity"][]
             | null
@@ -196,22 +196,22 @@ export type Database = {
       }
       mastery: {
         Row: {
-          created_at: string | null
+          created_at: string
           description: string
           id: string
-          updated_at: string | null
+          updated_at: string
         }
         Insert: {
-          created_at?: string | null
+          created_at?: string
           description: string
           id?: string
-          updated_at?: string | null
+          updated_at?: string
         }
         Update: {
-          created_at?: string | null
+          created_at?: string
           description?: string
           id?: string
-          updated_at?: string | null
+          updated_at?: string
         }
         Relationships: []
       }
@@ -226,7 +226,7 @@ export type Database = {
           charisma_save: number
           constitution: number
           constitution_save: number
-          created_at: string | null
+          created_at: string
           creature_type: string
           descriptive_tags: string | null
           dexterity: number
@@ -259,7 +259,7 @@ export type Database = {
           strength: number
           strength_save: number
           traits: string[]
-          updated_at: string | null
+          updated_at: string
           vulnerabilities: string | null
           wisdom: number
           wisdom_save: number
@@ -274,7 +274,7 @@ export type Database = {
           charisma_save: number
           constitution: number
           constitution_save: number
-          created_at?: string | null
+          created_at?: string
           creature_type: string
           descriptive_tags?: string | null
           dexterity: number
@@ -307,7 +307,7 @@ export type Database = {
           strength: number
           strength_save: number
           traits?: string[]
-          updated_at?: string | null
+          updated_at?: string
           vulnerabilities?: string | null
           wisdom: number
           wisdom_save: number
@@ -322,7 +322,7 @@ export type Database = {
           charisma_save?: number
           constitution?: number
           constitution_save?: number
-          created_at?: string | null
+          created_at?: string
           creature_type?: string
           descriptive_tags?: string | null
           dexterity?: number
@@ -355,7 +355,7 @@ export type Database = {
           strength?: number
           strength_save?: number
           traits?: string[]
-          updated_at?: string | null
+          updated_at?: string
           vulnerabilities?: string | null
           wisdom?: number
           wisdom_save?: number
@@ -365,34 +365,34 @@ export type Database = {
       profiles: {
         Row: {
           avatar_source: Database["public"]["Enums"]["profile_avatar_source"]
-          created_at: string | null
+          created_at: string
           email: string
           gravatar_id: string | null
           id: string
           name: string | null
-          updated_at: string | null
+          updated_at: string
           uploaded_avatar_id: string | null
           user_id: string
         }
         Insert: {
           avatar_source?: Database["public"]["Enums"]["profile_avatar_source"]
-          created_at?: string | null
+          created_at?: string
           email: string
           gravatar_id?: string | null
           id?: string
           name?: string | null
-          updated_at?: string | null
+          updated_at?: string
           uploaded_avatar_id?: string | null
           user_id: string
         }
         Update: {
           avatar_source?: Database["public"]["Enums"]["profile_avatar_source"]
-          created_at?: string | null
+          created_at?: string
           email?: string
           gravatar_id?: string | null
           id?: string
           name?: string | null
-          updated_at?: string | null
+          updated_at?: string
           uploaded_avatar_id?: string | null
           user_id?: string
         }
@@ -401,7 +401,7 @@ export type Database = {
       spells: {
         Row: {
           casting_time: string
-          created_at: string | null
+          created_at: string
           description: string | null
           duration: string
           id: string
@@ -416,11 +416,11 @@ export type Database = {
           range: string
           school: string
           upcast_description: string | null
-          updated_at: string | null
+          updated_at: string
         }
         Insert: {
           casting_time: string
-          created_at?: string | null
+          created_at?: string
           description?: string | null
           duration: string
           id?: string
@@ -435,11 +435,11 @@ export type Database = {
           range: string
           school: string
           upcast_description?: string | null
-          updated_at?: string | null
+          updated_at?: string
         }
         Update: {
           casting_time?: string
-          created_at?: string | null
+          created_at?: string
           description?: string | null
           duration?: string
           id?: string
@@ -454,56 +454,56 @@ export type Database = {
           range?: string
           school?: string
           upcast_description?: string | null
-          updated_at?: string | null
+          updated_at?: string
         }
         Relationships: []
       }
       weapon_properties: {
         Row: {
-          created_at: string | null
+          created_at: string
           id: string
           name: string
           range_long: number | null
           range_short: number | null
-          updated_at: string | null
+          updated_at: string
           versatile_damage_die: string | null
         }
         Insert: {
-          created_at?: string | null
+          created_at?: string
           id?: string
           name: string
           range_long?: number | null
           range_short?: number | null
-          updated_at?: string | null
+          updated_at?: string
           versatile_damage_die?: string | null
         }
         Update: {
-          created_at?: string | null
+          created_at?: string
           id?: string
           name?: string
           range_long?: number | null
           range_short?: number | null
-          updated_at?: string | null
+          updated_at?: string
           versatile_damage_die?: string | null
         }
         Relationships: []
       }
       weapon_to_weapon_properties: {
         Row: {
-          created_at: string | null
-          updated_at: string | null
+          created_at: string
+          updated_at: string
           weapon_id: string
           weapon_property_id: string
         }
         Insert: {
-          created_at?: string | null
-          updated_at?: string | null
+          created_at?: string
+          updated_at?: string
           weapon_id: string
           weapon_property_id: string
         }
         Update: {
-          created_at?: string | null
-          updated_at?: string | null
+          created_at?: string
+          updated_at?: string
           weapon_id?: string
           weapon_property_id?: string
         }
@@ -528,29 +528,29 @@ export type Database = {
         Row: {
           category: string
           classification: string
-          created_at: string | null
+          created_at: string
           id: string
           mastery_id: string
           name: string
-          updated_at: string | null
+          updated_at: string
         }
         Insert: {
           category: string
           classification: string
-          created_at?: string | null
+          created_at?: string
           id?: string
           mastery_id: string
           name: string
-          updated_at?: string | null
+          updated_at?: string
         }
         Update: {
           category?: string
           classification?: string
-          created_at?: string | null
+          created_at?: string
           id?: string
           mastery_id?: string
           name?: string
-          updated_at?: string | null
+          updated_at?: string
         }
         Relationships: [
           {
@@ -627,12 +627,12 @@ export type Database = {
         Args: { p_active: boolean; p_encounter_id: string }
         Returns: {
           active: boolean
-          created_at: string | null
+          created_at: string
           id: string
           name: string
           profile_id: string
           state: Json
-          updated_at: string | null
+          updated_at: string
         }[]
         SetofOptions: {
           from: "*"
@@ -653,12 +653,12 @@ export type Database = {
         Args: { p_encounter_id: string; p_name: string }
         Returns: {
           active: boolean
-          created_at: string | null
+          created_at: string
           id: string
           name: string
           profile_id: string
           state: Json
-          updated_at: string | null
+          updated_at: string
         }[]
         SetofOptions: {
           from: "*"

@@ -28,10 +28,10 @@ import type {
   ActiveEffect,
   EffectDescriptor,
   EffectExpiry,
-  EffectSourceType,
+  EffectSource,
   StandardCondition,
   TickOn,
-  TriggerEventType,
+  TriggerEvent,
 } from '../../types/encounterState';
 import { STANDARD_CONDITION_IDS, TRIGGER_EVENT_TYPES } from '../../types/encounterState';
 
@@ -74,7 +74,7 @@ const TICK_ON_OPTIONS: { label: string; value: TickOn }[] = [
   { label: 'End of round', value: 'end_of_round' },
 ];
 
-const sourceToSourceType = (source: Source): EffectSourceType =>
+const sourceToSourceType = (source: Source): EffectSource =>
   source === 'item' ? 'item' : source === 'spell' ? 'spell' : source === 'condition' ? 'condition' : 'manual';
 
 interface DescriptorFormState {
@@ -84,7 +84,7 @@ interface DescriptorFormState {
   kind: DescriptorKind;
   reactionName: string;
   reactionPrompt: string;
-  reactionTriggers: TriggerEventType[];
+  reactionTriggers: TriggerEvent[];
   spellName: string;
 }
 
@@ -250,7 +250,7 @@ export const ApplyEffectDialog: FC<ApplyEffectDialogProps> = ({ buildId, combata
 
   const remainingRounds: number | null = expiry.kind === 'after_rounds' ? expiry.rounds : null;
 
-  const notifyOn: TriggerEventType[] = useMemo(() => {
+  const notifyOn: TriggerEvent[] = useMemo(() => {
     if (descriptorForm.kind === 'condition') {
       return STANDARD_CONDITIONS[descriptorForm.conditionId].defaultNotifyOn;
     }
