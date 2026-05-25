@@ -26,6 +26,7 @@ import {
   useApplyTransform,
 } from '../../api/encounters';
 import { InitiativeTracker } from '../../components/encounter/InitiativeTracker';
+import { RecordEventToolbar } from '../../components/encounter/RecordEventToolbar';
 import { RouterLink } from '../../components/RouterLink';
 import { queryClient } from '../../queryClient';
 
@@ -51,6 +52,26 @@ const EncounterPage: FC = () => {
     applyTransform.mutate({
       input: { buildId: () => crypto.randomUUID(), now: new Date().toISOString() },
       type: 'advanceTurn',
+    });
+  };
+
+  const handleAdvanceRound = () => {
+    applyTransform.mutate({
+      input: { buildId: () => crypto.randomUUID(), now: new Date().toISOString() },
+      type: 'advanceRound',
+    });
+  };
+
+  const handleRecordEvent = (
+    event: Parameters<typeof applyTransform.mutate>[0]['input'] extends infer T
+      ? T extends { event: infer E }
+        ? E
+        : never
+      : never,
+  ) => {
+    applyTransform.mutate({
+      input: { buildId: () => crypto.randomUUID(), event, now: new Date().toISOString() },
+      type: 'recordEvent',
     });
   };
 
@@ -127,9 +148,10 @@ const EncounterPage: FC = () => {
         state={data.state}
       />
 
+      <RecordEventToolbar onAdvanceRound={handleAdvanceRound} onRecordEvent={handleRecordEvent} state={data.state} />
+
       <Alert severity="info">
-        Record-event toolbar, combatant detail drawer, and reminder panel will surface here as the remaining iteration
-        steps land.
+        Combatant detail drawer and reminder panel will surface here as the remaining iteration steps land.
       </Alert>
 
       <Dialog fullWidth maxWidth="sm" onClose={handleRenameClose} open={renameOpen}>
