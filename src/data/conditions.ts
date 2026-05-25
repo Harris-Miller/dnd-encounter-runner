@@ -1,123 +1,142 @@
-// Standard D&D 5e condition definitions with their triggers
+import { STANDARD_CONDITION_IDS } from '../types/encounterState';
+import type { StandardCondition, TickOn, TriggerEventType } from '../types/encounterState';
 
-import type { Condition, StandardCondition } from '../types/encounter';
+export interface ConditionDef {
+  defaultNotifyOn: TriggerEventType[];
+  defaultTickOn: TickOn;
+  description: string;
+  id: StandardCondition;
+  name: string;
+}
 
-export const STANDARD_CONDITIONS: Record<StandardCondition, Condition> = {
+export const STANDARD_CONDITIONS: Record<StandardCondition, ConditionDef> = {
   blinded: {
+    defaultNotifyOn: [],
+    defaultTickOn: 'manual',
     description:
       "A blinded creature can't see and automatically fails any ability check that requires sight. Attack rolls against the creature have advantage, and the creature's attack rolls have disadvantage.",
     id: 'blinded',
     name: 'Blinded',
-    triggers: [],
   },
   charmed: {
+    defaultNotifyOn: [],
+    defaultTickOn: 'manual',
     description:
       "A charmed creature can't attack the charmer or target the charmer with harmful abilities or magical effects. The charmer has advantage on any ability check to interact socially with the creature.",
     id: 'charmed',
     name: 'Charmed',
-    triggers: [],
   },
   concentrating: {
+    defaultNotifyOn: ['ON_DAMAGE'],
+    defaultTickOn: 'manual',
     description:
-      'When you cast a spell that has a casting time longer than a single action or reaction, you must spend your action each turn casting the spell, and you must maintain your concentration while you do so. If your concentration is broken, the spell fails.',
+      'When you take damage while concentrating, make a Constitution saving throw (DC equal to 10 or half the damage taken, whichever is higher) to maintain concentration on the spell.',
     id: 'concentrating',
     name: 'Concentrating',
-    triggers: ['ON_DAMAGE'],
   },
   deafened: {
+    defaultNotifyOn: [],
+    defaultTickOn: 'manual',
     description: "A deafened creature can't hear and automatically fails any ability check that requires hearing.",
     id: 'deafened',
     name: 'Deafened',
-    triggers: [],
   },
   exhaustion: {
+    defaultNotifyOn: [],
+    defaultTickOn: 'manual',
     description:
-      'Some special abilities and environmental hazards, such as starvation and the long-term effects of freezing or scorching temperatures, can lead to a special condition called exhaustion.',
+      'Levels of exhaustion impose stacking penalties to ability checks, attack rolls, saving throws, and ultimately reduce HP maximum and movement.',
     id: 'exhaustion',
     name: 'Exhaustion',
-    triggers: [],
   },
   frightened: {
+    defaultNotifyOn: [],
+    defaultTickOn: 'manual',
     description:
       "A frightened creature has disadvantage on ability checks and attack rolls while the source of its fear is within line of sight. The creature can't willingly move closer to the source of its fear.",
     id: 'frightened',
     name: 'Frightened',
-    triggers: [],
   },
   grappled: {
+    defaultNotifyOn: [],
+    defaultTickOn: 'manual',
     description:
       "A grappled creature's speed becomes 0, and it can't benefit from any bonus to its speed. The condition ends if the grappler is incapacitated.",
     id: 'grappled',
     name: 'Grappled',
-    triggers: [],
   },
   incapacitated: {
+    defaultNotifyOn: [],
+    defaultTickOn: 'manual',
     description: "An incapacitated creature can't take actions or reactions.",
     id: 'incapacitated',
     name: 'Incapacitated',
-    triggers: [],
   },
   invisible: {
+    defaultNotifyOn: [],
+    defaultTickOn: 'manual',
     description:
-      "An invisible creature is impossible to see without the aid of magic or a special sense. For the purpose of hiding, the creature is heavily obscured. The creature's location can be detected by any noise it makes or any tracks it leaves. Attack rolls against the creature have disadvantage, and the creature's attack rolls have advantage.",
+      "An invisible creature is impossible to see without the aid of magic or a special sense. Attack rolls against the creature have disadvantage, and the creature's attack rolls have advantage.",
     id: 'invisible',
     name: 'Invisible',
-    triggers: [],
   },
   paralyzed: {
+    defaultNotifyOn: [],
+    defaultTickOn: 'manual',
     description:
-      "A paralyzed creature is incapacitated and can't move or speak. The creature automatically fails Strength and Dexterity saving throws. Attack rolls against the creature have advantage. Any attack that hits the creature is a critical hit if the attacker is within 5 feet of the creature.",
+      "A paralyzed creature is incapacitated and can't move or speak. It automatically fails Strength and Dexterity saving throws. Attack rolls against the creature have advantage. Any attack that hits is a crit if the attacker is within 5 feet.",
     id: 'paralyzed',
     name: 'Paralyzed',
-    triggers: [],
   },
   petrified: {
+    defaultNotifyOn: [],
+    defaultTickOn: 'manual',
     description:
-      "A petrified creature is transformed, along with any nonmagical object it is wearing or carrying, into a solid inanimate substance (usually stone). The creature's weight increases by a factor of ten, and it ceases aging. The creature is incapacitated, can't move or speak, and is unaware of its surroundings. Attack rolls against the creature have advantage. The creature automatically fails Strength and Dexterity saving throws. The creature has resistance to all damage. The creature is immune to poison and disease, although a poison or disease already in its system is suspended, not neutralized.",
+      'A petrified creature is transformed into a solid inanimate substance, incapacitated, has resistance to all damage, and is immune to poison and disease.',
     id: 'petrified',
     name: 'Petrified',
-    triggers: [],
   },
   poisoned: {
+    defaultNotifyOn: ['START_OF_TURN'],
+    defaultTickOn: 'manual',
     description: 'A poisoned creature has disadvantage on attack rolls and ability checks.',
     id: 'poisoned',
     name: 'Poisoned',
-    triggers: [],
   },
   prone: {
+    defaultNotifyOn: ['START_OF_TURN'],
+    defaultTickOn: 'manual',
     description:
-      "A prone creature's only movement option is to crawl, unless it stands up and thereby ends the condition. The creature has disadvantage on attack rolls. An attack roll against the creature has advantage if the attacker is within 5 feet of the creature. Otherwise, the attack roll has disadvantage.",
+      "A prone creature's only movement option is to crawl, unless it stands up. It has disadvantage on attack rolls. Attack rolls against the creature have advantage if the attacker is within 5 feet, otherwise disadvantage.",
     id: 'prone',
     name: 'Prone',
-    triggers: [],
   },
   restrained: {
+    defaultNotifyOn: [],
+    defaultTickOn: 'manual',
     description:
-      "A restrained creature's speed becomes 0, and it can't benefit from any bonus to its speed. Attack rolls against the creature have advantage, and the creature's attack rolls have disadvantage. The creature has disadvantage on Dexterity saving throws.",
+      "A restrained creature's speed is 0. Attack rolls against the creature have advantage, and the creature's attack rolls have disadvantage. The creature has disadvantage on Dexterity saving throws.",
     id: 'restrained',
     name: 'Restrained',
-    triggers: [],
   },
   stunned: {
+    defaultNotifyOn: [],
+    defaultTickOn: 'manual',
     description:
-      "A stunned creature is incapacitated, can't move, and can speak only falteringly. The creature automatically fails Strength and Dexterity saving throws. Attack rolls against the creature have advantage.",
+      "A stunned creature is incapacitated, can't move, and can speak only falteringly. It automatically fails Strength and Dexterity saving throws, and attack rolls against it have advantage.",
     id: 'stunned',
     name: 'Stunned',
-    triggers: [],
   },
   unconscious: {
+    defaultNotifyOn: [],
+    defaultTickOn: 'manual',
     description:
-      "An unconscious creature is incapacitated, can't move or speak, and is unaware of its surroundings. The creature drops whatever it's holding and falls prone. The creature automatically fails Strength and Dexterity saving throws. Attack rolls against the creature have advantage. Any attack that hits the creature is a critical hit if the attacker is within 5 feet of the creature.",
+      "An unconscious creature is incapacitated, can't move or speak, drops what it's holding, and falls prone. It automatically fails Strength and Dexterity saving throws, attack rolls against it have advantage, and any hit within 5 feet is a critical hit.",
     id: 'unconscious',
     name: 'Unconscious',
-    triggers: [],
   },
 };
 
-export const getConditionById = (id: StandardCondition): Condition => {
-  return STANDARD_CONDITIONS[id];
-};
+export const getConditionById = (id: StandardCondition): ConditionDef => STANDARD_CONDITIONS[id];
 
-export const getAllConditions = (): Condition[] => {
-  return Object.values(STANDARD_CONDITIONS);
-};
+export const getAllConditions = (): ConditionDef[] => STANDARD_CONDITION_IDS.map(id => STANDARD_CONDITIONS[id]);

@@ -34,6 +34,50 @@ export type Database = {
   }
   public: {
     Tables: {
+      characters: {
+        Row: {
+          armor_class: number
+          created_at: string | null
+          id: string
+          level: number
+          max_hit_points: number
+          name: string
+          notes: string | null
+          profile_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          armor_class: number
+          created_at?: string | null
+          id?: string
+          level?: number
+          max_hit_points: number
+          name: string
+          notes?: string | null
+          profile_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          armor_class?: number
+          created_at?: string | null
+          id?: string
+          level?: number
+          max_hit_points?: number
+          name?: string
+          notes?: string | null
+          profile_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "characters_profile_id_profiles_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       damage_types: {
         Row: {
           created_at: string | null
@@ -57,21 +101,30 @@ export type Database = {
       }
       encounters: {
         Row: {
+          active: boolean
           created_at: string | null
           id: string
+          name: string
           profile_id: string
+          state: Json
           updated_at: string | null
         }
         Insert: {
+          active?: boolean
           created_at?: string | null
           id?: string
+          name?: string
           profile_id: string
+          state?: Json
           updated_at?: string | null
         }
         Update: {
+          active?: boolean
           created_at?: string | null
           id?: string
+          name?: string
           profile_id?: string
+          state?: Json
           updated_at?: string | null
         }
         Relationships: [
@@ -514,7 +567,106 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      encounter_add_combatant: {
+        Args: {
+          p_combatant: Json
+          p_encounter_id: string
+          p_next_initiative_order: Json
+        }
+        Returns: Json
+      }
+      encounter_adjust_hp: {
+        Args: {
+          p_combatant_id: string
+          p_delta: number
+          p_encounter_id: string
+        }
+        Returns: Json
+      }
+      encounter_advance_round: {
+        Args: { p_encounter_id: string; p_next_state: Json }
+        Returns: Json
+      }
+      encounter_advance_turn: {
+        Args: { p_encounter_id: string; p_next_state: Json }
+        Returns: Json
+      }
+      encounter_apply_effect: {
+        Args: { p_combatant_id: string; p_effect: Json; p_encounter_id: string }
+        Returns: Json
+      }
+      encounter_dismiss_reminder: {
+        Args: { p_encounter_id: string; p_reminder_id: string }
+        Returns: Json
+      }
+      encounter_mark_reaction_used: {
+        Args: {
+          p_combatant_id: string
+          p_encounter_id: string
+          p_used: boolean
+        }
+        Returns: Json
+      }
+      encounter_record_event: {
+        Args: { p_encounter_id: string; p_next_state: Json }
+        Returns: Json
+      }
+      encounter_remove_combatant: {
+        Args: { p_combatant_id: string; p_encounter_id: string }
+        Returns: Json
+      }
+      encounter_remove_effect: {
+        Args: {
+          p_combatant_id: string
+          p_effect_id: string
+          p_encounter_id: string
+        }
+        Returns: Json
+      }
+      encounter_set_active: {
+        Args: { p_active: boolean; p_encounter_id: string }
+        Returns: {
+          active: boolean
+          created_at: string | null
+          id: string
+          name: string
+          profile_id: string
+          state: Json
+          updated_at: string | null
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "encounters"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
+      encounter_set_initiative: {
+        Args: {
+          p_combatant_id: string
+          p_encounter_id: string
+          p_initiative: number
+        }
+        Returns: Json
+      }
+      encounter_set_name: {
+        Args: { p_encounter_id: string; p_name: string }
+        Returns: {
+          active: boolean
+          created_at: string | null
+          id: string
+          name: string
+          profile_id: string
+          state: Json
+          updated_at: string | null
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "encounters"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
     }
     Enums: {
       magic_item_variant_rarity:

@@ -12,9 +12,11 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as LogoutRouteImport } from './routes/logout'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as HomeRouteImport } from './routes/home'
+import { Route as EncounterRouteImport } from './routes/encounter'
 import { Route as CreateProfileRouteImport } from './routes/createProfile'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as HomeIndexRouteImport } from './routes/home/index'
+import { Route as EncounterEncounterIdRouteImport } from './routes/encounter/$encounterId'
 
 const LogoutRoute = LogoutRouteImport.update({
   id: '/logout',
@@ -29,6 +31,11 @@ const LoginRoute = LoginRouteImport.update({
 const HomeRoute = HomeRouteImport.update({
   id: '/home',
   path: '/home',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EncounterRoute = EncounterRouteImport.update({
+  id: '/encounter',
+  path: '/encounter',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CreateProfileRoute = CreateProfileRouteImport.update({
@@ -46,49 +53,78 @@ const HomeIndexRoute = HomeIndexRouteImport.update({
   path: '/',
   getParentRoute: () => HomeRoute,
 } as any)
+const EncounterEncounterIdRoute = EncounterEncounterIdRouteImport.update({
+  id: '/$encounterId',
+  path: '/$encounterId',
+  getParentRoute: () => EncounterRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/createProfile': typeof CreateProfileRoute
+  '/encounter': typeof EncounterRouteWithChildren
   '/home': typeof HomeRouteWithChildren
   '/login': typeof LoginRoute
   '/logout': typeof LogoutRoute
+  '/encounter/$encounterId': typeof EncounterEncounterIdRoute
   '/home/': typeof HomeIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/createProfile': typeof CreateProfileRoute
+  '/encounter': typeof EncounterRouteWithChildren
   '/login': typeof LoginRoute
   '/logout': typeof LogoutRoute
+  '/encounter/$encounterId': typeof EncounterEncounterIdRoute
   '/home': typeof HomeIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/createProfile': typeof CreateProfileRoute
+  '/encounter': typeof EncounterRouteWithChildren
   '/home': typeof HomeRouteWithChildren
   '/login': typeof LoginRoute
   '/logout': typeof LogoutRoute
+  '/encounter/$encounterId': typeof EncounterEncounterIdRoute
   '/home/': typeof HomeIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/createProfile' | '/home' | '/login' | '/logout' | '/home/'
+  fullPaths:
+    | '/'
+    | '/createProfile'
+    | '/encounter'
+    | '/home'
+    | '/login'
+    | '/logout'
+    | '/encounter/$encounterId'
+    | '/home/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/createProfile' | '/login' | '/logout' | '/home'
+  to:
+    | '/'
+    | '/createProfile'
+    | '/encounter'
+    | '/login'
+    | '/logout'
+    | '/encounter/$encounterId'
+    | '/home'
   id:
     | '__root__'
     | '/'
     | '/createProfile'
+    | '/encounter'
     | '/home'
     | '/login'
     | '/logout'
+    | '/encounter/$encounterId'
     | '/home/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CreateProfileRoute: typeof CreateProfileRoute
+  EncounterRoute: typeof EncounterRouteWithChildren
   HomeRoute: typeof HomeRouteWithChildren
   LoginRoute: typeof LoginRoute
   LogoutRoute: typeof LogoutRoute
@@ -117,6 +153,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HomeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/encounter': {
+      id: '/encounter'
+      path: '/encounter'
+      fullPath: '/encounter'
+      preLoaderRoute: typeof EncounterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/createProfile': {
       id: '/createProfile'
       path: '/createProfile'
@@ -138,8 +181,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HomeIndexRouteImport
       parentRoute: typeof HomeRoute
     }
+    '/encounter/$encounterId': {
+      id: '/encounter/$encounterId'
+      path: '/$encounterId'
+      fullPath: '/encounter/$encounterId'
+      preLoaderRoute: typeof EncounterEncounterIdRouteImport
+      parentRoute: typeof EncounterRoute
+    }
   }
 }
+
+interface EncounterRouteChildren {
+  EncounterEncounterIdRoute: typeof EncounterEncounterIdRoute
+}
+
+const EncounterRouteChildren: EncounterRouteChildren = {
+  EncounterEncounterIdRoute: EncounterEncounterIdRoute,
+}
+
+const EncounterRouteWithChildren = EncounterRoute._addFileChildren(
+  EncounterRouteChildren,
+)
 
 interface HomeRouteChildren {
   HomeIndexRoute: typeof HomeIndexRoute
@@ -154,6 +216,7 @@ const HomeRouteWithChildren = HomeRoute._addFileChildren(HomeRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CreateProfileRoute: CreateProfileRoute,
+  EncounterRoute: EncounterRouteWithChildren,
   HomeRoute: HomeRouteWithChildren,
   LoginRoute: LoginRoute,
   LogoutRoute: LogoutRoute,

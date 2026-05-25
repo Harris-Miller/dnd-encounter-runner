@@ -1,10 +1,11 @@
-// @ts-nocheck
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {
+  Alert,
   Box,
   Button,
   Card,
+  CardActionArea,
   CardContent,
   Chip,
   Dialog,
@@ -12,169 +13,197 @@ import {
   DialogContent,
   DialogTitle,
   IconButton,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
+  Skeleton,
+  Stack,
+  TextField,
+  Tooltip,
   Typography,
 } from '@mui/material';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { useState } from 'react';
 import type { FC } from 'react';
 
-// import { supabase } from '../services/supabase';
-import { RouterLink } from '../../components/RouterLink';
-import { useEncounterStore } from '../../store/encounter';
-import type { Encounter } from '../../store/encounter';
+import { mutateCreateEncounter, mutateDeleteEncounter, queryEncountersList } from '../../api/encounters';
+import { queryClient } from '../../queryClient';
 
-const HomeComponentOld: FC = () => {
+const formatTimestamp = (raw: string): string => {
+  if (raw === '') return '';
+  const date = new Date(raw);
+  if (Number.isNaN(date.getTime())) return raw;
+  return date.toLocaleString();
+};
+
+const HomePage: FC = () => {
   const navigate = useNavigate();
-  const encounters = useEncounterStore((state): Record<string, Encounter> => state.encounters);
-  const createEncounter = useEncounterStore(state => state.create);
-  const deleteEncounter = useEncounterStore(state => state.delete);
+  const { data, isError, isLoading } = useQuery(queryEncountersList);
+  const createMutation = useMutation({ ...mutateCreateEncounter, mutationKey: ['encounters', 'create'] });
+  const deleteMutation = useMutation({ ...mutateDeleteEncounter, mutationKey: ['encounters', 'delete'] });
 
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [encounterToDelete, setEncounterToDelete] = useState<Encounter | null>(null);
+  const [createDraft, setCreateDraft] = useState<string | null>(null);
+  const createOpen = createDraft !== null;
 
-  const encounterList: Encounter[] = Object.values(encounters);
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
 
-  const handleCreateEncounter = () => {
-    const newEncounter = createEncounter();
-    navigate({ params: { encounterId: newEncounter.id }, to: '/encounter/$encounterId' });
+  const handleCreateOpen = () => {
+    setCreateDraft('');
   };
 
-  const handleDeleteClick = (encounter: Encounter) => {
-    setEncounterToDelete(encounter);
-    setDeleteDialogOpen(true);
+  const handleCreateClose = () => {
+    setCreateDraft(null);
   };
 
-  const handleDeleteConfirm = () => {
-    if (encounterToDelete) {
-      deleteEncounter(encounterToDelete.id);
-    }
-    setDeleteDialogOpen(false);
-    setEncounterToDelete(null);
+  const handleCreateConfirm = () => {
+    const name = (createDraft ?? '').trim();
+    const finalName = name === '' ? 'Untitled Encounter' : name;
+
+    createMutation.mutate(
+      { name: finalName },
+      {
+        onSuccess: created => {
+          setCreateDraft(null);
+          navigate({ params: { encounterId: created.id }, to: '/encounter/$encounterId' });
+        },
+      },
+    );
+  };
+
+  const handleDeleteRequest = (encounterId: string) => {
+    setPendingDeleteId(encounterId);
   };
 
   const handleDeleteCancel = () => {
-    setDeleteDialogOpen(false);
-    setEncounterToDelete(null);
+    setPendingDeleteId(null);
   };
 
-  return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-      <Card>
-        <CardContent>
-          <Box sx={{ alignItems: 'center', display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-            <Typography variant="h5">Encounters</Typography>
-            <Button onClick={handleCreateEncounter} startIcon={<AddIcon />} variant="contained">
-              Create Encounter
-            </Button>
-          </Box>
-          {encounterList.length === 0 ? (
-            <Typography
-              sx={{
-                color: 'text.secondary',
-              }}
-              variant="body2"
-            >
-              No encounters created yet. Create an encounter to get started.
-            </Typography>
-          ) : (
-            <TableContainer component={Paper}>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Name</TableCell>
-                    <TableCell>Status</TableCell>
-                    <TableCell>Combatants</TableCell>
-                    <TableCell>Current Initiative</TableCell>
-                    <TableCell />
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {encounterList.map(encounter => {
-                    const combatantCount = Object.keys(encounter.combatants).length;
-                    const currentCombatant =
-                      encounter.currentInitiative != null && encounter.currentInitiative !== ''
-                        ? encounter.combatants[encounter.currentInitiative]
-                        : null;
+  const handleDeleteConfirm = () => {
+    if (pendingDeleteId == null) return;
+    const idToDelete = pendingDeleteId;
+    deleteMutation.mutate(idToDelete, {
+      onSettled: () => {
+        setPendingDeleteId(null);
+      },
+    });
+  };
 
-                    return (
-                      <TableRow key={encounter.id}>
-                        <TableCell>
-                          <RouterLink params={{ encounterId: encounter.id }} to="/encounter/$encounterId">
-                            {encounter.name}
-                          </RouterLink>
-                        </TableCell>
-                        <TableCell>
-                          <Chip
-                            color={encounter.active ? 'success' : 'default'}
-                            label={encounter.active ? 'Active' : 'Inactive'}
-                            size="small"
-                          />
-                        </TableCell>
-                        <TableCell>{combatantCount}</TableCell>
-                        <TableCell>
-                          {currentCombatant ? (
-                            <Box>
-                              <Typography component="span" variant="body2">
-                                {currentCombatant.name}
-                              </Typography>
-                            </Box>
-                          ) : (
-                            <Typography
-                              component="span"
-                              sx={{
-                                color: 'text.secondary',
-                              }}
-                              variant="body2"
-                            >
-                              None
-                            </Typography>
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          <IconButton
-                            color="error"
-                            onClick={() => {
-                              handleDeleteClick(encounter);
-                            }}
-                            size="small"
-                          >
-                            <DeleteIcon />
-                          </IconButton>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          )}
-          <Dialog onClose={handleDeleteCancel} open={deleteDialogOpen}>
-            <DialogTitle>Delete Encounter</DialogTitle>
-            <DialogContent>
-              <Typography>
-                Are you sure you want to delete &quot;{encounterToDelete?.name}&quot;? This action cannot be undone.
-              </Typography>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleDeleteCancel}>Cancel</Button>
-              <Button color="error" onClick={handleDeleteConfirm} variant="contained">
-                Delete
-              </Button>
-            </DialogActions>
-          </Dialog>
-        </CardContent>
-      </Card>
-    </Box>
+  const encounters = data ?? [];
+  const pendingDeleteEncounter =
+    pendingDeleteId == null ? null : (encounters.find(encounter => encounter.id === pendingDeleteId) ?? null);
+
+  return (
+    <Stack spacing={3}>
+      <Box sx={{ alignItems: 'center', display: 'flex', gap: 2 }}>
+        <Typography variant="h4">Encounters</Typography>
+        <Box sx={{ flexGrow: 1 }} />
+        <Button onClick={handleCreateOpen} startIcon={<AddIcon />} variant="contained">
+          New encounter
+        </Button>
+      </Box>
+
+      {isLoading ? (
+        <Stack spacing={2}>
+          <Skeleton height={96} variant="rectangular" />
+          <Skeleton height={96} variant="rectangular" />
+        </Stack>
+      ) : null}
+
+      {isError ? <Alert severity="error">Failed to load encounters.</Alert> : null}
+
+      {!isLoading && !isError && encounters.length === 0 && (
+        <Alert severity="info">
+          No encounters yet. Click <strong>New encounter</strong> to get started.
+        </Alert>
+      )}
+
+      {!isLoading && !isError && encounters.length > 0 && (
+        <Stack spacing={2}>
+          {encounters.map(encounter => (
+            <Card key={encounter.id} variant="outlined">
+              <Box sx={{ alignItems: 'center', display: 'flex' }}>
+                <CardActionArea
+                  onClick={() => {
+                    navigate({ params: { encounterId: encounter.id }, to: '/encounter/$encounterId' });
+                  }}
+                  sx={{ flexGrow: 1 }}
+                >
+                  <CardContent>
+                    <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap', gap: 1, mb: 0.5 }}>
+                      <Typography variant="h6">{encounter.name}</Typography>
+                      <Chip
+                        color={encounter.active ? 'success' : 'default'}
+                        label={encounter.active ? 'Active' : 'Inactive'}
+                        size="small"
+                      />
+                    </Stack>
+                    <Typography sx={{ color: 'text.secondary' }} variant="body2">
+                      Round {String(encounter.round)} · {String(encounter.combatantCount)} combatant
+                      {encounter.combatantCount === 1 ? '' : 's'} · Updated {formatTimestamp(encounter.updatedAt)}
+                    </Typography>
+                  </CardContent>
+                </CardActionArea>
+                <Box sx={{ pr: 1 }}>
+                  <Tooltip title="Delete encounter">
+                    <IconButton
+                      aria-label="Delete encounter"
+                      color="error"
+                      onClick={() => {
+                        handleDeleteRequest(encounter.id);
+                      }}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </Tooltip>
+                </Box>
+              </Box>
+            </Card>
+          ))}
+        </Stack>
+      )}
+
+      <Dialog fullWidth maxWidth="sm" onClose={handleCreateClose} open={createOpen}>
+        <DialogTitle>New encounter</DialogTitle>
+        <DialogContent>
+          <Box sx={{ pt: 1 }}>
+            <TextField
+              fullWidth
+              label="Encounter name"
+              onChange={event => {
+                setCreateDraft(event.target.value);
+              }}
+              placeholder="Untitled Encounter"
+              value={createDraft ?? ''}
+            />
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCreateClose}>Cancel</Button>
+          <Button disabled={createMutation.isPending} onClick={handleCreateConfirm} variant="contained">
+            Create
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog fullWidth maxWidth="xs" onClose={handleDeleteCancel} open={pendingDeleteId !== null}>
+        <DialogTitle>Delete encounter</DialogTitle>
+        <DialogContent>
+          <Typography variant="body2">
+            Delete <strong>{pendingDeleteEncounter?.name ?? 'this encounter'}</strong>? This cannot be undone.
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDeleteCancel}>Cancel</Button>
+          <Button color="error" disabled={deleteMutation.isPending} onClick={handleDeleteConfirm} variant="contained">
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Stack>
   );
 };
 
 export const Route = createFileRoute('/home/')({
-  component: HomeComponentOld,
+  component: HomePage,
+  loader: async () => {
+    await queryClient.ensureQueryData(queryEncountersList);
+  },
 });
