@@ -1,6 +1,7 @@
 import { integer, pgTable, text } from 'drizzle-orm/pg-core';
 
 import { createdAt, updatedAt, uuidFkCascade, uuidPk } from '../column.utils.ts';
+
 import { profiles } from './profile.ts';
 
 export const characters = pgTable.withRLS('characters', {

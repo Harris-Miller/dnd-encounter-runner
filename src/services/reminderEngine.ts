@@ -43,8 +43,7 @@ const findDamageModifierEffect = (
 ): ActiveEffect | undefined =>
   combatant.effects.find(effect =>
     effect.provides.some(
-      descriptor =>
-        descriptor.kind === kind && descriptor.damageType.toLowerCase() === damageType.toLowerCase(),
+      descriptor => descriptor.kind === kind && descriptor.damageType.toLowerCase() === damageType.toLowerCase(),
     ),
   );
 
@@ -54,8 +53,9 @@ const findConcentrationEffect = (combatant: Combatant): ActiveEffect | undefined
 const getConcentrationDescriptor = (
   effect: ActiveEffect,
 ): Extract<EffectDescriptor, { kind: 'concentration' }> | undefined =>
-  effect.provides.find((descriptor): descriptor is Extract<EffectDescriptor, { kind: 'concentration' }> =>
-    descriptor.kind === 'concentration',
+  effect.provides.find(
+    (descriptor): descriptor is Extract<EffectDescriptor, { kind: 'concentration' }> =>
+      descriptor.kind === 'concentration',
   );
 
 const critImmunityReminders = (
@@ -99,7 +99,7 @@ const damageModifierReminders = (
   }
 
   const reminders: Reminder[] = [];
-  const damageType = event.payload.damageType;
+  const { damageType } = event.payload;
   const immunity = findDamageModifierEffect(target, damageType, 'damage_immunity');
 
   if (immunity != null) {
@@ -185,23 +185,29 @@ const eventInvolvesCombatant = (event: EncounterEvent, combatantId: string): boo
   match(event)
     .with({ type: 'START_OF_TURN' }, ({ combatantId: id }) => id === combatantId)
     .with({ type: 'END_OF_TURN' }, ({ combatantId: id }) => id === combatantId)
-    .with({ type: 'ON_ATTACK' }, ({ payload }) =>
-      payload.attackerCombatantId === combatantId || payload.targetCombatantId === combatantId,
+    .with(
+      { type: 'ON_ATTACK' },
+      ({ payload }) => payload.attackerCombatantId === combatantId || payload.targetCombatantId === combatantId,
     )
-    .with({ type: 'ON_HIT' }, ({ payload }) =>
-      payload.attackerCombatantId === combatantId || payload.targetCombatantId === combatantId,
+    .with(
+      { type: 'ON_HIT' },
+      ({ payload }) => payload.attackerCombatantId === combatantId || payload.targetCombatantId === combatantId,
     )
-    .with({ type: 'ON_CRIT' }, ({ payload }) =>
-      payload.attackerCombatantId === combatantId || payload.targetCombatantId === combatantId,
+    .with(
+      { type: 'ON_CRIT' },
+      ({ payload }) => payload.attackerCombatantId === combatantId || payload.targetCombatantId === combatantId,
     )
-    .with({ type: 'ON_MISS' }, ({ payload }) =>
-      payload.attackerCombatantId === combatantId || payload.targetCombatantId === combatantId,
+    .with(
+      { type: 'ON_MISS' },
+      ({ payload }) => payload.attackerCombatantId === combatantId || payload.targetCombatantId === combatantId,
     )
-    .with({ type: 'ON_DAMAGE' }, ({ payload }) =>
-      payload.targetCombatantId === combatantId || payload.sourceCombatantId === combatantId,
+    .with(
+      { type: 'ON_DAMAGE' },
+      ({ payload }) => payload.targetCombatantId === combatantId || payload.sourceCombatantId === combatantId,
     )
-    .with({ type: 'ON_SPELL_CAST' }, ({ payload }) =>
-      payload.casterCombatantId === combatantId || payload.targetCombatantIds.includes(combatantId),
+    .with(
+      { type: 'ON_SPELL_CAST' },
+      ({ payload }) => payload.casterCombatantId === combatantId || payload.targetCombatantIds.includes(combatantId),
     )
     .with({ type: 'ON_REACTION_USED' }, ({ payload }) => payload.combatantId === combatantId)
     .with({ type: 'START_OF_ROUND' }, () => true)

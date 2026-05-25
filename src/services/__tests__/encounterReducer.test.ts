@@ -63,7 +63,7 @@ describe('encounterReducer', () => {
 
       const nextState = adjustHp(state, { combatantId: 'a', delta: -100 });
 
-      expect(nextState.combatants['a']?.currentHp).toBe(0);
+      expect(nextState.combatants.a?.currentHp).toBe(0);
     });
 
     it('clamps healing at maxHp', () => {
@@ -72,7 +72,7 @@ describe('encounterReducer', () => {
 
       const nextState = adjustHp(state, { combatantId: 'a', delta: 50 });
 
-      expect(nextState.combatants['a']?.currentHp).toBe(30);
+      expect(nextState.combatants.a?.currentHp).toBe(30);
     });
   });
 
@@ -85,7 +85,7 @@ describe('encounterReducer', () => {
       const nextState = setInitiative(state, { combatantId: 'b', initiative: 22 });
 
       expect(nextState.initiativeOrder).toStrictEqual(['b', 'a']);
-      expect(nextState.combatants['b']?.initiative).toBe(22);
+      expect(nextState.combatants.b?.initiative).toBe(22);
     });
   });
 
@@ -96,7 +96,7 @@ describe('encounterReducer', () => {
 
       const nextState = markReactionUsed(state, { combatantId: 'a', used: true });
 
-      expect(nextState.combatants['a']?.actionEconomy.reactionUsed).toBe(true);
+      expect(nextState.combatants.a?.actionEconomy.reactionUsed).toBe(true);
     });
 
     it('resets action economy', () => {
@@ -109,7 +109,7 @@ describe('encounterReducer', () => {
 
       const nextState = resetActionEconomy(state, { combatantId: 'a' });
 
-      expect(nextState.combatants['a']?.actionEconomy).toStrictEqual({
+      expect(nextState.combatants.a?.actionEconomy).toStrictEqual({
         actionUsed: false,
         bonusActionUsed: false,
         reactionUsed: false,
@@ -130,8 +130,8 @@ describe('encounterReducer', () => {
 
       const nextState = applyEffect(state, { combatantId: 'a', effect });
 
-      expect(nextState.combatants['a']?.effects).toHaveLength(1);
-      expect(nextState.combatants['a']?.effects[0]?.id).toBe('eff-1');
+      expect(nextState.combatants.a?.effects).toHaveLength(1);
+      expect(nextState.combatants.a?.effects[0]?.id).toBe('eff-1');
     });
 
     it('removes an effect by id', () => {
@@ -145,7 +145,7 @@ describe('encounterReducer', () => {
 
       const nextState = removeEffect(state, { combatantId: 'a', effectId: 'eff-1' });
 
-      expect(nextState.combatants['a']?.effects).toHaveLength(0);
+      expect(nextState.combatants.a?.effects).toHaveLength(0);
     });
   });
 
@@ -193,7 +193,7 @@ describe('encounterReducer', () => {
 
       const result = tickEffects(state, 'end_of_owner_turn', ['a']);
 
-      expect(result.state.combatants['a']?.effects[0]?.remainingRounds).toBe(2);
+      expect(result.state.combatants.a?.effects[0]?.remainingRounds).toBe(2);
       expect(result.expired).toHaveLength(0);
     });
 
@@ -215,7 +215,7 @@ describe('encounterReducer', () => {
 
       const result = tickEffects(state, 'end_of_owner_turn', ['a']);
 
-      expect(result.state.combatants['a']?.effects).toHaveLength(0);
+      expect(result.state.combatants.a?.effects).toHaveLength(0);
       expect(result.expired).toHaveLength(1);
       expect(result.expired[0]?.effect.id).toBe('eff-1');
     });
@@ -238,7 +238,7 @@ describe('encounterReducer', () => {
 
       const result = tickEffects(state, 'end_of_owner_turn', ['a']);
 
-      expect(result.state.combatants['a']?.effects[0]?.remainingRounds).toBe(3);
+      expect(result.state.combatants.a?.effects[0]?.remainingRounds).toBe(3);
     });
   });
 
@@ -277,7 +277,7 @@ describe('encounterReducer', () => {
 
       const nextState = advanceTurn(state, buildFactories());
 
-      expect(nextState.combatants['a']?.actionEconomy).toStrictEqual({
+      expect(nextState.combatants.a?.actionEconomy).toStrictEqual({
         actionUsed: false,
         bonusActionUsed: false,
         reactionUsed: false,
@@ -305,7 +305,7 @@ describe('encounterReducer', () => {
 
       const nextState = advanceTurn(state, buildFactories());
 
-      expect(nextState.combatants['a']?.effects[0]?.remainingRounds).toBe(2);
+      expect(nextState.combatants.a?.effects[0]?.remainingRounds).toBe(2);
     });
   });
 
@@ -330,7 +330,7 @@ describe('encounterReducer', () => {
 
       const nextState = advanceRound(state, buildFactories());
 
-      expect(nextState.combatants['a']?.actionEconomy).toStrictEqual({
+      expect(nextState.combatants.a?.actionEconomy).toStrictEqual({
         actionUsed: false,
         bonusActionUsed: false,
         reactionUsed: false,

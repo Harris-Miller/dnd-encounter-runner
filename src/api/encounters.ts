@@ -2,14 +2,14 @@ import { mutationOptions, queryOptions, useMutation, useQueryClient } from '@tan
 import type { UseMutationResult } from '@tanstack/react-query';
 import { match } from 'ts-pattern';
 
-import { getCachedProfile } from './profile';
-
 import { applyTransform } from '../services/encounterReducer';
 import type { Transform } from '../services/encounterReducer';
 import { supabase } from '../services/supabase';
 import type { Database } from '../types/database.gen';
 import type { EncounterState } from '../types/encounterState';
 import { emptyEncounterState, encounterStateSchema } from '../types/encounterState';
+
+import { getCachedProfile } from './profile';
 
 type EncounterRow = Database['public']['Tables']['encounters']['Row'];
 
@@ -33,7 +33,7 @@ export interface EncounterDetail {
 }
 
 const parseEncounterState = (raw: unknown): EncounterState => {
-  if (raw == null || (typeof raw === 'object' && Object.keys(raw as object).length === 0)) {
+  if (raw == null || (typeof raw === 'object' && Object.keys(raw).length === 0)) {
     return emptyEncounterState();
   }
 
@@ -64,10 +64,7 @@ const rowToListItem = (row: EncounterRow): EncounterListItem => {
 };
 
 const fetchEncountersList = async (): Promise<EncounterListItem[]> => {
-  const { data, error } = await supabase
-    .from('encounters')
-    .select('*')
-    .order('updated_at', { ascending: false });
+  const { data, error } = await supabase.from('encounters').select('*').order('updated_at', { ascending: false });
 
   if (error != null) {
     throw error;
@@ -302,14 +299,11 @@ export interface ApplyTransformContext {
  * 3. Replaces the cache with the server's authoritative state on success;
  *    rolls back to the snapshot on error.
  */
-export const useApplyTransform = (encounterId: string): UseMutationResult<
-  EncounterState,
-  Error,
-  Transform,
-  ApplyTransformContext
-> => {
+export const useApplyTransform = (
+  encounterId: string,
+): UseMutationResult<EncounterState, Error, Transform, ApplyTransformContext> => {
   const client = useQueryClient();
-  const queryKey = queryEncounter(encounterId).queryKey;
+  const { queryKey } = queryEncounter(encounterId);
 
   return useMutation<EncounterState, Error, Transform, ApplyTransformContext>({
     mutationFn: async transform => {

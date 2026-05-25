@@ -16,8 +16,8 @@ export interface MagicItemSummary {
 
 export interface MagicItemDetail extends MagicItemSummary {
   categorySpecifierText: string | null;
-  description: string | null;
   ddbId: string | null;
+  description: string | null;
   isConsumable: boolean;
   slug: string | null;
 }
@@ -44,14 +44,9 @@ const PAGE_SIZE = 25;
 
 const searchMagicItems = async (search: string): Promise<MagicItemSummary[]> => {
   const trimmed = search.trim();
-  const query = supabase
-    .from('magic_items')
-    .select('*')
-    .order('name', { ascending: true })
-    .limit(PAGE_SIZE);
+  const query = supabase.from('magic_items').select('*').order('name', { ascending: true }).limit(PAGE_SIZE);
 
-  const { data, error } =
-    trimmed === '' ? await query : await query.ilike('name', `%${trimmed}%`);
+  const { data, error } = trimmed === '' ? await query : await query.ilike('name', `%${trimmed}%`);
 
   if (error != null) {
     throw error;

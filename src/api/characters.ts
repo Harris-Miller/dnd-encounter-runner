@@ -1,9 +1,9 @@
 import { mutationOptions, queryOptions } from '@tanstack/react-query';
 
-import { getCachedProfile } from './profile';
-
 import { supabase } from '../services/supabase';
 import type { Database } from '../types/database.gen';
+
+import { getCachedProfile } from './profile';
 
 export type CharacterRow = Database['public']['Tables']['characters']['Row'];
 

@@ -59,8 +59,7 @@ const searchSpells = async (search: string): Promise<SpellSummary[]> => {
     .order('name', { ascending: true })
     .limit(PAGE_SIZE);
 
-  const { data, error } =
-    trimmed === '' ? await query : await query.ilike('name', `%${trimmed}%`);
+  const { data, error } = trimmed === '' ? await query : await query.ilike('name', `%${trimmed}%`);
 
   if (error != null) {
     throw error;

@@ -26,6 +26,8 @@ export const encounters = pgTable.withRLS('encounters', {
   id: uuidPk(),
   name: text().notNull().default('Untitled Encounter'),
   profileId: uuidFkCascade(() => profiles.id),
-  state: jsonb().notNull().default(sql`'{}'::jsonb`),
+  state: jsonb()
+    .notNull()
+    .default(sql`'{}'::jsonb`),
   updatedAt: updatedAt(),
 });

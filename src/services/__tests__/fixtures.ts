@@ -2,8 +2,8 @@ import type {
   ActiveEffect,
   Combatant,
   CombatantType,
-  EncounterState,
   EffectDescriptor,
+  EncounterState,
 } from '../../types/encounterState';
 import { DEFAULT_ACTION_ECONOMY, emptyEncounterState } from '../../types/encounterState';
 
@@ -25,9 +25,7 @@ export const buildFactories = (): { buildId: () => string; now: string } => ({
   now: FIXED_NOW,
 });
 
-export const buildCombatant = (
-  overrides: Partial<Combatant> & { id: string; name: string },
-): Combatant => ({
+export const buildCombatant = (overrides: Partial<Combatant> & { id: string; name: string }): Combatant => ({
   actionEconomy: { ...DEFAULT_ACTION_ECONOMY },
   armorClass: 14,
   currentHp: 30,

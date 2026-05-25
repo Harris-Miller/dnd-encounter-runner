@@ -1,9 +1,6 @@
 import * as R from 'ramda';
 import { match } from 'ts-pattern';
 
-import { generateReminders } from './reminderEngine';
-import type { ReminderFactories } from './reminderEngine';
-
 import type {
   ActionEconomy,
   ActiveEffect,
@@ -14,6 +11,9 @@ import type {
   Reminder,
 } from '../types/encounterState';
 import { DEFAULT_ACTION_ECONOMY } from '../types/encounterState';
+
+import { generateReminders } from './reminderEngine';
+import type { ReminderFactories } from './reminderEngine';
 
 const sortInitiativeOrder = (combatants: Record<string, Combatant>): string[] =>
   Object.keys(combatants).sort((leftId, rightId) => {
@@ -85,7 +85,10 @@ export interface SetInitiativeInput {
   initiative: number;
 }
 
-export const setInitiative = (state: EncounterState, { combatantId, initiative }: SetInitiativeInput): EncounterState => {
+export const setInitiative = (
+  state: EncounterState,
+  { combatantId, initiative }: SetInitiativeInput,
+): EncounterState => {
   requireCombatant(state, combatantId);
 
   const withInitiative = R.assocPath<number, EncounterState>(
@@ -102,7 +105,10 @@ export interface MarkReactionUsedInput {
   used: boolean;
 }
 
-export const markReactionUsed = (state: EncounterState, { combatantId, used }: MarkReactionUsedInput): EncounterState => {
+export const markReactionUsed = (
+  state: EncounterState,
+  { combatantId, used }: MarkReactionUsedInput,
+): EncounterState => {
   requireCombatant(state, combatantId);
 
   return R.assocPath(['combatants', combatantId, 'actionEconomy', 'reactionUsed'], used, state);
@@ -268,7 +274,7 @@ export const recordEvent = (state: EncounterState, input: RecordEventInput): Enc
 };
 
 const turnEventForCombatant = (
-  type: 'START_OF_TURN' | 'END_OF_TURN',
+  type: 'END_OF_TURN' | 'START_OF_TURN',
   combatantId: string,
   factories: IdAndTimeFactories,
   payload?: EventOfType<'START_OF_TURN'>['payload'],
@@ -289,7 +295,7 @@ const turnEventForCombatant = (
       };
 
 const roundEvent = (
-  type: 'START_OF_ROUND' | 'END_OF_ROUND',
+  type: 'END_OF_ROUND' | 'START_OF_ROUND',
   round: number,
   factories: IdAndTimeFactories,
 ): EncounterEvent => ({
@@ -339,7 +345,7 @@ const resetActionEconomyFor = (state: EncounterState, combatantId: string): Enco
   return resetActionEconomy(state, { combatantId });
 };
 
-export interface AdvanceTurnInput extends IdAndTimeFactories {}
+export type AdvanceTurnInput = IdAndTimeFactories;
 
 /**
  * Advances to the next combatant in initiative order. When the cursor wraps
@@ -382,7 +388,7 @@ export const advanceTurn = (state: EncounterState, factories: AdvanceTurnInput):
   return nextState;
 };
 
-export interface AdvanceRoundInput extends IdAndTimeFactories {}
+export type AdvanceRoundInput = IdAndTimeFactories;
 
 /**
  * Forces the round to advance regardless of turn position. Used by DMs to
@@ -403,17 +409,17 @@ export const advanceRound = (state: EncounterState, factories: AdvanceRoundInput
 
 export type Transform =
   | { input: AddCombatantInput; type: 'addCombatant' }
-  | { input: RemoveCombatantInput; type: 'removeCombatant' }
   | { input: AdjustHpInput; type: 'adjustHp' }
-  | { input: SetInitiativeInput; type: 'setInitiative' }
-  | { input: MarkReactionUsedInput; type: 'markReactionUsed' }
-  | { input: ResetActionEconomyInput; type: 'resetActionEconomy' }
-  | { input: ApplyEffectInput; type: 'applyEffect' }
-  | { input: RemoveEffectInput; type: 'removeEffect' }
-  | { input: DismissReminderInput; type: 'dismissReminder' }
-  | { input: RecordEventInput; type: 'recordEvent' }
+  | { input: AdvanceRoundInput; type: 'advanceRound' }
   | { input: AdvanceTurnInput; type: 'advanceTurn' }
-  | { input: AdvanceRoundInput; type: 'advanceRound' };
+  | { input: ApplyEffectInput; type: 'applyEffect' }
+  | { input: DismissReminderInput; type: 'dismissReminder' }
+  | { input: MarkReactionUsedInput; type: 'markReactionUsed' }
+  | { input: RecordEventInput; type: 'recordEvent' }
+  | { input: RemoveCombatantInput; type: 'removeCombatant' }
+  | { input: RemoveEffectInput; type: 'removeEffect' }
+  | { input: ResetActionEconomyInput; type: 'resetActionEconomy' }
+  | { input: SetInitiativeInput; type: 'setInitiative' };
 
 /**
  * Dispatches one of the named transforms. Used by the API mutation layer

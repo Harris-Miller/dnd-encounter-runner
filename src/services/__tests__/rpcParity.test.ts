@@ -1,19 +1,11 @@
-import { randomUUID } from 'node:crypto';
-
 import { config } from 'dotenv';
 import postgres from 'postgres';
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 
-import type {
-  AddCombatantInput,
-  AdjustHpInput,
-  ApplyEffectInput,
-  DismissReminderInput,
-  MarkReactionUsedInput,
-  RemoveCombatantInput,
-  RemoveEffectInput,
-  SetInitiativeInput,
-} from '../encounterReducer';
+import { randomUUID } from 'node:crypto';
+import process from 'node:process';
+
+import type { EncounterState } from '../../types/encounterState';
 import {
   addCombatant,
   adjustHp,
@@ -24,7 +16,16 @@ import {
   removeEffect,
   setInitiative,
 } from '../encounterReducer';
-import type { EncounterState } from '../../types/encounterState';
+import type {
+  AddCombatantInput,
+  AdjustHpInput,
+  ApplyEffectInput,
+  DismissReminderInput,
+  MarkReactionUsedInput,
+  RemoveCombatantInput,
+  RemoveEffectInput,
+  SetInitiativeInput,
+} from '../encounterReducer';
 
 import { buildCombatant, buildEffect, buildState } from './fixtures';
 
@@ -60,7 +61,7 @@ describeIfDb('RPC parity (server JSONB transforms vs client reducer)', () => {
     const profileRows = await sql<{ id: string }[]>`
       SELECT id FROM public.profiles WHERE user_id = ${TEST_USER_ID}::uuid LIMIT 1
     `;
-    const existingProfile = profileRows[0];
+    const [existingProfile] = profileRows;
 
     if (existingProfile != null) {
       profileId = existingProfile.id;
@@ -70,7 +71,7 @@ describeIfDb('RPC parity (server JSONB transforms vs client reducer)', () => {
         VALUES (${TEST_USER_ID}::uuid, ${TEST_USER_EMAIL}, 'Parity Test')
         RETURNING id
       `;
-      const insertedRow = inserted[0];
+      const [insertedRow] = inserted;
       if (insertedRow == null) {
         throw new Error('Failed to create test profile');
       }
@@ -79,9 +80,9 @@ describeIfDb('RPC parity (server JSONB transforms vs client reducer)', () => {
   });
 
   afterEach(async () => {
-    if (createdEncounterIds.length > 0) {
-      await sql`DELETE FROM public.encounters WHERE id = ANY(${createdEncounterIds}::uuid[])`;
-      createdEncounterIds.length = 0;
+    const idsToDelete = createdEncounterIds.splice(0, createdEncounterIds.length);
+    if (idsToDelete.length > 0) {
+      await sql`DELETE FROM public.encounters WHERE id = ANY(${idsToDelete}::uuid[])`;
     }
   });
 
@@ -101,7 +102,7 @@ describeIfDb('RPC parity (server JSONB transforms vs client reducer)', () => {
   };
 
   const firstResult = <T>(rows: { result: T }[]): T => {
-    const first = rows[0];
+    const [first] = rows;
     if (first == null) {
       throw new Error('RPC returned no rows');
     }

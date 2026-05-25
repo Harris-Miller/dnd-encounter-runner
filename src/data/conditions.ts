@@ -137,14 +137,6 @@ export const STANDARD_CONDITIONS: Record<StandardCondition, ConditionDef> = {
   },
 };
 
-export const getConditionById = (id: StandardCondition): ConditionDef => {
-  const def = STANDARD_CONDITIONS[id];
-
-  if (def == null) {
-    throw new Error(`Unknown condition id: "${id}"`);
-  }
-
-  return def;
-};
+export const getConditionById = (id: StandardCondition): ConditionDef => STANDARD_CONDITIONS[id];
 
 export const getAllConditions = (): ConditionDef[] => STANDARD_CONDITION_IDS.map(id => STANDARD_CONDITIONS[id]);
