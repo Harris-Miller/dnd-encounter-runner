@@ -50,12 +50,6 @@ Run tests (watch mode by default):
 pnpm test
 ```
 
-Run tests once with coverage:
-
-```bash
-pnpm test:coverage
-```
-
 ### Database
 
 Generate a new Drizzle migration from schema changes:
