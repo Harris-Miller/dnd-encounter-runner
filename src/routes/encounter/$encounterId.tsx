@@ -25,6 +25,7 @@ import {
   queryEncounter,
   useApplyTransform,
 } from '../../api/encounters';
+import { CombatantDetailDrawer } from '../../components/encounter/CombatantDetailDrawer';
 import { InitiativeTracker } from '../../components/encounter/InitiativeTracker';
 import { RecordEventToolbar } from '../../components/encounter/RecordEventToolbar';
 import { RouterLink } from '../../components/RouterLink';
@@ -150,9 +151,32 @@ const EncounterPage: FC = () => {
 
       <RecordEventToolbar onAdvanceRound={handleAdvanceRound} onRecordEvent={handleRecordEvent} state={data.state} />
 
-      <Alert severity="info">
-        Combatant detail drawer and reminder panel will surface here as the remaining iteration steps land.
-      </Alert>
+      <Alert severity="info">Reminder panel will land in a follow-up step.</Alert>
+
+      <CombatantDetailDrawer
+        combatant={selectedCombatantId == null ? null : (data.state.combatants[selectedCombatantId] ?? null)}
+        onAdjustHp={(combatantId, delta) => {
+          applyTransform.mutate({ input: { combatantId, delta }, type: 'adjustHp' });
+        }}
+        onApplyEffect={() => {
+          // ApplyEffectDialog lands in a follow-up step
+        }}
+        onClose={() => {
+          setSelectedCombatantId(null);
+        }}
+        onMarkReactionUsed={(combatantId, used) => {
+          applyTransform.mutate({ input: { combatantId, used }, type: 'markReactionUsed' });
+        }}
+        onRemoveCombatant={combatantId => {
+          applyTransform.mutate({ input: { combatantId }, type: 'removeCombatant' });
+        }}
+        onRemoveEffect={(combatantId, effectId) => {
+          applyTransform.mutate({ input: { combatantId, effectId }, type: 'removeEffect' });
+        }}
+        onSetInitiative={(combatantId, initiative) => {
+          applyTransform.mutate({ input: { combatantId, initiative }, type: 'setInitiative' });
+        }}
+      />
 
       <Dialog fullWidth maxWidth="sm" onClose={handleRenameClose} open={renameOpen}>
         <DialogTitle>Rename Encounter</DialogTitle>
