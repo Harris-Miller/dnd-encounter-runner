@@ -1,6 +1,17 @@
 // Trigger system for D&D encounter events
 
-export type TriggerEventType = 'END_OF_TURN' | 'ON_ATTACK' | 'ON_DAMAGE' | 'ON_HIT' | 'ON_SPELL_CAST' | 'START_OF_TURN';
+export type TriggerEventType =
+  | 'END_OF_ROUND'
+  | 'END_OF_TURN'
+  | 'ON_ATTACK'
+  | 'ON_CRIT'
+  | 'ON_DAMAGE'
+  | 'ON_HIT'
+  | 'ON_MISS'
+  | 'ON_REACTION_USED'
+  | 'ON_SPELL_CAST'
+  | 'START_OF_ROUND'
+  | 'START_OF_TURN';
 
 export interface TriggerEvent {
   characterId: string;
