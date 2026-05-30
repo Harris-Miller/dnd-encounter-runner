@@ -25,7 +25,7 @@ import {
 } from '../api/profile';
 import type { Profile, ProfileAvatarSource } from '../api/profile';
 import { queryUser } from '../api/user';
-import { resolveProfileAvatarUrl } from '../lib/resolveProfileAvatarUrl';
+import { resolveProfileAvatarUrl } from '../api/utils/resolveProfileAvatarUrl';
 
 type ProfileEditDialogProps = {
   onClose: () => void;

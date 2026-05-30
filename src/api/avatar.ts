@@ -1,9 +1,17 @@
-import { ALLOWED_AVATAR_MIME_TYPES, AVATAR_BUCKET, MAX_AVATAR_BYTES } from '../constants/avatars';
-import type { AllowedAvatarMimeType } from '../constants/avatars';
-import { buildAvatarObjectPath } from '../lib/avatarObjectPath';
 import { supabase } from '../services/supabase';
 
 import { getCachedUser } from './user';
+import { buildAvatarObjectPath } from './utils/resolveProfileAvatarUrl';
+
+export const AVATAR_BUCKET = 'avatars';
+
+export const AVATAR_OBJECT_PATH_SUFFIX = 'avatar';
+
+export const MAX_AVATAR_BYTES = 1_048_576;
+
+export const ALLOWED_AVATAR_MIME_TYPES = ['image/gif', 'image/jpeg', 'image/png', 'image/webp'] as const;
+
+export type AllowedAvatarMimeType = (typeof ALLOWED_AVATAR_MIME_TYPES)[number];
 
 const isAllowedAvatarMimeType = (mimeType: string): mimeType is AllowedAvatarMimeType =>
   (ALLOWED_AVATAR_MIME_TYPES as readonly string[]).includes(mimeType);

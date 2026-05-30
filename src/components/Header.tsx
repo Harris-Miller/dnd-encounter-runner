@@ -23,7 +23,7 @@ import { match } from 'ts-pattern';
 
 import { queryProfile } from '../api/profile';
 import { queryUser } from '../api/user';
-import { resolveProfileAvatarUrl } from '../lib/resolveProfileAvatarUrl';
+import { resolveProfileAvatarUrl } from '../api/utils/resolveProfileAvatarUrl';
 
 import { ProfileEditDialog } from './ProfileEditDialog';
 

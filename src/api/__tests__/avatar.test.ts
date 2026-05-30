@@ -2,11 +2,10 @@
 import type { User } from '@supabase/supabase-js';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { AVATAR_BUCKET } from '../../constants/avatars';
-import { buildAvatarObjectPath } from '../../lib/avatarObjectPath';
 import { supabase } from '../../services/supabase';
-import { uploadAvatar } from '../avatar';
+import { AVATAR_BUCKET, uploadAvatar } from '../avatar';
 import { getCachedUser } from '../user';
+import { buildAvatarObjectPath } from '../utils/resolveProfileAvatarUrl';
 
 vi.mock('../../services/supabase', () => ({
   supabase: {

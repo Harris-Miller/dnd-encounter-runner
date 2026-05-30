@@ -1,10 +1,10 @@
 import type { User } from '@supabase/supabase-js';
 
-import type { Profile } from '../api/profile';
-import { AVATAR_BUCKET } from '../constants/avatars';
-import { supabase } from '../services/supabase';
+import { supabase } from '../../services/supabase';
+import { AVATAR_BUCKET, AVATAR_OBJECT_PATH_SUFFIX } from '../avatar';
+import type { Profile } from '../profile';
 
-import { buildAvatarObjectPath } from './avatarObjectPath';
+export const buildAvatarObjectPath = (userId: string): string => `${userId}/${AVATAR_OBJECT_PATH_SUFFIX}`;
 
 export const resolveProfileAvatarUrl = (profile: Profile, user: User): string | undefined => {
   if (profile.avatar_source === 'oauth') {
