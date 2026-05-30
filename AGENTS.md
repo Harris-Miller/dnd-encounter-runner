@@ -30,5 +30,8 @@
 - NEVER manually edit `src/types/database.gen.ts`. run `pnpm run db:gen-types` after `pnpm run db:migrate`
 - NEVER manually edit `src/routeTree.gen.ts`. run `pnpm run routes:gen` after updates in `src/routes/`
 
+### MCP
+- if you are doing supabase work and want to use their MCP server, don't use the cursor plugin `supabase`, use the locally defined `supabase-local` instead
+
 ### Zod
 - Use PascalCase for variable names from `z.` constructor functions. Don't put "Schema" at the end name the type from `z.infer<>` the exact same! This way the concrete instance _and_ it's type can be represented by the same name. This overloading is a good practice in Typescript
