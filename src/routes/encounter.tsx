@@ -11,7 +11,7 @@ export const Route = createFileRoute('/encounter')({
   component: () => (
     <>
       <Header />
-      <Container maxWidth="xl" sx={{ marginTop: 4 }}>
+      <Container maxWidth="xl" sx={{ marginTop: 9 }}>
         <Outlet />
       </Container>
     </>

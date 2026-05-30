@@ -17,6 +17,7 @@ import { Route as CreateProfileRouteImport } from './routes/createProfile'
 import { Route as CharactersRouteImport } from './routes/characters'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as HomeIndexRouteImport } from './routes/home/index'
+import { Route as EncounterIndexRouteImport } from './routes/encounter/index'
 import { Route as CharactersIndexRouteImport } from './routes/characters/index'
 import { Route as EncounterEncounterIdRouteImport } from './routes/encounter/$encounterId'
 import { Route as CharactersCharacterIdRouteImport } from './routes/characters/$characterId'
@@ -61,6 +62,11 @@ const HomeIndexRoute = HomeIndexRouteImport.update({
   path: '/',
   getParentRoute: () => HomeRoute,
 } as any)
+const EncounterIndexRoute = EncounterIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => EncounterRoute,
+} as any)
 const CharactersIndexRoute = CharactersIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -88,17 +94,18 @@ export interface FileRoutesByFullPath {
   '/characters/$characterId': typeof CharactersCharacterIdRoute
   '/encounter/$encounterId': typeof EncounterEncounterIdRoute
   '/characters/': typeof CharactersIndexRoute
+  '/encounter/': typeof EncounterIndexRoute
   '/home/': typeof HomeIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/createProfile': typeof CreateProfileRoute
-  '/encounter': typeof EncounterRouteWithChildren
   '/login': typeof LoginRoute
   '/logout': typeof LogoutRoute
   '/characters/$characterId': typeof CharactersCharacterIdRoute
   '/encounter/$encounterId': typeof EncounterEncounterIdRoute
   '/characters': typeof CharactersIndexRoute
+  '/encounter': typeof EncounterIndexRoute
   '/home': typeof HomeIndexRoute
 }
 export interface FileRoutesById {
@@ -113,6 +120,7 @@ export interface FileRoutesById {
   '/characters/$characterId': typeof CharactersCharacterIdRoute
   '/encounter/$encounterId': typeof EncounterEncounterIdRoute
   '/characters/': typeof CharactersIndexRoute
+  '/encounter/': typeof EncounterIndexRoute
   '/home/': typeof HomeIndexRoute
 }
 export interface FileRouteTypes {
@@ -128,17 +136,18 @@ export interface FileRouteTypes {
     | '/characters/$characterId'
     | '/encounter/$encounterId'
     | '/characters/'
+    | '/encounter/'
     | '/home/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/createProfile'
-    | '/encounter'
     | '/login'
     | '/logout'
     | '/characters/$characterId'
     | '/encounter/$encounterId'
     | '/characters'
+    | '/encounter'
     | '/home'
   id:
     | '__root__'
@@ -152,6 +161,7 @@ export interface FileRouteTypes {
     | '/characters/$characterId'
     | '/encounter/$encounterId'
     | '/characters/'
+    | '/encounter/'
     | '/home/'
   fileRoutesById: FileRoutesById
 }
@@ -223,6 +233,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HomeIndexRouteImport
       parentRoute: typeof HomeRoute
     }
+    '/encounter/': {
+      id: '/encounter/'
+      path: '/'
+      fullPath: '/encounter/'
+      preLoaderRoute: typeof EncounterIndexRouteImport
+      parentRoute: typeof EncounterRoute
+    }
     '/characters/': {
       id: '/characters/'
       path: '/'
@@ -263,10 +280,12 @@ const CharactersRouteWithChildren = CharactersRoute._addFileChildren(
 
 interface EncounterRouteChildren {
   EncounterEncounterIdRoute: typeof EncounterEncounterIdRoute
+  EncounterIndexRoute: typeof EncounterIndexRoute
 }
 
 const EncounterRouteChildren: EncounterRouteChildren = {
   EncounterEncounterIdRoute: EncounterEncounterIdRoute,
+  EncounterIndexRoute: EncounterIndexRoute,
 }
 
 const EncounterRouteWithChildren = EncounterRoute._addFileChildren(

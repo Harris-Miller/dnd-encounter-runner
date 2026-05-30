@@ -126,7 +126,7 @@ const EncounterPage: FC = () => {
     <Stack spacing={3}>
       <Box>
         <Typography sx={{ mb: 1 }} variant="body2">
-          <RouterLink to="/home">Back to encounters</RouterLink>
+          <RouterLink to="/encounter">Back to encounters</RouterLink>
         </Typography>
         <Box sx={{ alignItems: 'center', display: 'flex', flexWrap: 'wrap', gap: 2 }}>
           <Typography variant="h4">{data.name}</Typography>

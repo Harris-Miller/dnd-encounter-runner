@@ -80,15 +80,23 @@ export const Header: FC = () => {
     <>
       <AppBar position="fixed">
         <Toolbar>
-          <Typography component="h1" sx={{ mr: 3 }} variant="h6">
-            D&D Encounter Runner
-          </Typography>
+          <RouterLink
+            activeOptions={{ exact: true, includeSearch: false }}
+            color="inherit"
+            sx={{ mr: 3, textDecoration: 'none' }}
+            to="/home"
+            underline="none"
+          >
+            <Typography component="h1" variant="h6">
+              D&D Encounter Runner
+            </Typography>
+          </RouterLink>
           <Box sx={{ display: 'flex', gap: 2 }}>
             <RouterLink
               activeOptions={{ includeSearch: false }}
               activeProps={{ sx: { fontWeight: 700, textDecoration: 'underline' } }}
               color="inherit"
-              to="/home"
+              to="/encounter"
               underline="hover"
             >
               Encounters

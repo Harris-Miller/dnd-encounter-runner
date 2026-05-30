@@ -11,7 +11,7 @@ export const Route = createFileRoute('/home')({
   component: () => (
     <>
       <Header />
-      <Container maxWidth="lg" sx={{ marginTop: 8 }}>
+      <Container maxWidth="lg" sx={{ marginTop: 9 }}>
         <Outlet />
       </Container>
     </>
