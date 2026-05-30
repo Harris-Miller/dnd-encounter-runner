@@ -8,7 +8,7 @@ type SeedRefineTableKey = 'magicItems' | 'monsters' | 'spells';
 
 type SeedDb = ReturnType<typeof createSeedClient>['db'];
 
-const OMIT_VALUE_COLUMNS = new Set(['id', 'createdAt', 'updatedAt']);
+const OMIT_VALUE_COLUMNS = new Set(['createdAt', 'id', 'updatedAt']);
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -30,7 +30,7 @@ export const resetAndDeterministicSeedPgTable = async <Table extends PgTable>(pa
 }): Promise<void> => {
   const { columnsFalse, db, refineTableKey, rows, seedNumber, table } = params;
 
-  await reset(db, { [refineTableKey]: table } as Record<string, Table>);
+  await reset(db, { [refineTableKey]: table });
 
   if (rows.length === 0) {
     return;

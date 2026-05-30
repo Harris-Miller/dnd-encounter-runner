@@ -189,72 +189,96 @@ const dispatchTransform = async (
   nextState: EncounterState,
 ): Promise<EncounterState> => {
   const result = await match(transform)
-    .with({ type: 'adjustHp' }, async ({ input }) =>
-      supabase.rpc('encounter_adjust_hp', {
-        p_combatant_id: input.combatantId,
-        p_delta: input.delta,
-        p_encounter_id: encounterId,
-      }),
+    .with(
+      { type: 'adjustHp' },
+      async ({ input }) =>
+        await supabase.rpc('encounter_adjust_hp', {
+          p_combatant_id: input.combatantId,
+          p_delta: input.delta,
+          p_encounter_id: encounterId,
+        }),
     )
-    .with({ type: 'markReactionUsed' }, async ({ input }) =>
-      supabase.rpc('encounter_mark_reaction_used', {
-        p_combatant_id: input.combatantId,
-        p_encounter_id: encounterId,
-        p_used: input.used,
-      }),
+    .with(
+      { type: 'markReactionUsed' },
+      async ({ input }) =>
+        await supabase.rpc('encounter_mark_reaction_used', {
+          p_combatant_id: input.combatantId,
+          p_encounter_id: encounterId,
+          p_used: input.used,
+        }),
     )
-    .with({ type: 'applyEffect' }, async ({ input }) =>
-      supabase.rpc('encounter_apply_effect', {
-        p_combatant_id: input.combatantId,
-        p_effect: input.effect,
-        p_encounter_id: encounterId,
-      }),
+    .with(
+      { type: 'applyEffect' },
+      async ({ input }) =>
+        await supabase.rpc('encounter_apply_effect', {
+          p_combatant_id: input.combatantId,
+          p_effect: input.effect,
+          p_encounter_id: encounterId,
+        }),
     )
-    .with({ type: 'removeEffect' }, async ({ input }) =>
-      supabase.rpc('encounter_remove_effect', {
-        p_combatant_id: input.combatantId,
-        p_effect_id: input.effectId,
-        p_encounter_id: encounterId,
-      }),
+    .with(
+      { type: 'removeEffect' },
+      async ({ input }) =>
+        await supabase.rpc('encounter_remove_effect', {
+          p_combatant_id: input.combatantId,
+          p_effect_id: input.effectId,
+          p_encounter_id: encounterId,
+        }),
     )
-    .with({ type: 'setInitiative' }, async ({ input }) =>
-      supabase.rpc('encounter_set_initiative', {
-        p_combatant_id: input.combatantId,
-        p_encounter_id: encounterId,
-        p_initiative: input.initiative,
-      }),
+    .with(
+      { type: 'setInitiative' },
+      async ({ input }) =>
+        await supabase.rpc('encounter_set_initiative', {
+          p_combatant_id: input.combatantId,
+          p_encounter_id: encounterId,
+          p_initiative: input.initiative,
+        }),
     )
-    .with({ type: 'removeCombatant' }, async ({ input }) =>
-      supabase.rpc('encounter_remove_combatant', {
-        p_combatant_id: input.combatantId,
-        p_encounter_id: encounterId,
-      }),
+    .with(
+      { type: 'removeCombatant' },
+      async ({ input }) =>
+        await supabase.rpc('encounter_remove_combatant', {
+          p_combatant_id: input.combatantId,
+          p_encounter_id: encounterId,
+        }),
     )
-    .with({ type: 'dismissReminder' }, async ({ input }) =>
-      supabase.rpc('encounter_dismiss_reminder', {
-        p_encounter_id: encounterId,
-        p_reminder_id: input.reminderId,
-      }),
+    .with(
+      { type: 'dismissReminder' },
+      async ({ input }) =>
+        await supabase.rpc('encounter_dismiss_reminder', {
+          p_encounter_id: encounterId,
+          p_reminder_id: input.reminderId,
+        }),
     )
-    .with({ type: 'addCombatant' }, async ({ input }) =>
-      supabase.rpc('encounter_add_combatant', {
-        p_combatant: input.combatant,
-        p_encounter_id: encounterId,
-        p_next_initiative_order: nextState.initiativeOrder,
-      }),
+    .with(
+      { type: 'addCombatant' },
+      async ({ input }) =>
+        await supabase.rpc('encounter_add_combatant', {
+          p_combatant: input.combatant,
+          p_encounter_id: encounterId,
+          p_next_initiative_order: nextState.initiativeOrder,
+        }),
     )
-    .with({ type: 'resetActionEconomy' }, async () =>
-      // Reset is just a state-equivalent of recordEvent without an event; reuse advance_turn pathway
-      supabase.rpc('encounter_record_event', { p_encounter_id: encounterId, p_next_state: nextState }),
+    .with(
+      { type: 'resetActionEconomy' },
+      async () =>
+        // Reset is just a state-equivalent of recordEvent without an event; reuse advance_turn pathway
+        await supabase.rpc('encounter_record_event', { p_encounter_id: encounterId, p_next_state: nextState }),
     )
-    .with({ type: 'advanceTurn' }, async () =>
-      supabase.rpc('encounter_advance_turn', { p_encounter_id: encounterId, p_next_state: nextState }),
+    .with(
+      { type: 'advanceTurn' },
+      async () =>
+        await supabase.rpc('encounter_advance_turn', { p_encounter_id: encounterId, p_next_state: nextState }),
     )
-    .with({ type: 'advanceRound' }, async () =>
-      supabase.rpc('encounter_advance_round', { p_encounter_id: encounterId, p_next_state: nextState }),
+    .with(
+      { type: 'advanceRound' },
+      async () =>
+        await supabase.rpc('encounter_advance_round', { p_encounter_id: encounterId, p_next_state: nextState }),
     )
-    .with({ type: 'recordEvent' }, async () =>
-      supabase.rpc('encounter_record_event', { p_encounter_id: encounterId, p_next_state: nextState }),
+    .with(
+      { type: 'recordEvent' },
+      async () =>
+        await supabase.rpc('encounter_record_event', { p_encounter_id: encounterId, p_next_state: nextState }),
     )
     .exhaustive();
 
@@ -294,7 +318,7 @@ export const useApplyTransform = (
       }
 
       const nextState = applyTransform(cached.state, transform);
-      return dispatchTransform(encounterId, transform, nextState);
+      return await dispatchTransform(encounterId, transform, nextState);
     },
     onError: (_error, _transform, context) => {
       if (context?.snapshot != null) {

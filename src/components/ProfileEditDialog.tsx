@@ -43,9 +43,9 @@ const ProfileEditForm: FC<ProfileEditFormProps> = ({ onClose, profileData }) => 
 
   const [draftName, setDraftName] = useState(profileData.name ?? '');
   const [pendingAvatarFile, setPendingAvatarFile] = useState<File | null>(null);
-  const [pendingAvatarPreviewUrl, setPendingAvatarPreviewUrl] = useState<string | null>(null);
+  const [pendingAvatarPreviewUrl, setPendingAvatarPreviewUrl] = useState<null | string>(null);
   const [draftAvatarSource, setDraftAvatarSource] = useState<ProfileAvatarSource>(profileData.avatar_source);
-  const [formError, setFormError] = useState<string | null>(null);
+  const [formError, setFormError] = useState<null | string>(null);
 
   const updateNameMutation = useMutation(mutateUpdateProfile);
   const updateAvatarSourceMutation = useMutation(mutateUpdateProfileAvatarSource);
@@ -85,7 +85,7 @@ const ProfileEditForm: FC<ProfileEditFormProps> = ({ onClose, profileData }) => 
     return resolveProfileAvatarUrl({ ...profileData, avatar_source: draftAvatarSource }, user.data);
   })();
 
-  const handleAvatarSourceChange = (_event: MouseEvent<HTMLElement>, nextAvatarSource: ProfileAvatarSource | null) => {
+  const handleAvatarSourceChange = (_event: MouseEvent<HTMLElement>, nextAvatarSource: null | ProfileAvatarSource) => {
     if (nextAvatarSource == null) {
       return;
     }

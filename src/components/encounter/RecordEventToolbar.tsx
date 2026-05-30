@@ -63,10 +63,10 @@ const buildAttackEvent = (form: AttackForm, factories: { id: string; ts: string 
   switch (form.kind) {
     case 'ATTACK':
       return { id: factories.id, payload, ts: factories.ts, type: 'ON_ATTACK' };
-    case 'HIT':
-      return { id: factories.id, payload, ts: factories.ts, type: 'ON_HIT' };
     case 'CRIT':
       return { id: factories.id, payload, ts: factories.ts, type: 'ON_CRIT' };
+    case 'HIT':
+      return { id: factories.id, payload, ts: factories.ts, type: 'ON_HIT' };
     case 'MISS':
       return { id: factories.id, payload, ts: factories.ts, type: 'ON_MISS' };
     default:
@@ -337,7 +337,7 @@ export const RecordEventToolbar: FC<RecordEventToolbarProps> = ({ onAdvanceRound
                 const { value } = event.target;
                 setSpellForm(prev => ({
                   ...prev,
-                  targetIds: typeof value === 'string' ? value.split(',') : (value as unknown as string[]),
+                  targetIds: typeof value === 'string' ? value.split(',') : value,
                 }));
               }}
               select

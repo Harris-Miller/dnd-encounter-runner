@@ -42,7 +42,7 @@ describe('resolveProfileAvatarUrl', () => {
     const userWithoutAvatar = {
       ...baseUser,
       user_metadata: {},
-    } as unknown as User;
+    };
 
     expect(resolveProfileAvatarUrl(baseProfile, userWithoutAvatar)).toBeUndefined();
   });

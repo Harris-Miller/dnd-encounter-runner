@@ -6,7 +6,7 @@ import type { FC } from 'react';
 import { STANDARD_CONDITIONS } from '../../data/conditions';
 import type { Combatant, EffectDescriptor } from '../../types/encounterState';
 
-const isStandardCondition = (provides: EffectDescriptor[]): string | null => {
+const isStandardCondition = (provides: EffectDescriptor[]): null | string => {
   for (const descriptor of provides) {
     if (descriptor.kind === 'condition') {
       return STANDARD_CONDITIONS[descriptor.conditionId].name;

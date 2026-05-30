@@ -101,19 +101,23 @@ const initialDescriptorState = (): DescriptorFormState => ({
 
 const buildDescriptor = (form: DescriptorFormState): EffectDescriptor | null => {
   switch (form.kind) {
-    case 'damage_resistance':
-    case 'damage_immunity':
-    case 'damage_vulnerability': {
-      if (form.damageType.trim() === '') return null;
-      return { damageType: form.damageType.trim().toLowerCase(), kind: form.kind };
-    }
-    case 'crit_damage_immunity':
-      return { kind: 'crit_damage_immunity' };
-    case 'condition':
-      return { conditionId: form.conditionId, kind: 'condition' };
     case 'concentration': {
       if (form.spellName.trim() === '') return null;
       return { kind: 'concentration', spellName: form.spellName.trim() };
+    }
+    case 'condition':
+      return { conditionId: form.conditionId, kind: 'condition' };
+    case 'crit_damage_immunity':
+      return { kind: 'crit_damage_immunity' };
+    case 'custom': {
+      if (form.customDescriptor.trim() === '') return null;
+      return { descriptor: form.customDescriptor.trim(), kind: 'custom' };
+    }
+    case 'damage_immunity':
+    case 'damage_resistance':
+    case 'damage_vulnerability': {
+      if (form.damageType.trim() === '') return null;
+      return { damageType: form.damageType.trim().toLowerCase(), kind: form.kind };
     }
     case 'reaction_available': {
       if (form.reactionName.trim() === '' || form.reactionTriggers.length === 0) return null;
@@ -124,10 +128,6 @@ const buildDescriptor = (form: DescriptorFormState): EffectDescriptor | null => 
         reactionName: form.reactionName.trim(),
         triggerEvents: form.reactionTriggers,
       };
-    }
-    case 'custom': {
-      if (form.customDescriptor.trim() === '') return null;
-      return { descriptor: form.customDescriptor.trim(), kind: 'custom' };
     }
     default:
       return null;
@@ -146,7 +146,7 @@ export const ApplyEffectDialog: FC<ApplyEffectDialogProps> = ({ buildId, combata
   const [source, setSource] = useState<Source>('condition');
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [refId, setRefId] = useState<string | null>(null);
+  const [refId, setRefId] = useState<null | string>(null);
   const [tickOn, setTickOn] = useState<TickOn>('manual');
   const [expiryKind, setExpiryKind] = useState<EffectExpiry['kind']>('end_of_combat');
   const [expiryRounds, setExpiryRounds] = useState('10');
@@ -155,7 +155,7 @@ export const ApplyEffectDialog: FC<ApplyEffectDialogProps> = ({ buildId, combata
   const [itemSearch, setItemSearch] = useState('');
   const [selectedItem, setSelectedItem] = useState<MagicItemSummary | null>(null);
   const [spellSearch, setSpellSearch] = useState('');
-  const [selectedSpell, setSelectedSpell] = useState<SpellSummary | null>(null);
+  const [selectedSpell, setSelectedSpell] = useState<null | SpellSummary>(null);
 
   const itemsQuery = useQuery({ ...queryMagicItemsSearch(itemSearch), enabled: open && source === 'item' });
   const spellsQuery = useQuery({ ...querySpellsSearch(spellSearch), enabled: open && source === 'spell' });
@@ -225,7 +225,7 @@ export const ApplyEffectDialog: FC<ApplyEffectDialogProps> = ({ buildId, combata
     setRefId(item.id);
   };
 
-  const handleSpellSelect = (_event: SyntheticEvent, spell: SpellSummary | null) => {
+  const handleSpellSelect = (_event: SyntheticEvent, spell: null | SpellSummary) => {
     setSelectedSpell(spell);
     if (spell == null) {
       setRefId(null);
@@ -248,7 +248,7 @@ export const ApplyEffectDialog: FC<ApplyEffectDialogProps> = ({ buildId, combata
     return { kind: 'after_rounds', rounds };
   }, [expiryKind, expiryRounds]);
 
-  const remainingRounds: number | null = expiry.kind === 'after_rounds' ? expiry.rounds : null;
+  const remainingRounds: null | number = expiry.kind === 'after_rounds' ? expiry.rounds : null;
 
   const notifyOn: TriggerEvent[] = useMemo(() => {
     if (descriptorForm.kind === 'condition') {

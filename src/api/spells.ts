@@ -16,14 +16,14 @@ export interface SpellSummary {
 
 export interface SpellDetail extends SpellSummary {
   castingTime: string;
-  description: string | null;
+  description: null | string;
   duration: string;
   isMaterial: boolean;
   isSomatic: boolean;
   isVerbal: boolean;
-  materialDescription: string | null;
+  materialDescription: null | string;
   range: string;
-  upcastDescription: string | null;
+  upcastDescription: null | string;
 }
 
 const rowToSummary = (row: SpellRow): SpellSummary => ({

@@ -14,7 +14,7 @@ export interface Character {
   level: number;
   maxHitPoints: number;
   name: string;
-  notes: string | null;
+  notes: null | string;
   profileId: string;
   updatedAt: string;
 }
@@ -51,7 +51,7 @@ export interface CreateCharacterInput {
   level?: number;
   maxHitPoints: number;
   name: string;
-  notes?: string | null;
+  notes?: null | string;
 }
 
 const createCharacterFn = async (input: CreateCharacterInput): Promise<Character> => {
@@ -94,7 +94,7 @@ export interface UpdateCharacterInput {
   level?: number;
   maxHitPoints?: number;
   name?: string;
-  notes?: string | null;
+  notes?: null | string;
 }
 
 const updateCharacterFn = async (input: UpdateCharacterInput): Promise<Character> => {

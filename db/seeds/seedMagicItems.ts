@@ -12,16 +12,16 @@ type MagicItemInsert = InferInsertModel<typeof magicItems>;
 
 interface MagicItemJson {
   category: string;
-  categorySpecifier: string | null;
-  ddbId: string | null;
+  categorySpecifier: null | string;
+  ddbId: null | string;
   description: string;
   isConsumable: boolean;
   isCursed: boolean;
   name: string;
   rarity: string;
   requiresAttunement: boolean;
-  slug: string | null;
-  variantRarities: string[] | null;
+  slug: null | string;
+  variantRarities: null | string[];
 }
 
 /* `variant_rarities` exists on the Drizzle schema but not yet in applied migrations; omit until the column exists. */

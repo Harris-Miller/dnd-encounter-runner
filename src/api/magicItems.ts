@@ -15,11 +15,11 @@ export interface MagicItemSummary {
 }
 
 export interface MagicItemDetail extends MagicItemSummary {
-  categorySpecifierText: string | null;
-  ddbId: string | null;
-  description: string | null;
+  categorySpecifierText: null | string;
+  ddbId: null | string;
+  description: null | string;
   isConsumable: boolean;
-  slug: string | null;
+  slug: null | string;
 }
 
 const rowToSummary = (row: MagicItemRow): MagicItemSummary => ({

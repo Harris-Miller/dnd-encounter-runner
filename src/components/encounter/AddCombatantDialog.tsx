@@ -24,7 +24,7 @@ import { DEFAULT_ACTION_ECONOMY } from '../../types/encounterState';
 
 type Mode = 'character-roster' | 'custom' | 'monster-index';
 
-const parseIntOrNull = (raw: string): number | null => {
+const parseIntOrNull = (raw: string): null | number => {
   const trimmed = raw.trim();
   if (trimmed === '') return null;
   const parsed = Number(trimmed);
@@ -54,10 +54,10 @@ export const AddCombatantDialog: FC<AddCombatantDialogProps> = ({
   const [armorClass, setArmorClass] = useState('10');
   const [maxHp, setMaxHp] = useState('10');
   const [initiative, setInitiative] = useState('');
-  const [selectedCharacterId, setSelectedCharacterId] = useState<string | null>(null);
+  const [selectedCharacterId, setSelectedCharacterId] = useState<null | string>(null);
   const [monsterSearch, setMonsterSearch] = useState('');
-  const [selectedMonsterId, setSelectedMonsterId] = useState<string | null>(null);
-  const [refId, setRefId] = useState<string | null>(null);
+  const [selectedMonsterId, setSelectedMonsterId] = useState<null | string>(null);
+  const [refId, setRefId] = useState<null | string>(null);
 
   const charactersQuery = useQuery({ ...queryCharactersList, enabled: open });
   const monstersQuery = useQuery({ ...queryMonstersSearch(monsterSearch), enabled: open && mode === 'monster-index' });

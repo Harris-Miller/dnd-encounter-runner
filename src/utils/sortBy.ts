@@ -1,5 +1,5 @@
 export const sortBy =
-  <T>(mapFn: (value: T) => Date | boolean | number | string) =>
+  <T>(mapFn: (value: T) => boolean | Date | number | string) =>
   (left: T, right: T) => {
     const l = mapFn(left);
     const r = mapFn(right);
