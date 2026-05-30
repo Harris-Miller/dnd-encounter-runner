@@ -11,8 +11,8 @@ const router = createRouter({
       <CircularProgress />
     </FullScreenCenter>
   ),
-  defaultPendingMinMs: 500,
-  defaultPendingMs: 10,
+  // defaultPendingMinMs: 500,
+  // defaultPendingMs: 10,
   routeTree,
 });
 

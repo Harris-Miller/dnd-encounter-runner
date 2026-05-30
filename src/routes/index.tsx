@@ -10,8 +10,6 @@ import { RouterLink } from '../components/RouterLink';
 import { queryClient } from '../queryClient';
 import { supabase } from '../services/supabase';
 
-// const Img = styled('img')();
-
 const IndexComponent: FC = () => {
   return (
     <FullScreenCenter>
