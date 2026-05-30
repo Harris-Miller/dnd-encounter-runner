@@ -1,12 +1,45 @@
 import { defineRelations } from 'drizzle-orm';
 
-import * as schema from './schema.ts';
+import * as schemaTables from './schema.ts';
+import { users } from './transient/auth.ts';
+
+const schema = { ...schemaTables, users };
 
 export const relations = defineRelations(schema, r => ({
+  characters: {
+    profile: r.one.profiles({
+      from: r.characters.profileId,
+      to: r.profiles.id,
+    }),
+  },
+  encounters: {
+    profile: r.one.profiles({
+      from: r.encounters.profileId,
+      to: r.profiles.id,
+    }),
+  },
+  mastery: {
+    weapons: r.many.weapons(),
+  },
+  profiles: {
+    characters: r.many.characters(),
+    encounters: r.many.encounters(),
+    user: r.one.users({
+      from: r.profiles.userId,
+      to: r.users.id,
+    }),
+  },
+  weaponProperties: {
+    weapons: r.many.weapons(),
+  },
   weapons: {
     mastery: r.one.mastery({
       from: r.weapons.masteryId,
       to: r.mastery.id,
+    }),
+    weaponProperties: r.many.weaponProperties({
+      from: r.weapons.id.through(r.weaponToWeaponProperties.weaponId),
+      to: r.weaponProperties.id.through(r.weaponToWeaponProperties.weaponPropertyId),
     }),
   },
 }));
