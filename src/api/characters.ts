@@ -41,10 +41,26 @@ const fetchCharacters = async (): Promise<Character[]> => {
   return data.map(rowToCharacter);
 };
 
+const fetchCharacter = async (characterId: string): Promise<Character> => {
+  const { data, error } = await supabase.from('characters').select('*').eq('id', characterId).single();
+
+  if (error != null) {
+    throw error;
+  }
+
+  return rowToCharacter(data);
+};
+
 export const queryCharactersList = queryOptions({
   queryFn: fetchCharacters,
   queryKey: ['characters', 'list'] as const,
 });
+
+export const queryCharacter = (characterId: string) =>
+  queryOptions({
+    queryFn: () => fetchCharacter(characterId),
+    queryKey: ['characters', 'detail', characterId] as const,
+  });
 
 export interface CreateCharacterInput {
   armorClass: number;
@@ -83,7 +99,8 @@ const createCharacterFn = async (input: CreateCharacterInput): Promise<Character
 
 export const mutateCreateCharacter = mutationOptions({
   mutationFn: createCharacterFn,
-  onSuccess: (_created, _variables, _onMutateResult, { client }) => {
+  onSuccess: (created, _variables, _onMutateResult, { client }) => {
+    client.setQueryData(queryCharacter(created.id).queryKey, created);
     client.invalidateQueries({ queryKey: queryCharactersList.queryKey });
   },
 });
@@ -119,7 +136,8 @@ const updateCharacterFn = async (input: UpdateCharacterInput): Promise<Character
 
 export const mutateUpdateCharacter = mutationOptions({
   mutationFn: updateCharacterFn,
-  onSuccess: (_updated, _variables, _onMutateResult, { client }) => {
+  onSuccess: (updated, _variables, _onMutateResult, { client }) => {
+    client.setQueryData(queryCharacter(updated.id).queryKey, updated);
     client.invalidateQueries({ queryKey: queryCharactersList.queryKey });
   },
 });
@@ -136,7 +154,8 @@ const deleteCharacterFn = async (characterId: string): Promise<{ id: string }> =
 
 export const mutateDeleteCharacter = mutationOptions({
   mutationFn: deleteCharacterFn,
-  onSuccess: (_deleted, _variables, _onMutateResult, { client }) => {
+  onSuccess: ({ id }, _variables, _onMutateResult, { client }) => {
+    client.removeQueries({ queryKey: queryCharacter(id).queryKey });
     client.invalidateQueries({ queryKey: queryCharactersList.queryKey });
   },
 });
