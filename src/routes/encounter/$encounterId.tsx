@@ -48,11 +48,11 @@ const EncounterPage: FC = () => {
     ...mutateSetEncounterActive,
     mutationKey: ['encounter', encounterId, 'set-active'],
   });
-  const [renameDraft, setRenameDraft] = useState<string | null>(null);
+  const [renameDraft, setRenameDraft] = useState<null | string>(null);
   const renameOpen = renameDraft !== null;
-  const [selectedCombatantId, setSelectedCombatantId] = useState<string | null>(null);
+  const [selectedCombatantId, setSelectedCombatantId] = useState<null | string>(null);
   const [addCombatantOpen, setAddCombatantOpen] = useState(false);
-  const [applyEffectForCombatantId, setApplyEffectForCombatantId] = useState<string | null>(null);
+  const [applyEffectForCombatantId, setApplyEffectForCombatantId] = useState<null | string>(null);
   const applyTransform = useApplyTransform(encounterId);
 
   const handleAdvanceTurn = () => {

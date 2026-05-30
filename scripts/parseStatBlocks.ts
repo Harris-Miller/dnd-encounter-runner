@@ -21,46 +21,46 @@ interface AbilityEntry {
 
 interface ParsedStatBlock {
   actions: string[];
-  alignment: string | null;
-  armorClass: number | null;
+  alignment: null | string;
+  armorClass: null | number;
   bonusActions: string[];
-  challengeRating: string | null;
+  challengeRating: null | string;
   charisma: number;
   charismaSave: number;
   constitution: number;
   constitutionSave: number;
-  creatureType: string | null;
-  descriptiveTags: string | null;
+  creatureType: null | string;
+  descriptiveTags: null | string;
   dexterity: number;
   dexteritySave: number;
-  experiencePoints: number | null;
-  experiencePointsAlt: string | null;
-  gear: string | null;
-  hitPointDice: string | null;
-  hitPoints: number | null;
+  experiencePoints: null | number;
+  experiencePointsAlt: null | string;
+  gear: null | string;
+  hitPointDice: null | string;
+  hitPoints: null | number;
   immunities: string[];
-  initiativeModifier: string | null;
-  initiativeScore: number | null;
+  initiativeModifier: null | string;
+  initiativeScore: null | number;
   intelligence: number;
   intelligenceSave: number;
-  languages: string | null;
+  languages: null | string;
   legendaryActions: string[];
-  name: string | null;
-  proficiencyBonus: number | null;
+  name: null | string;
+  proficiencyBonus: null | number;
   reactions: string[];
   resistances: string[];
-  senses: string[] | null;
-  size: string | null;
-  skills: string[] | null;
-  speed: string | null;
-  speedBurrow: string | null;
-  speedClimb: string | null;
-  speedFly: string | null;
-  speedSwim: string | null;
+  senses: null | string[];
+  size: null | string;
+  skills: null | string[];
+  speed: null | string;
+  speedBurrow: null | string;
+  speedClimb: null | string;
+  speedFly: null | string;
+  speedSwim: null | string;
   strength: number;
   strengthSave: number;
   traits: string[];
-  vulnerabilities: string | null;
+  vulnerabilities: null | string;
   wisdom: number;
   wisdomSave: number;
 }
@@ -74,7 +74,7 @@ const unesc = (s: string): string => {
 
 const stripHtml = (html: string): string => html.replace(/<[^>]+>/g, ' ').trim();
 
-const parseSizeTypeAlign = (text: string): [string | null, string | null, string | null, string | null] => {
+const parseSizeTypeAlign = (text: string): [null | string, null | string, null | string, null | string] => {
   const trimmed = text.trim();
 
   if (trimmed === '') return [null, null, null, null];
@@ -93,7 +93,7 @@ const parseSizeTypeAlign = (text: string): [string | null, string | null, string
   return [size, creatureType, descriptiveTags, alignment];
 };
 
-const parseSkills = (raw: string | null | undefined): string[] | null => {
+const parseSkills = (raw: null | string | undefined): null | string[] => {
   if (raw === null || raw === undefined || raw.trim() === '') return null;
   return raw
     .split(',')
@@ -101,7 +101,7 @@ const parseSkills = (raw: string | null | undefined): string[] | null => {
     .filter(p => p !== '');
 };
 
-const parseSenses = (raw: string | null | undefined): string[] | null => {
+const parseSenses = (raw: null | string | undefined): null | string[] => {
   if (raw === null || raw === undefined || raw.trim() === '') return null;
   return raw
     .split(';')
@@ -109,7 +109,7 @@ const parseSenses = (raw: string | null | undefined): string[] | null => {
     .filter(p => p !== '');
 };
 
-const parseCommaSeparatedList = (raw: string | null | undefined): string[] => {
+const parseCommaSeparatedList = (raw: null | string | undefined): string[] => {
   if (raw === null || raw === undefined || raw.trim() === '') return [];
   return raw
     .split(',')
@@ -118,8 +118,8 @@ const parseCommaSeparatedList = (raw: string | null | undefined): string[] => {
 };
 
 const parseSpeed = (
-  raw: string | null | undefined,
-): [string | null, string | null, string | null, string | null, string | null] => {
+  raw: null | string | undefined,
+): [null | string, null | string, null | string, null | string, null | string] => {
   const text = raw?.trim() ?? '';
   if (text === '') return [null, null, null, null, null];
 
@@ -138,7 +138,7 @@ const parseSpeed = (
   return [speed, burrow, climb, fly, swim];
 };
 
-const parseCrLine = (text: string): [string | null, number | null, string | null, number | null] => {
+const parseCrLine = (text: string): [null | string, null | number, null | string, null | number] => {
   const trimmed = text.trim();
 
   if (trimmed === '') return [null, null, null, null];
@@ -207,7 +207,7 @@ interface HeaderMatch {
 const collectHeaders = (s: string): HeaderMatch[] => {
   const headerRegex = /<p class="monster-header"[^>]*>([^<]+)<\/p>/g;
   const headers: HeaderMatch[] = [];
-  let m: RegExpExecArray | null;
+  let m: null | RegExpExecArray;
   while ((m = headerRegex.exec(s)) !== null) {
     const [, section] = m;
     headers.push({
@@ -231,35 +231,35 @@ const extractTextsFromHtml = (s: string): string[] => {
 const extractFieldValues = (
   texts: string[],
 ): {
-  ac: number | null;
-  crLine: string | null;
-  gear: string | null;
-  hp: number | null;
-  hpDice: string | null;
-  immunitiesRaw: string | null;
-  initMod: string | null;
-  initScore: number | null;
-  languages: string | null;
-  resistancesRaw: string | null;
-  sensesRaw: string | null;
-  skillsRaw: string | null;
-  speedRaw: string | null;
-  vulnerabilities: string | null;
+  ac: null | number;
+  crLine: null | string;
+  gear: null | string;
+  hp: null | number;
+  hpDice: null | string;
+  immunitiesRaw: null | string;
+  initMod: null | string;
+  initScore: null | number;
+  languages: null | string;
+  resistancesRaw: null | string;
+  sensesRaw: null | string;
+  skillsRaw: null | string;
+  speedRaw: null | string;
+  vulnerabilities: null | string;
 } => {
-  let ac: number | null = null;
-  let initMod: string | null = null;
-  let initScore: number | null = null;
-  let hp: number | null = null;
-  let hpDice: string | null = null;
-  let speedRaw: string | null = null;
-  let skillsRaw: string | null = null;
-  let sensesRaw: string | null = null;
-  let languages: string | null = null;
-  let crLine: string | null = null;
-  let resistancesRaw: string | null = null;
-  let immunitiesRaw: string | null = null;
-  let vulnerabilities: string | null = null;
-  let gear: string | null = null;
+  let ac: null | number = null;
+  let initMod: null | string = null;
+  let initScore: null | number = null;
+  let hp: null | number = null;
+  let hpDice: null | string = null;
+  let speedRaw: null | string = null;
+  let skillsRaw: null | string = null;
+  let sensesRaw: null | string = null;
+  let languages: null | string = null;
+  let crLine: null | string = null;
+  let resistancesRaw: null | string = null;
+  let immunitiesRaw: null | string = null;
+  let vulnerabilities: null | string = null;
+  let gear: null | string = null;
 
   for (const t of texts) {
     if (t.includes('AC') && t.includes('Initiative')) {
@@ -318,7 +318,7 @@ const extractFieldValues = (
 const parseSectionBlocks = (
   s: string,
   headers: HeaderMatch[],
-  legendaryIntro: string | null,
+  legendaryIntro: null | string,
 ): {
   actions: string[];
   bonusActions: string[];
@@ -394,7 +394,7 @@ const parseOne = (htmlRaw: string): ParsedStatBlock => {
   const s = unesc(htmlRaw);
   const texts = extractTextsFromHtml(s);
 
-  let name: string | null = null;
+  let name: null | string = null;
   const nameMatch = s.match(/<a[^>]*class="[^"]*monster-tooltip[^"]*"[^>]*>([^<]+)<\/a>/);
   if (nameMatch) {
     const [, n] = nameMatch;
@@ -415,7 +415,7 @@ const parseOne = (htmlRaw: string): ParsedStatBlock => {
   const abilities = parseAbilities(s);
   const headers = collectHeaders(s);
 
-  let legendaryIntro: string | null = null;
+  let legendaryIntro: null | string = null;
   const legendaryMatch = s.match(/<p class="legendary-actions"[^>]*>([\s\S]*?)<\/p>/);
   if (legendaryMatch) {
     const [_, introContent] = legendaryMatch;

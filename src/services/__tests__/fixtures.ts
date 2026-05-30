@@ -1,10 +1,4 @@
-import type {
-  ActiveEffect,
-  Combatant,
-  CombatantType,
-  EffectDescriptor,
-  EncounterState,
-} from '../../types/encounterState';
+import type { ActiveEffect, Combatant, EffectDescriptor, EncounterState } from '../../types/encounterState';
 import { DEFAULT_ACTION_ECONOMY } from '../../types/encounterState';
 
 let counter = 0;
@@ -25,7 +19,7 @@ export const buildFactories = (): { buildId: () => string; now: string } => ({
   now: FIXED_NOW,
 });
 
-export const buildCombatant = (overrides: Partial<Combatant> & { id: string; name: string }): Combatant => ({
+export const buildCombatant = (overrides: { id: string; name: string } & Partial<Combatant>): Combatant => ({
   actionEconomy: { ...DEFAULT_ACTION_ECONOMY },
   armorClass: 14,
   currentHp: 30,
@@ -39,12 +33,12 @@ export const buildCombatant = (overrides: Partial<Combatant> & { id: string; nam
   maxHp: 30,
   refId: null,
   tempHp: 0,
-  type: 'character' as CombatantType,
+  type: 'character',
   ...overrides,
 });
 
 export const buildEffect = (
-  overrides: Partial<ActiveEffect> & { id: string; name: string; provides: EffectDescriptor[] },
+  overrides: { id: string; name: string; provides: EffectDescriptor[] } & Partial<ActiveEffect>,
 ): ActiveEffect => ({
   description: 'Test effect',
   expiresAt: { kind: 'never' },

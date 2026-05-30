@@ -40,10 +40,10 @@ const HomePage: FC = () => {
   const createMutation = useMutation({ ...mutateCreateEncounter, mutationKey: ['encounters', 'create'] });
   const deleteMutation = useMutation({ ...mutateDeleteEncounter, mutationKey: ['encounters', 'delete'] });
 
-  const [createDraft, setCreateDraft] = useState<string | null>(null);
+  const [createDraft, setCreateDraft] = useState<null | string>(null);
   const createOpen = createDraft !== null;
 
-  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
+  const [pendingDeleteId, setPendingDeleteId] = useState<null | string>(null);
 
   const handleCreateOpen = () => {
     setCreateDraft('');

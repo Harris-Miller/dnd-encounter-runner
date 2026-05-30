@@ -16,11 +16,11 @@ export interface ReminderFactories {
 }
 
 const createReminder = (
-  combatantId: string | null,
+  combatantId: null | string,
   kind: Reminder['kind'],
   message: string,
-  eventId: string | null,
-  effectId: string | null,
+  eventId: null | string,
+  effectId: null | string,
   factories: ReminderFactories,
 ): Reminder => ({
   combatantId,

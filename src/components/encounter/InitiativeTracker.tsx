@@ -10,7 +10,7 @@ export interface InitiativeTrackerProps {
   isAdvancing?: boolean;
   onAdvanceTurn: () => void;
   onSelectCombatant?: (combatantId: string) => void;
-  selectedCombatantId?: string | null;
+  selectedCombatantId?: null | string;
   state: EncounterState;
 }
 

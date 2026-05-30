@@ -45,7 +45,7 @@ const CreateProfileComponent: FC = () => {
       }).then(async res => {
         const data = (await res.json()) as unknown;
         // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
-        return res.ok ? data : Promise.reject(data);
+        return res.ok ? data : await Promise.reject(data);
       });
       return response;
     },

@@ -63,7 +63,7 @@
     "drizzle-orm": "1.0.0-beta.22",
     "drizzle-seed": "1.0.0-beta.22",
     "eslint": "^9.39.4",
-    "eslint-config-harris": "^5.1.2",
+    "eslint-config-harris": "^6.0.0-beta.1",
     "node-html-parser": "^7.1.0",
     "postgres": "^3.4.9",
     "supabase": "2.92.0",

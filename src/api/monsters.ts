@@ -35,7 +35,7 @@ export interface MonsterDetail extends MonsterSummary {
   speed: string;
   strength: number;
   traits: string[];
-  vulnerabilities: string | null;
+  vulnerabilities: null | string;
   wisdom: number;
 }
 

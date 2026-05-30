@@ -18,16 +18,16 @@ const MAGIC_ITEM_H3_START = /<h3\s[^>]*class="[^"]*compendium--magic-item[^"]*"[
 
 interface MagicItemJson {
   category: string;
-  categorySpecifier: string | null;
-  ddbId: string | null;
+  categorySpecifier: null | string;
+  ddbId: null | string;
   description: string;
   isConsumable: boolean;
   isCursed: boolean;
   name: string;
   rarity: string;
   requiresAttunement: boolean;
-  slug: string | null;
-  variantRarities: string[] | null;
+  slug: null | string;
+  variantRarities: null | string[];
 }
 
 const extractText = function (html: string): string {
@@ -39,10 +39,10 @@ const RARITY_REGEX = /(common|uncommon|very\s+rare|rare|legendary|artifact)/i;
 
 const parseCategoryLine = function (emText: string): {
   category: string;
-  categorySpecifier: string | null;
+  categorySpecifier: null | string;
   rarity: string;
   requiresAttunement: boolean;
-  variantRarities: string[] | null;
+  variantRarities: null | string[];
 } {
   const stripped = extractText(emText);
   const firstRarityMatch = stripped.match(RARITY_REGEX);
@@ -59,7 +59,7 @@ const parseCategoryLine = function (emText: string): {
     .trim();
   const variantRarities: string[] = [];
   const rarityTokens = rarityNorm.split(/\s*,\s*|\s+or\s+/i).filter(Boolean);
-  const pickRarityWord = (t: string): string | null => {
+  const pickRarityWord = (t: string): null | string => {
     const s = t.trim();
     const m = s.match(/(common|uncommon|very\s+rare|rare|legendary|artifact)/i);
     return m?.[1] ?? null;
@@ -74,7 +74,7 @@ const parseCategoryLine = function (emText: string): {
     });
   }
   let category = categoryPart;
-  let categorySpecifier: string | null = null;
+  let categorySpecifier: null | string = null;
   const paren = categoryPart.indexOf('(');
   if (paren !== -1) {
     const close = categoryPart.indexOf(')', paren);
@@ -94,9 +94,9 @@ const parseCategoryLine = function (emText: string): {
 };
 
 const extractNameSlugDdbIdFromH3 = function (blockHtml: string): {
-  ddbId: string | null;
+  ddbId: null | string;
   name: string;
-  slug: string | null;
+  slug: null | string;
 } {
   const root = parse(blockHtml, { lowerCaseTagName: true });
   const h3 = root.querySelector('h3.compendium--magic-item') ?? root.querySelector('h3');
@@ -115,7 +115,7 @@ const extractNameSlugDdbIdFromH3 = function (blockHtml: string): {
 };
 
 const collectDescriptionAndCategory = function (blockHtml: string): {
-  categoryLine: string | null;
+  categoryLine: null | string;
   descriptionParts: string[];
 } {
   const root = parse(blockHtml, { lowerCaseTagName: true });
@@ -164,7 +164,7 @@ const inferConsumable = function (category: string, description: string): boolea
   return /\bconsumed\b/.test(d) || /\bused up\b/.test(d) || /\bloses its magic\b/.test(d) || /\bexpended\b/.test(d);
 };
 
-const inferCursed = function (description: string, categoryLine: string | null): boolean {
+const inferCursed = function (description: string, categoryLine: null | string): boolean {
   const text = [description, categoryLine ?? ''].join(' ').toLowerCase();
   return /\bcurse[d]?\b/.test(text) || /\bcursed\b/.test(text);
 };
@@ -175,7 +175,7 @@ const main = function (): void {
   const outputPath = join(repoRoot, 'data', 'magicItems.json');
   const html = readFileSync(inputPath, 'utf-8');
   const matchStarts: number[] = [];
-  let m: RegExpExecArray | null;
+  let m: null | RegExpExecArray;
   const re = new RegExp(MAGIC_ITEM_H3_START.source, 'gi');
   while ((m = re.exec(html)) !== null) {
     matchStarts.push(m.index);
@@ -189,11 +189,11 @@ const main = function (): void {
   for (let i = 0; i < blocks.length; i += 1) {
     const block = blocks[i]!;
     if (block.trim() !== '') {
-      const { name, slug, ddbId } = extractNameSlugDdbIdFromH3(block);
+      const { ddbId, name, slug } = extractNameSlugDdbIdFromH3(block);
       const { categoryLine, descriptionParts } = collectDescriptionAndCategory(block);
       const description = descriptionParts.join('\n\n');
       const catLine = categoryLine ?? '';
-      const { category, categorySpecifier, rarity, variantRarities, requiresAttunement } = parseCategoryLine(catLine);
+      const { category, categorySpecifier, rarity, requiresAttunement, variantRarities } = parseCategoryLine(catLine);
       const isConsumable = inferConsumable(category, description);
       const isCursed = inferCursed(description, categoryLine);
       items.push({

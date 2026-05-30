@@ -11,7 +11,7 @@ const assertSpellRecord = (value: unknown, index: number): Record<string, unknow
   return value as Record<string, unknown>;
 };
 
-const getOptionalString = (raw: Record<string, unknown>, keys: readonly string[]): string | null => {
+const getOptionalString = (raw: Record<string, unknown>, keys: readonly string[]): null | string => {
   for (const key of keys) {
     const candidate = raw[key];
     if (typeof candidate === 'string') {
@@ -61,8 +61,8 @@ const parseSpellLevel = (value: unknown, spellLabel: string): number => {
 };
 
 const parseComponentsLine = (
-  components: string | null,
-): { isMaterial: boolean; isSomatic: boolean; isVerbal: boolean; materialDescription: string | null } => {
+  components: null | string,
+): { isMaterial: boolean; isSomatic: boolean; isVerbal: boolean; materialDescription: null | string } => {
   if (components == null || components === '') {
     return { isMaterial: false, isSomatic: false, isVerbal: false, materialDescription: null };
   }
