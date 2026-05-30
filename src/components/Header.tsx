@@ -80,12 +80,10 @@ export const Header: FC = () => {
     <>
       <AppBar position="fixed">
         <Toolbar>
-          <Box sx={{ flexGrow: 1 }}>
-            <Typography component="h1" sx={{ flexGrow: 1 }} variant="h6">
-              D&D Encounter Runner
-            </Typography>
-          </Box>
-          <Box sx={{ display: 'flex', gap: 2, mr: 2 }}>
+          <Typography component="h1" sx={{ mr: 3 }} variant="h6">
+            D&D Encounter Runner
+          </Typography>
+          <Box sx={{ display: 'flex', gap: 2 }}>
             <RouterLink
               activeOptions={{ includeSearch: false }}
               activeProps={{ sx: { fontWeight: 700, textDecoration: 'underline' } }}
@@ -105,7 +103,8 @@ export const Header: FC = () => {
               Characters
             </RouterLink>
           </Box>
-          <Box sx={{ flexGrow: 0 }}>
+          <Box sx={{ flexGrow: 1 }} />
+          <Box sx={{ alignItems: 'center', display: 'flex' }}>
             <IconButton color="inherit" onClick={handleThemeOpen}>
               {match(mode!)
                 .with('light', () => <LightModeIcon />)
