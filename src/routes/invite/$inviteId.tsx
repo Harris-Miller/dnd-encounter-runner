@@ -19,7 +19,7 @@ import type { FC } from 'react';
 import { mutateJoinCampaignViaInvite, queryInviteCampaign, queryMyCharactersWithCampaign } from '../../api/invites';
 import { RouterLink } from '../../components/RouterLink';
 import { queryClient } from '../../queryClient';
-import { ensureQueryDataOrNotFound } from '../../utils/ensureQueryDataOrNotFound';
+import { fetchQueryOrNotFound } from '../../utils/fetchQueryOrNotFound';
 
 const routeApi = getRouteApi('/invite/$inviteId');
 
@@ -152,8 +152,8 @@ export const Route = createFileRoute('/invite/$inviteId')({
   loader: async ({ params }) => {
     const { inviteId } = params;
     const [inviteCampaign] = await Promise.all([
-      ensureQueryDataOrNotFound(queryClient, queryInviteCampaign(inviteId)),
-      ensureQueryDataOrNotFound(queryClient, queryMyCharactersWithCampaign),
+      fetchQueryOrNotFound(queryClient, queryInviteCampaign(inviteId)),
+      fetchQueryOrNotFound(queryClient, queryMyCharactersWithCampaign),
     ]);
 
     if (inviteCampaign == null) {

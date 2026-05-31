@@ -109,5 +109,4 @@ export const queryMonster = (monsterId: string) =>
   queryOptions({
     queryFn: () => fetchMonster(monsterId),
     queryKey: ['monsters', 'detail', monsterId] as const,
-    staleTime: 5 * 60 * 1000,
   });

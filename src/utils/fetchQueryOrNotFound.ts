@@ -5,7 +5,7 @@ import { notFound } from '@tanstack/react-router';
 const isPostgrestNotFoundError = (error: unknown): boolean =>
   error instanceof PostgrestError && error.code === 'PGRST116';
 
-export const ensureQueryDataOrNotFound = async <
+export const fetchQueryOrNotFound = async <
   TQueryFnData = unknown,
   TError = DefaultError,
   TData = TQueryFnData,
@@ -15,7 +15,7 @@ export const ensureQueryDataOrNotFound = async <
   queryOptions: EnsureQueryDataOptions<TQueryFnData, TError, TData, TQueryKey>,
 ): Promise<TData> => {
   try {
-    return await queryClient.ensureQueryData(queryOptions);
+    return await queryClient.fetchQuery(queryOptions);
   } catch (error) {
     if (isPostgrestNotFoundError(error)) {
       // eslint-disable-next-line @typescript-eslint/only-throw-error -- TanStack Router notFound API

@@ -15,7 +15,6 @@ export const queryUser = queryOptions({
   queryKey: ['user'],
   refetchOnMount: false,
   refetchOnWindowFocus: false,
-  staleTime: Infinity,
 });
 
 export const getCachedUser = () => queryClient.getQueryCache().find<unknown, Error, User>(queryUser)?.state.data;
