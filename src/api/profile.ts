@@ -2,9 +2,9 @@ import { mutationOptions, queryOptions } from '@tanstack/react-query';
 import type { QueryClient } from '@tanstack/react-query';
 
 import { queryClient } from '../queryClient';
-import { hasProfileName } from '../routing/profileName';
 import { supabase } from '../services/supabase';
 import type { Database } from '../types/database.gen';
+import { hasProfileName } from '../utils/profileName';
 
 import { getCachedUser } from './user';
 
@@ -31,8 +31,6 @@ export type UpdateProfileAfterUploadInput = {
 export type UpdateProfileGravatarIdInput = {
   gravatarId: string;
 };
-
-export { hasProfileName } from '../routing/profileName';
 
 const fetchProfileForCurrentUser = async (): Promise<Profile> => {
   const user = getCachedUser();
