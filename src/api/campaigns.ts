@@ -18,8 +18,6 @@ export interface Campaign {
   updatedAt: string;
 }
 
-export type CampaignListItem = Campaign;
-
 const rowToCampaign = (row: CampaignRow): Campaign => ({
   createdAt: row.created_at,
   id: row.id,
@@ -30,7 +28,7 @@ const rowToCampaign = (row: CampaignRow): Campaign => ({
 });
 
 export const queryCampaignsList = queryOptions({
-  queryFn: async (): Promise<CampaignListItem[]> => {
+  queryFn: async (): Promise<Campaign[]> => {
     const { data, error } = await supabase.from('campaigns').select('*').order('updated_at', { ascending: false });
 
     if (error != null) {
