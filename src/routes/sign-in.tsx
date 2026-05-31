@@ -9,6 +9,7 @@ import type { FC } from 'react';
 import { mutateSignInWithOAuth, mutateSignInWithPassword } from '../api/auth';
 import { FullScreenCenter } from '../components/FullScreenCenter';
 import { RouterLink } from '../components/RouterLink';
+import { basepath } from '../router';
 
 const SignInComponent: FC = () => {
   const searchParams = useSearch({ from: '/sign-in' });
@@ -29,7 +30,7 @@ const SignInComponent: FC = () => {
   const handleGoogleOAuth = () => {
     oauthMutation.mutate({
       provider: 'google',
-      redirectTo: `${window.location.origin}${decodeURIComponent(redirectParam)}`,
+      redirectTo: `${window.location.origin}${basepath}${decodeURIComponent(redirectParam)}`,
     });
   };
 

@@ -6,7 +6,7 @@ import { FullScreenCenter } from './components/FullScreenCenter';
 import { NotFoundPage } from './components/NotFoundPage';
 import { routeTree } from './routeTree.gen';
 
-const basepath = import.meta.env.BASE_URL === '/' ? '/' : import.meta.env.BASE_URL.replace(/\/$/, '');
+export const basepath = import.meta.env.BASE_URL === '/' ? '/' : import.meta.env.BASE_URL.replace(/\/$/, '');
 
 const router = createRouter({
   basepath,
