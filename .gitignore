@@ -34,4 +34,6 @@ coverage
 .env*
 
 # other
+data
+scripts
 stuff
