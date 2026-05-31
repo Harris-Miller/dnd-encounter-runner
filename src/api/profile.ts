@@ -32,24 +32,22 @@ export type UpdateProfileGravatarIdInput = {
   gravatarId: string;
 };
 
-const fetchProfileForCurrentUser = async (): Promise<Profile> => {
-  const user = getCachedUser();
-
-  if (user == null) {
-    throw new Error('Not authenticated');
-  }
-
-  const { data, error } = await supabase.from('profiles').select().eq('user_id', user.id).single();
-
-  if (error != null) {
-    throw error;
-  }
-
-  return data;
-};
-
 export const queryProfile = queryOptions({
-  queryFn: fetchProfileForCurrentUser,
+  queryFn: async (): Promise<Profile> => {
+    const user = getCachedUser();
+
+    if (user == null) {
+      throw new Error('Not authenticated');
+    }
+
+    const { data, error } = await supabase.from('profiles').select().eq('user_id', user.id).single();
+
+    if (error != null) {
+      throw error;
+    }
+
+    return data;
+  },
   queryKey: ['profile'],
   refetchOnMount: false,
   refetchOnWindowFocus: false,
