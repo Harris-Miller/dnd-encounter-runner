@@ -14,11 +14,6 @@ export type SignUpWithPasswordInput = {
   password: string;
 };
 
-export type SignInWithOAuthInput = {
-  provider: Provider;
-  redirectTo: string;
-};
-
 export const mutateSignInWithPassword = mutationOptions({
   mutationFn: async ({ email, password }: SignInWithPasswordInput): Promise<Session> => {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
@@ -46,6 +41,11 @@ export const mutateSignUpWithPassword = mutationOptions({
     return data.user;
   },
 });
+
+export interface SignInWithOAuthInput {
+  provider: Provider;
+  redirectTo: string;
+}
 
 export const mutateSignInWithOAuth = mutationOptions({
   mutationFn: async ({ provider, redirectTo }: SignInWithOAuthInput): Promise<void> => {
