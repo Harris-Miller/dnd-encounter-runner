@@ -1,6 +1,18 @@
 {
   "version": 1,
   "skills": {
+    "material-ui-styling": {
+      "source": "mui/material-ui",
+      "sourceType": "github",
+      "skillPath": "skills/material-ui-styling/SKILL.md",
+      "computedHash": "286bc50b4244062e6eda02fad2d8b3765a8d0a74a1cd6821f7348384d10ba610"
+    },
+    "material-ui-theming": {
+      "source": "mui/material-ui",
+      "sourceType": "github",
+      "skillPath": "skills/material-ui-theming/SKILL.md",
+      "computedHash": "2fbc2e3babdfbdec37301b9d41c6d3df5bba2c9a62e01b0517018e4133b876d4"
+    },
     "penpot-uiux-design": {
       "source": "github/awesome-copilot",
       "sourceType": "github",
