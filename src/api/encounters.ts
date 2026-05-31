@@ -14,6 +14,7 @@ type EncounterRow = Database['public']['Tables']['encounters']['Row'];
 
 export interface EncounterListItem {
   active: boolean;
+  campaignId: string;
   combatantCount: number;
   createdAt: string;
   id: string;
@@ -24,6 +25,7 @@ export interface EncounterListItem {
 
 export interface EncounterDetail {
   active: boolean;
+  campaignId: string;
   createdAt: string;
   id: string;
   name: string;
@@ -31,8 +33,15 @@ export interface EncounterDetail {
   updatedAt: string;
 }
 
+export interface EncountersListFilters {
+  campaignId?: string;
+}
+
+const encountersListQueryKeyPrefix = ['encounters', 'list'] as const;
+
 const rowToDetail = (row: EncounterRow): EncounterDetail => ({
   active: row.active,
+  campaignId: row.campaign_id,
   createdAt: row.created_at,
   id: row.id,
   name: row.name,
@@ -45,6 +54,7 @@ const rowToListItem = (row: EncounterRow): EncounterListItem => {
 
   return {
     active: row.active,
+    campaignId: row.campaign_id,
     combatantCount: Object.keys(state.combatants).length,
     createdAt: row.created_at,
     id: row.id,
@@ -54,80 +64,100 @@ const rowToListItem = (row: EncounterRow): EncounterListItem => {
   };
 };
 
-const fetchEncountersList = async (): Promise<EncounterListItem[]> => {
-  const { data, error } = await supabase.from('encounters').select('*').order('updated_at', { ascending: false });
+export const queryEncountersList = (filters?: EncountersListFilters) =>
+  queryOptions({
+    queryFn: async (): Promise<EncounterListItem[]> => {
+      let query = supabase.from('encounters').select('*');
 
-  if (error != null) {
-    throw error;
-  }
+      if (filters?.campaignId != null) {
+        query = query.eq('campaign_id', filters.campaignId);
+      }
 
-  return data.map(rowToListItem);
-};
+      const { data, error } = await query.order('updated_at', { ascending: false });
 
-const fetchEncounter = async (encounterId: string): Promise<EncounterDetail> => {
-  const { data, error } = await supabase.from('encounters').select('*').eq('id', encounterId).single();
+      if (error != null) {
+        throw error;
+      }
 
-  if (error != null) {
-    throw error;
-  }
-
-  return rowToDetail(data);
-};
-
-export const queryEncountersList = queryOptions({
-  queryFn: fetchEncountersList,
-  queryKey: ['encounters', 'list'] as const,
-});
+      return data.map(rowToListItem);
+    },
+    queryKey: [...encountersListQueryKeyPrefix, filters ?? {}] as const,
+  });
 
 export const queryEncounter = (encounterId: string) =>
   queryOptions({
-    queryFn: () => fetchEncounter(encounterId),
+    queryFn: async (): Promise<EncounterDetail> => {
+      const { data, error } = await supabase.from('encounters').select('*').eq('id', encounterId).single();
+
+      if (error != null) {
+        throw error;
+      }
+
+      return rowToDetail(data);
+    },
     queryKey: ['encounters', 'detail', encounterId] as const,
   });
 
 export interface CreateEncounterInput {
+  campaignId: string;
   name?: string;
 }
 
-const createEncounterFn = async ({ name = 'Untitled Encounter' }: CreateEncounterInput): Promise<EncounterDetail> => {
-  const profile = getCachedProfile();
+export interface CreateEncounterVariables {
+  name?: string;
+}
 
-  if (profile == null) {
-    throw new Error('No profile loaded; cannot create encounter');
-  }
+export const mutateCreateEncounter = (campaignId: string) =>
+  mutationOptions({
+    mutationFn: async ({ name }: CreateEncounterVariables = {}) => {
+      const profile = getCachedProfile();
 
-  const { data, error } = await supabase.from('encounters').insert({ name, profile_id: profile.id }).select().single();
+      if (profile == null) {
+        throw new Error('No profile loaded; cannot create encounter');
+      }
 
-  if (error != null) {
-    throw error;
-  }
+      const { data, error } = await supabase
+        .from('encounters')
+        .insert({
+          campaign_id: campaignId,
+          name,
+          profile_id: profile.id,
+        })
+        .select()
+        .single();
 
-  return rowToDetail(data);
-};
+      if (error != null) {
+        throw error;
+      }
 
-export const mutateCreateEncounter = mutationOptions({
-  mutationFn: createEncounterFn,
-  onSuccess: (created, _variables, _onMutateResult, { client }) => {
-    client.setQueryData(queryEncounter(created.id).queryKey, created);
-    client.invalidateQueries({ queryKey: queryEncountersList.queryKey });
-  },
-});
-
-const deleteEncounterFn = async (encounterId: string): Promise<{ id: string }> => {
-  const { error } = await supabase.from('encounters').delete().eq('id', encounterId);
-
-  if (error != null) {
-    throw error;
-  }
-
-  return { id: encounterId };
-};
+      return rowToDetail(data);
+    },
+    onSuccess: (created, _variables, _onMutateResult, { client }) => {
+      client.setQueryData(queryEncounter(created.id).queryKey, created);
+      client.invalidateQueries({ queryKey: encountersListQueryKeyPrefix });
+      client.invalidateQueries({ queryKey: queryEncountersList({ campaignId }).queryKey });
+    },
+  });
 
 export const mutateDeleteEncounter = mutationOptions({
-  mutationFn: deleteEncounterFn,
-  onSuccess: ({ id }, _variables, _onMutateResult, { client }) => {
+  mutationFn: async (encounterId: string): Promise<{ campaignId: string; id: string }> => {
+    const { data, error } = await supabase
+      .from('encounters')
+      .delete()
+      .eq('id', encounterId)
+      .select('campaign_id')
+      .single();
+
+    if (error != null) {
+      throw error;
+    }
+
+    return { campaignId: data.campaign_id, id: encounterId };
+  },
+  onSuccess: ({ campaignId, id }, _variables, _onMutateResult, { client }) => {
     client.removeQueries({ queryKey: queryEncounter(id).queryKey });
-    client.invalidateQueries({ queryKey: queryEncountersList.queryKey });
+    client.invalidateQueries({ queryKey: encountersListQueryKeyPrefix });
+    client.invalidateQueries({ queryKey: queryEncountersList({ campaignId }).queryKey });
   },
 });
 
@@ -136,24 +166,22 @@ export interface SetEncounterNameInput {
   name: string;
 }
 
-const setEncounterNameFn = async ({ encounterId, name }: SetEncounterNameInput): Promise<EncounterDetail> => {
-  const { data, error } = await supabase
-    .rpc('encounter_set_name', { p_encounter_id: encounterId, p_name: name })
-    .select()
-    .single();
-
-  if (error != null) {
-    throw error;
-  }
-
-  return rowToDetail(data);
-};
-
 export const mutateSetEncounterName = mutationOptions({
-  mutationFn: setEncounterNameFn,
+  mutationFn: async ({ encounterId, name }: SetEncounterNameInput): Promise<EncounterDetail> => {
+    const { data, error } = await supabase
+      .rpc('encounter_set_name', { p_encounter_id: encounterId, p_name: name })
+      .select()
+      .single();
+
+    if (error != null) {
+      throw error;
+    }
+
+    return rowToDetail(data);
+  },
   onSuccess: (updated, _variables, _onMutateResult, { client }) => {
     client.setQueryData(queryEncounter(updated.id).queryKey, updated);
-    client.invalidateQueries({ queryKey: queryEncountersList.queryKey });
+    client.invalidateQueries({ queryKey: encountersListQueryKeyPrefix });
   },
 });
 
@@ -162,24 +190,22 @@ export interface SetEncounterActiveInput {
   encounterId: string;
 }
 
-const setEncounterActiveFn = async ({ active, encounterId }: SetEncounterActiveInput): Promise<EncounterDetail> => {
-  const { data, error } = await supabase
-    .rpc('encounter_set_active', { p_active: active, p_encounter_id: encounterId })
-    .select()
-    .single();
-
-  if (error != null) {
-    throw error;
-  }
-
-  return rowToDetail(data);
-};
-
 export const mutateSetEncounterActive = mutationOptions({
-  mutationFn: setEncounterActiveFn,
+  mutationFn: async ({ active, encounterId }: SetEncounterActiveInput): Promise<EncounterDetail> => {
+    const { data, error } = await supabase
+      .rpc('encounter_set_active', { p_active: active, p_encounter_id: encounterId })
+      .select()
+      .single();
+
+    if (error != null) {
+      throw error;
+    }
+
+    return rowToDetail(data);
+  },
   onSuccess: (updated, _variables, _onMutateResult, { client }) => {
     client.setQueryData(queryEncounter(updated.id).queryKey, updated);
-    client.invalidateQueries({ queryKey: queryEncountersList.queryKey });
+    client.invalidateQueries({ queryKey: encountersListQueryKeyPrefix });
   },
 });
 
@@ -344,7 +370,7 @@ export const useApplyTransform = (
         client.setQueryData<EncounterDetail>(queryKey, { ...existing, state: nextServerState });
       }
 
-      client.invalidateQueries({ queryKey: queryEncountersList.queryKey });
+      client.invalidateQueries({ queryKey: encountersListQueryKeyPrefix });
     },
   });
 };

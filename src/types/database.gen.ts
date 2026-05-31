@@ -34,9 +34,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      campaigns: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          profile_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name?: string
+          profile_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          profile_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campaigns_profile_id_profiles_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       characters: {
         Row: {
           armor_class: number
+          campaign_id: string | null
           created_at: string
           id: string
           level: number
@@ -48,6 +81,7 @@ export type Database = {
         }
         Insert: {
           armor_class: number
+          campaign_id?: string | null
           created_at?: string
           id?: string
           level?: number
@@ -59,6 +93,7 @@ export type Database = {
         }
         Update: {
           armor_class?: number
+          campaign_id?: string | null
           created_at?: string
           id?: string
           level?: number
@@ -69,6 +104,13 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "characters_campaign_id_campaigns_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "characters_profile_id_profiles_id_fkey"
             columns: ["profile_id"]
@@ -102,6 +144,7 @@ export type Database = {
       encounters: {
         Row: {
           active: boolean
+          campaign_id: string
           created_at: string
           id: string
           name: string
@@ -111,6 +154,7 @@ export type Database = {
         }
         Insert: {
           active?: boolean
+          campaign_id: string
           created_at?: string
           id?: string
           name?: string
@@ -120,6 +164,7 @@ export type Database = {
         }
         Update: {
           active?: boolean
+          campaign_id?: string
           created_at?: string
           id?: string
           name?: string
@@ -128,6 +173,13 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "encounters_campaign_id_campaigns_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "encounters_profile_id_profiles_id_fkey"
             columns: ["profile_id"]
@@ -627,6 +679,7 @@ export type Database = {
         Args: { p_active: boolean; p_encounter_id: string }
         Returns: {
           active: boolean
+          campaign_id: string
           created_at: string
           id: string
           name: string
@@ -653,6 +706,7 @@ export type Database = {
         Args: { p_encounter_id: string; p_name: string }
         Returns: {
           active: boolean
+          campaign_id: string
           created_at: string
           id: string
           name: string

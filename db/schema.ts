@@ -1,3 +1,4 @@
+export * from './schema/campaigns.ts';
 export * from './schema/characters.ts';
 export * from './schema/encounters.ts';
 export * from './schema/general.ts';
