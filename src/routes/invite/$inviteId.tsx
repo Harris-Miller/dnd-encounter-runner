@@ -12,13 +12,14 @@ import {
   Typography,
 } from '@mui/material';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { createFileRoute, getRouteApi } from '@tanstack/react-router';
+import { createFileRoute, getRouteApi, notFound } from '@tanstack/react-router';
 import { useState } from 'react';
 import type { FC } from 'react';
 
 import { mutateJoinCampaignViaInvite, queryInviteCampaign, queryMyCharactersWithCampaign } from '../../api/invites';
 import { RouterLink } from '../../components/RouterLink';
 import { queryClient } from '../../queryClient';
+import { ensureQueryDataOrNotFound } from '../../utils/ensureQueryDataOrNotFound';
 
 const routeApi = getRouteApi('/invite/$inviteId');
 
@@ -150,9 +151,14 @@ export const Route = createFileRoute('/invite/$inviteId')({
   component: InvitePage,
   loader: async ({ params }) => {
     const { inviteId } = params;
-    await Promise.all([
-      queryClient.ensureQueryData(queryInviteCampaign(inviteId)),
-      queryClient.ensureQueryData(queryMyCharactersWithCampaign),
+    const [inviteCampaign] = await Promise.all([
+      ensureQueryDataOrNotFound(queryClient, queryInviteCampaign(inviteId)),
+      ensureQueryDataOrNotFound(queryClient, queryMyCharactersWithCampaign),
     ]);
+
+    if (inviteCampaign == null) {
+      // eslint-disable-next-line @typescript-eslint/only-throw-error -- TanStack Router notFound API
+      throw notFound();
+    }
   },
 });

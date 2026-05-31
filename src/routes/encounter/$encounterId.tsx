@@ -34,6 +34,7 @@ import { RecordEventToolbar } from '../../components/encounter/RecordEventToolba
 import { ReminderPanel } from '../../components/encounter/ReminderPanel';
 import { RouterLink } from '../../components/RouterLink';
 import { queryClient } from '../../queryClient';
+import { ensureQueryDataOrNotFound } from '../../utils/ensureQueryDataOrNotFound';
 
 const routeApi = getRouteApi('/encounter/$encounterId');
 
@@ -261,6 +262,6 @@ const EncounterPage: FC = () => {
 export const Route = createFileRoute('/encounter/$encounterId')({
   component: EncounterPage,
   loader: async ({ params }) => {
-    await queryClient.ensureQueryData(queryEncounter(params.encounterId));
+    await ensureQueryDataOrNotFound(queryClient, queryEncounter(params.encounterId));
   },
 });
