@@ -14,7 +14,6 @@ import { Route as LogoutRouteImport } from './routes/logout'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as HomeRouteImport } from './routes/home'
 import { Route as EncounterRouteImport } from './routes/encounter'
-import { Route as CreateProfileRouteImport } from './routes/createProfile'
 import { Route as CharactersRouteImport } from './routes/characters'
 import { Route as CampaignsRouteImport } from './routes/campaigns'
 import { Route as IndexRouteImport } from './routes/index'
@@ -49,11 +48,6 @@ const HomeRoute = HomeRouteImport.update({
 const EncounterRoute = EncounterRouteImport.update({
   id: '/encounter',
   path: '/encounter',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CreateProfileRoute = CreateProfileRouteImport.update({
-  id: '/createProfile',
-  path: '/createProfile',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CharactersRoute = CharactersRouteImport.update({
@@ -111,7 +105,6 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/campaigns': typeof CampaignsRouteWithChildren
   '/characters': typeof CharactersRouteWithChildren
-  '/createProfile': typeof CreateProfileRoute
   '/encounter': typeof EncounterRouteWithChildren
   '/home': typeof HomeRouteWithChildren
   '/login': typeof LoginRoute
@@ -127,7 +120,6 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/createProfile': typeof CreateProfileRoute
   '/login': typeof LoginRoute
   '/logout': typeof LogoutRoute
   '/sign-up': typeof SignUpRoute
@@ -144,7 +136,6 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/campaigns': typeof CampaignsRouteWithChildren
   '/characters': typeof CharactersRouteWithChildren
-  '/createProfile': typeof CreateProfileRoute
   '/encounter': typeof EncounterRouteWithChildren
   '/home': typeof HomeRouteWithChildren
   '/login': typeof LoginRoute
@@ -164,7 +155,6 @@ export interface FileRouteTypes {
     | '/'
     | '/campaigns'
     | '/characters'
-    | '/createProfile'
     | '/encounter'
     | '/home'
     | '/login'
@@ -180,7 +170,6 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/createProfile'
     | '/login'
     | '/logout'
     | '/sign-up'
@@ -196,7 +185,6 @@ export interface FileRouteTypes {
     | '/'
     | '/campaigns'
     | '/characters'
-    | '/createProfile'
     | '/encounter'
     | '/home'
     | '/login'
@@ -215,7 +203,6 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CampaignsRoute: typeof CampaignsRouteWithChildren
   CharactersRoute: typeof CharactersRouteWithChildren
-  CreateProfileRoute: typeof CreateProfileRoute
   EncounterRoute: typeof EncounterRouteWithChildren
   HomeRoute: typeof HomeRouteWithChildren
   LoginRoute: typeof LoginRoute
@@ -258,13 +245,6 @@ declare module '@tanstack/react-router' {
       path: '/encounter'
       fullPath: '/encounter'
       preLoaderRoute: typeof EncounterRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/createProfile': {
-      id: '/createProfile'
-      path: '/createProfile'
-      fullPath: '/createProfile'
-      preLoaderRoute: typeof CreateProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/characters': {
@@ -396,7 +376,6 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CampaignsRoute: CampaignsRouteWithChildren,
   CharactersRoute: CharactersRouteWithChildren,
-  CreateProfileRoute: CreateProfileRoute,
   EncounterRoute: EncounterRouteWithChildren,
   HomeRoute: HomeRouteWithChildren,
   LoginRoute: LoginRoute,

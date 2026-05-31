@@ -3,7 +3,6 @@ import { createFileRoute, redirect } from '@tanstack/react-router';
 import type { FC } from 'react';
 
 // import dndLogo from '../assets/dnd-logo.svg';
-import { hasProfileName, queryProfile } from '../api/profile';
 import { queryUser } from '../api/user';
 import { FullScreenCenter } from '../components/FullScreenCenter';
 import { RouterLink } from '../components/RouterLink';
@@ -44,11 +43,9 @@ export const Route = createFileRoute('/')({
       // do nothing, this is expected if the user is not authenticated
     }
 
-    const profile = await queryClient.fetchQuery(queryProfile);
-
     // eslint-disable-next-line @typescript-eslint/only-throw-error -- TanStack Router redirect API
     throw redirect({
-      to: hasProfileName(profile.name) ? '/home' : '/createProfile',
+      to: '/home',
     });
   },
   component: IndexComponent,
