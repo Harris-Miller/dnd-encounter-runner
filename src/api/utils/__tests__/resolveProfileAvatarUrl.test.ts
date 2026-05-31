@@ -7,7 +7,7 @@ import { AVATAR_BUCKET } from '../../avatar';
 import type { Profile } from '../../profile';
 import { buildAvatarObjectPath, resolveProfileAvatarUrl } from '../resolveProfileAvatarUrl';
 
-vi.mock('../../services/supabase', () => ({
+vi.mock('../../../services/supabase', () => ({
   supabase: {
     storage: {
       from: vi.fn(),
