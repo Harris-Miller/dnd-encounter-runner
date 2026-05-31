@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SignUpRouteImport } from './routes/sign-up'
 import { Route as LogoutRouteImport } from './routes/logout'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as HomeRouteImport } from './routes/home'
@@ -25,6 +26,11 @@ import { Route as EncounterEncounterIdRouteImport } from './routes/encounter/$en
 import { Route as CharactersCharacterIdRouteImport } from './routes/characters/$characterId'
 import { Route as CampaignsCampaignIdRouteImport } from './routes/campaigns/$campaignId'
 
+const SignUpRoute = SignUpRouteImport.update({
+  id: '/sign-up',
+  path: '/sign-up',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LogoutRoute = LogoutRouteImport.update({
   id: '/logout',
   path: '/logout',
@@ -110,6 +116,7 @@ export interface FileRoutesByFullPath {
   '/home': typeof HomeRouteWithChildren
   '/login': typeof LoginRoute
   '/logout': typeof LogoutRoute
+  '/sign-up': typeof SignUpRoute
   '/campaigns/$campaignId': typeof CampaignsCampaignIdRoute
   '/characters/$characterId': typeof CharactersCharacterIdRoute
   '/encounter/$encounterId': typeof EncounterEncounterIdRoute
@@ -123,6 +130,7 @@ export interface FileRoutesByTo {
   '/createProfile': typeof CreateProfileRoute
   '/login': typeof LoginRoute
   '/logout': typeof LogoutRoute
+  '/sign-up': typeof SignUpRoute
   '/campaigns/$campaignId': typeof CampaignsCampaignIdRoute
   '/characters/$characterId': typeof CharactersCharacterIdRoute
   '/encounter/$encounterId': typeof EncounterEncounterIdRoute
@@ -141,6 +149,7 @@ export interface FileRoutesById {
   '/home': typeof HomeRouteWithChildren
   '/login': typeof LoginRoute
   '/logout': typeof LogoutRoute
+  '/sign-up': typeof SignUpRoute
   '/campaigns/$campaignId': typeof CampaignsCampaignIdRoute
   '/characters/$characterId': typeof CharactersCharacterIdRoute
   '/encounter/$encounterId': typeof EncounterEncounterIdRoute
@@ -160,6 +169,7 @@ export interface FileRouteTypes {
     | '/home'
     | '/login'
     | '/logout'
+    | '/sign-up'
     | '/campaigns/$campaignId'
     | '/characters/$characterId'
     | '/encounter/$encounterId'
@@ -173,6 +183,7 @@ export interface FileRouteTypes {
     | '/createProfile'
     | '/login'
     | '/logout'
+    | '/sign-up'
     | '/campaigns/$campaignId'
     | '/characters/$characterId'
     | '/encounter/$encounterId'
@@ -190,6 +201,7 @@ export interface FileRouteTypes {
     | '/home'
     | '/login'
     | '/logout'
+    | '/sign-up'
     | '/campaigns/$campaignId'
     | '/characters/$characterId'
     | '/encounter/$encounterId'
@@ -208,10 +220,18 @@ export interface RootRouteChildren {
   HomeRoute: typeof HomeRouteWithChildren
   LoginRoute: typeof LoginRoute
   LogoutRoute: typeof LogoutRoute
+  SignUpRoute: typeof SignUpRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sign-up': {
+      id: '/sign-up'
+      path: '/sign-up'
+      fullPath: '/sign-up'
+      preLoaderRoute: typeof SignUpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/logout': {
       id: '/logout'
       path: '/logout'
@@ -381,6 +401,7 @@ const rootRouteChildren: RootRouteChildren = {
   HomeRoute: HomeRouteWithChildren,
   LoginRoute: LoginRoute,
   LogoutRoute: LogoutRoute,
+  SignUpRoute: SignUpRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -31,26 +31,7 @@ const getGravatarHash = async (email: string): Promise<string> => {
 
 const CreateProfileComponent: FC = () => {
   const navigate = useNavigate();
-  // eslint-disable-next-line @typescript-eslint/no-use-before-define
-  const { profile } = Route.useRouteContext();
   const [draftName, setDraftName] = useState('');
-
-  const gravatarQuery = useQuery({
-    queryFn: async () => {
-      const gravatarHash = await getGravatarHash(profile.email);
-      const response = await fetch(`https://api.gravatar.com/v3/profiles/${gravatarHash}`, {
-        headers: {
-          Authorization: `Bearer ${import.meta.env.VITE_GRAVATAR_API_KEY}`,
-        },
-      }).then(async res => {
-        const data = (await res.json()) as unknown;
-        // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
-        return res.ok ? data : await Promise.reject(data);
-      });
-      return response;
-    },
-    queryKey: ['gravatar', draftName],
-  });
 
   const updateMutation = useMutation({
     ...mutateUpdateProfile,
@@ -58,22 +39,6 @@ const CreateProfileComponent: FC = () => {
       navigate({ to: '/home' });
     },
   });
-
-  const gravatarIdMutation = useMutation({
-    ...mutateUpdateProfileGravatarId,
-  });
-
-  useEffect(() => {
-    if (!gravatarQuery.isSuccess || gravatarIdMutation.isPending || gravatarIdMutation.isSuccess) {
-      return;
-    }
-
-    if (!isGravatarProfileResponse(gravatarQuery.data)) {
-      return;
-    }
-
-    gravatarIdMutation.mutate({ gravatarId: gravatarQuery.data.hash });
-  }, [gravatarQuery.data, gravatarQuery.isSuccess, gravatarIdMutation]);
 
   const trimmedName = draftName.trim();
   const isNameValid = trimmedName !== '';
@@ -87,20 +52,6 @@ const CreateProfileComponent: FC = () => {
       name: trimmedName,
     });
   };
-
-  if (gravatarQuery.isPending) {
-    return (
-      <FullScreenCenter>
-        <Container maxWidth="sm">
-          <Paper elevation={6} sx={{ alignItems: 'center', display: 'flex', flexDirection: 'column', padding: '24px' }}>
-            <Typography sx={{ marginBottom: '24px' }} variant="h5">
-              Loading...
-            </Typography>
-          </Paper>
-        </Container>
-      </FullScreenCenter>
-    );
-  }
 
   return (
     <FullScreenCenter>
@@ -138,6 +89,63 @@ const CreateProfileComponent: FC = () => {
       </Container>
     </FullScreenCenter>
   );
+};
+
+//  TODO: going to recycle this code in the future
+// @ts-expect-error
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const OuterCreateProfileComponent: FC = () => {
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
+  const { profile } = Route.useRouteContext();
+
+  const gravatarQuery = useQuery({
+    queryFn: async () => {
+      const gravatarHash = await getGravatarHash(profile.email);
+      const response = await fetch(`https://api.gravatar.com/v3/profiles/${gravatarHash}`, {
+        headers: {
+          Authorization: `Bearer ${import.meta.env.VITE_GRAVATAR_API_KEY}`,
+        },
+      }).then(async res => {
+        const data = (await res.json()) as unknown;
+        // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
+        return res.ok ? data : await Promise.reject(data);
+      });
+      return response;
+    },
+    queryKey: ['gravatar', profile.id],
+    refetchOnMount: false,
+    retry: false,
+  });
+
+  const gravatarIdMutation = useMutation(mutateUpdateProfileGravatarId);
+
+  useEffect(() => {
+    if (!gravatarQuery.isSuccess || gravatarIdMutation.isPending || gravatarIdMutation.isSuccess) {
+      return;
+    }
+
+    if (!isGravatarProfileResponse(gravatarQuery.data)) {
+      return;
+    }
+
+    gravatarIdMutation.mutate({ gravatarId: gravatarQuery.data.hash });
+  }, [gravatarQuery.data, gravatarQuery.isSuccess, gravatarIdMutation]);
+
+  if (gravatarQuery.isPending) {
+    return (
+      <FullScreenCenter>
+        <Container maxWidth="sm">
+          <Paper elevation={6} sx={{ alignItems: 'center', display: 'flex', flexDirection: 'column', padding: '24px' }}>
+            <Typography sx={{ marginBottom: '24px' }} variant="h5">
+              Loading...
+            </Typography>
+          </Paper>
+        </Container>
+      </FullScreenCenter>
+    );
+  }
+
+  return <CreateProfileComponent />;
 };
 
 export const Route = createFileRoute('/createProfile')({
