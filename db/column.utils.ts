@@ -8,6 +8,8 @@ export const uuidFk = (ref: ReferenceConfig['ref']) => uuid().notNull().referenc
 
 export const uuidFkCascade = (ref: ReferenceConfig['ref']) => uuid().notNull().references(ref, { onDelete: 'cascade' });
 
+export const uuidFkSetNull = (ref: ReferenceConfig['ref']) => uuid().references(ref, { onDelete: 'set null' });
+
 export const createdAt = () => timestamp({ withTimezone: true }).notNull().defaultNow();
 
 export const updatedAt = () =>

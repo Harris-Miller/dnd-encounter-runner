@@ -1,5 +1,5 @@
+import AutoStoriesIcon from '@mui/icons-material/AutoStories';
 import GroupsIcon from '@mui/icons-material/Groups';
-import ShieldIcon from '@mui/icons-material/Shield';
 import { Box, Card, CardActionArea, CardContent, Stack, Typography } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
@@ -20,21 +20,21 @@ const HomePage: FC = () => {
           Welcome, {displayName}
         </Typography>
         <Typography sx={{ color: 'text.secondary' }} variant="body1">
-          Run combat encounters and manage your party from here.
+          Organize campaigns and manage your party from here.
         </Typography>
       </Box>
 
       <Stack direction={{ sm: 'row', xs: 'column' }} spacing={2}>
         <Card sx={{ flex: 1 }} variant="outlined">
-          <RouterLink sx={{ color: 'inherit', textDecoration: 'none' }} to="/encounter">
+          <RouterLink sx={{ color: 'inherit', textDecoration: 'none' }} to="/campaigns">
             <CardActionArea>
               <CardContent>
                 <Stack direction="row" spacing={2} sx={{ alignItems: 'center' }}>
-                  <ShieldIcon color="primary" fontSize="large" />
+                  <AutoStoriesIcon color="primary" fontSize="large" />
                   <Box>
-                    <Typography variant="h6">Encounters</Typography>
+                    <Typography variant="h6">Campaigns</Typography>
                     <Typography sx={{ color: 'text.secondary' }} variant="body2">
-                      Create and run combat encounters
+                      Organize characters and encounters by campaign
                     </Typography>
                   </Box>
                 </Stack>

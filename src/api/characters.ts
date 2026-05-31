@@ -9,6 +9,7 @@ export type CharacterRow = Database['public']['Tables']['characters']['Row'];
 
 export interface Character {
   armorClass: number;
+  campaignId: null | string;
   createdAt: string;
   id: string;
   level: number;
@@ -19,8 +20,9 @@ export interface Character {
   updatedAt: string;
 }
 
-const rowToCharacter = (row: CharacterRow): Character => ({
+export const rowToCharacter = (row: CharacterRow): Character => ({
   armorClass: row.armor_class,
+  campaignId: row.campaign_id,
   createdAt: row.created_at,
   id: row.id,
   level: row.level,

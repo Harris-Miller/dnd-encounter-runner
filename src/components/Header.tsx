@@ -96,10 +96,10 @@ export const Header: FC = () => {
               activeOptions={{ includeSearch: false }}
               activeProps={{ sx: { fontWeight: 700, textDecoration: 'underline' } }}
               color="inherit"
-              to="/encounter"
+              to="/campaigns"
               underline="hover"
             >
-              Encounters
+              Campaigns
             </RouterLink>
             <RouterLink
               activeOptions={{ includeSearch: false }}

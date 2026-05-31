@@ -43,6 +43,7 @@ const TEST_USER_EMAIL = 'rpc-parity@example.test';
 describeIfDb('RPC parity (server JSONB transforms vs client reducer)', () => {
   let sql: ReturnType<typeof postgres>;
   let profileId: string;
+  let campaignId: string;
   const createdEncounterIds: string[] = [];
 
   beforeAll(async () => {
@@ -79,6 +80,26 @@ describeIfDb('RPC parity (server JSONB transforms vs client reducer)', () => {
       }
       profileId = insertedRow.id;
     }
+
+    const campaignRows = await sql<{ id: string }[]>`
+      SELECT id FROM public.campaigns WHERE profile_id = ${profileId}::uuid LIMIT 1
+    `;
+    const [existingCampaign] = campaignRows;
+
+    if (existingCampaign != null) {
+      campaignId = existingCampaign.id;
+    } else {
+      const insertedCampaign = await sql<{ id: string }[]>`
+        INSERT INTO public.campaigns (profile_id, name)
+        VALUES (${profileId}::uuid, 'Parity Campaign')
+        RETURNING id
+      `;
+      const [insertedCampaignRow] = insertedCampaign;
+      if (insertedCampaignRow == null) {
+        throw new Error('Failed to create test campaign');
+      }
+      campaignId = insertedCampaignRow.id;
+    }
   });
 
   afterEach(async () => {
@@ -96,8 +117,8 @@ describeIfDb('RPC parity (server JSONB transforms vs client reducer)', () => {
   const seedEncounter = async (state: EncounterState): Promise<string> => {
     const id = randomUUID();
     await sql`
-      INSERT INTO public.encounters (id, profile_id, name, state)
-      VALUES (${id}::uuid, ${profileId}::uuid, 'Parity Encounter', ${sql.json(state)})
+      INSERT INTO public.encounters (id, profile_id, campaign_id, name, state)
+      VALUES (${id}::uuid, ${profileId}::uuid, ${campaignId}::uuid, 'Parity Encounter', ${sql.json(state)})
     `;
     createdEncounterIds.push(id);
     return id;

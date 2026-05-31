@@ -144,7 +144,7 @@ export type Database = {
       encounters: {
         Row: {
           active: boolean
-          campaign_id: string | null
+          campaign_id: string
           created_at: string
           id: string
           name: string
@@ -154,7 +154,7 @@ export type Database = {
         }
         Insert: {
           active?: boolean
-          campaign_id?: string | null
+          campaign_id: string
           created_at?: string
           id?: string
           name?: string
@@ -164,7 +164,7 @@ export type Database = {
         }
         Update: {
           active?: boolean
-          campaign_id?: string | null
+          campaign_id?: string
           created_at?: string
           id?: string
           name?: string
@@ -679,7 +679,7 @@ export type Database = {
         Args: { p_active: boolean; p_encounter_id: string }
         Returns: {
           active: boolean
-          campaign_id: string | null
+          campaign_id: string
           created_at: string
           id: string
           name: string
@@ -706,7 +706,7 @@ export type Database = {
         Args: { p_encounter_id: string; p_name: string }
         Returns: {
           active: boolean
-          campaign_id: string | null
+          campaign_id: string
           created_at: string
           id: string
           name: string

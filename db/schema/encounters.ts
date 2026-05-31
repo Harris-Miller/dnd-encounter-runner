@@ -1,4 +1,4 @@
-import { boolean, jsonb, pgTable, text, uuid } from 'drizzle-orm/pg-core';
+import { boolean, jsonb, pgTable, text } from 'drizzle-orm/pg-core';
 
 import { createdAt, updatedAt, uuidFkCascade, uuidPk } from '../column.utils.ts';
 
@@ -16,7 +16,7 @@ const EMPTY_ENCOUNTER_STATE = {
 
 export const encounters = pgTable.withRLS('encounters', {
   active: boolean().notNull().default(false),
-  campaignId: uuid('campaign_id').references(() => campaigns.id, { onDelete: 'set null' }),
+  campaignId: uuidFkCascade(() => campaigns.id),
   createdAt: createdAt(),
   id: uuidPk(),
   name: text().notNull().default('Untitled Encounter'),

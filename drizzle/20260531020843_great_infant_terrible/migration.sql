@@ -1,0 +1,2 @@
+ALTER TABLE "encounters" ALTER COLUMN "campaign_id" SET NOT NULL;--> statement-breakpoint
+ALTER TABLE "encounters" DROP CONSTRAINT "encounters_campaign_id_campaigns_id_fkey", ADD CONSTRAINT "encounters_campaign_id_campaigns_id_fkey" FOREIGN KEY ("campaign_id") REFERENCES "campaigns"("id") ON DELETE CASCADE;
