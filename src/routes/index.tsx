@@ -40,7 +40,7 @@ export const Route = createFileRoute('/')({
     try {
       await queryClient.prefetchQuery(queryUser);
     } catch (_e) {
-      // do nothing, this is expected if the user is not authenticated
+      // TODO: this should _never_ happen. need to display an error page
     }
 
     // eslint-disable-next-line @typescript-eslint/only-throw-error -- TanStack Router redirect API
