@@ -6,13 +6,29 @@ import { users } from './transient/auth.ts';
 const schema = { ...schemaTables, users };
 
 export const relations = defineRelations(schema, r => ({
+  campaigns: {
+    characters: r.many.characters(),
+    encounters: r.many.encounters(),
+    profile: r.one.profiles({
+      from: r.campaigns.profileId,
+      to: r.profiles.id,
+    }),
+  },
   characters: {
+    campaign: r.one.campaigns({
+      from: r.characters.campaignId,
+      to: r.campaigns.id,
+    }),
     profile: r.one.profiles({
       from: r.characters.profileId,
       to: r.profiles.id,
     }),
   },
   encounters: {
+    campaign: r.one.campaigns({
+      from: r.encounters.campaignId,
+      to: r.campaigns.id,
+    }),
     profile: r.one.profiles({
       from: r.encounters.profileId,
       to: r.profiles.id,
@@ -22,6 +38,7 @@ export const relations = defineRelations(schema, r => ({
     weapons: r.many.weapons(),
   },
   profiles: {
+    campaigns: r.many.campaigns(),
     characters: r.many.characters(),
     encounters: r.many.encounters(),
     user: r.one.users({
