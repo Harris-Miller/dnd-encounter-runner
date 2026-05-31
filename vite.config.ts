@@ -5,6 +5,7 @@ import { defineConfig } from 'vitest/config';
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: process.env.GITHUB_ACTIONS === 'true' ? '/dnd-encounter-runner/' : '/',
   plugins: [tanstackRouter({ autoCodeSplitting: true, target: 'react' }), react(), basicSsl()],
   test: {
     clearMocks: true,

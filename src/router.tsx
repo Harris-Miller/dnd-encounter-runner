@@ -5,7 +5,10 @@ import type { FC } from 'react';
 import { FullScreenCenter } from './components/FullScreenCenter';
 import { routeTree } from './routeTree.gen';
 
+const basepath = import.meta.env.BASE_URL === '/' ? '/' : import.meta.env.BASE_URL.replace(/\/$/, '');
+
 const router = createRouter({
+  basepath,
   defaultPendingComponent: () => (
     <FullScreenCenter>
       <CircularProgress />
