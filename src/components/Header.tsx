@@ -70,7 +70,7 @@ export const Header: FC = () => {
 
   const handleLogout = () => {
     handleAvatarClose();
-    navigate({ to: '/logout' });
+    navigate({ to: '/sign-out' });
   };
 
   const themeOpen = Boolean(themeAnchorEl);

@@ -140,7 +140,7 @@ const SignUpComponent: FC = () => {
             </Button>
           </Box>
           <Typography sx={{ marginTop: '16px' }} variant="body2">
-            Already have an account? <RouterLink to="/login">Sign in</RouterLink>
+            Already have an account? <RouterLink to="/sign-in">Sign in</RouterLink>
           </Typography>
         </Paper>
       </Container>

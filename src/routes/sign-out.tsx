@@ -4,7 +4,7 @@ import { clearProfileQuery } from '../api/profile';
 import { queryClient } from '../queryClient';
 import { supabase } from '../services/supabase';
 
-export const Route = createFileRoute('/logout')({
+export const Route = createFileRoute('/sign-out')({
   // Set component to null or a simple fragment to ensure nothing is rendered while the redirect happens
   component: () => null,
 
@@ -13,7 +13,7 @@ export const Route = createFileRoute('/logout')({
     const { error } = await supabase.auth.signOut();
 
     if (error) {
-      console.error('Logout error:', error);
+      console.error('Sign out error:', error);
       // Handle error as needed, e.g., show a notification or redirect to an error page
     }
 

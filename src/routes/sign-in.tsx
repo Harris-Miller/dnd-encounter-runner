@@ -10,8 +10,8 @@ import { mutateSignInWithOAuth, mutateSignInWithPassword } from '../api/auth';
 import { FullScreenCenter } from '../components/FullScreenCenter';
 import { RouterLink } from '../components/RouterLink';
 
-const LoginComponent: FC = () => {
-  const searchParams = useSearch({ from: '/login' });
+const SignInComponent: FC = () => {
+  const searchParams = useSearch({ from: '/sign-in' });
   const redirectParam = (searchParams as { redirect?: string }).redirect ?? '/';
 
   const [email, setEmail] = useState('');
@@ -120,6 +120,6 @@ const LoginComponent: FC = () => {
   );
 };
 
-export const Route = createFileRoute('/login')({
-  component: LoginComponent,
+export const Route = createFileRoute('/sign-in')({
+  component: SignInComponent,
 });

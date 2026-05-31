@@ -9,7 +9,7 @@ export const redirectToLogin = (): never => {
   // eslint-disable-next-line @typescript-eslint/only-throw-error -- TanStack Router redirect API
   throw redirect({
     search: { redirect: redirectPath },
-    to: '/login',
+    to: '/sign-in',
   });
 };
 

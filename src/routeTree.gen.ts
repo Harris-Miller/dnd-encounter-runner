@@ -10,12 +10,12 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SignUpRouteImport } from './routes/sign-up'
-import { Route as LogoutRouteImport } from './routes/logout'
-import { Route as LoginRouteImport } from './routes/login'
-import { Route as HomeRouteImport } from './routes/home'
-import { Route as EncounterRouteImport } from './routes/encounter'
-import { Route as CharactersRouteImport } from './routes/characters'
-import { Route as CampaignsRouteImport } from './routes/campaigns'
+import { Route as SignOutRouteImport } from './routes/sign-out'
+import { Route as SignInRouteImport } from './routes/sign-in'
+import { Route as HomeRouteRouteImport } from './routes/home/route'
+import { Route as EncounterRouteRouteImport } from './routes/encounter/route'
+import { Route as CharactersRouteRouteImport } from './routes/characters/route'
+import { Route as CampaignsRouteRouteImport } from './routes/campaigns/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as HomeIndexRouteImport } from './routes/home/index'
 import { Route as EncounterIndexRouteImport } from './routes/encounter/index'
@@ -30,32 +30,32 @@ const SignUpRoute = SignUpRouteImport.update({
   path: '/sign-up',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LogoutRoute = LogoutRouteImport.update({
-  id: '/logout',
-  path: '/logout',
+const SignOutRoute = SignOutRouteImport.update({
+  id: '/sign-out',
+  path: '/sign-out',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
+const SignInRoute = SignInRouteImport.update({
+  id: '/sign-in',
+  path: '/sign-in',
   getParentRoute: () => rootRouteImport,
 } as any)
-const HomeRoute = HomeRouteImport.update({
+const HomeRouteRoute = HomeRouteRouteImport.update({
   id: '/home',
   path: '/home',
   getParentRoute: () => rootRouteImport,
 } as any)
-const EncounterRoute = EncounterRouteImport.update({
+const EncounterRouteRoute = EncounterRouteRouteImport.update({
   id: '/encounter',
   path: '/encounter',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CharactersRoute = CharactersRouteImport.update({
+const CharactersRouteRoute = CharactersRouteRouteImport.update({
   id: '/characters',
   path: '/characters',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CampaignsRoute = CampaignsRouteImport.update({
+const CampaignsRouteRoute = CampaignsRouteRouteImport.update({
   id: '/campaigns',
   path: '/campaigns',
   getParentRoute: () => rootRouteImport,
@@ -68,47 +68,47 @@ const IndexRoute = IndexRouteImport.update({
 const HomeIndexRoute = HomeIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => HomeRoute,
+  getParentRoute: () => HomeRouteRoute,
 } as any)
 const EncounterIndexRoute = EncounterIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => EncounterRoute,
+  getParentRoute: () => EncounterRouteRoute,
 } as any)
 const CharactersIndexRoute = CharactersIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => CharactersRoute,
+  getParentRoute: () => CharactersRouteRoute,
 } as any)
 const CampaignsIndexRoute = CampaignsIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => CampaignsRoute,
+  getParentRoute: () => CampaignsRouteRoute,
 } as any)
 const EncounterEncounterIdRoute = EncounterEncounterIdRouteImport.update({
   id: '/$encounterId',
   path: '/$encounterId',
-  getParentRoute: () => EncounterRoute,
+  getParentRoute: () => EncounterRouteRoute,
 } as any)
 const CharactersCharacterIdRoute = CharactersCharacterIdRouteImport.update({
   id: '/$characterId',
   path: '/$characterId',
-  getParentRoute: () => CharactersRoute,
+  getParentRoute: () => CharactersRouteRoute,
 } as any)
 const CampaignsCampaignIdRoute = CampaignsCampaignIdRouteImport.update({
   id: '/$campaignId',
   path: '/$campaignId',
-  getParentRoute: () => CampaignsRoute,
+  getParentRoute: () => CampaignsRouteRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/campaigns': typeof CampaignsRouteWithChildren
-  '/characters': typeof CharactersRouteWithChildren
-  '/encounter': typeof EncounterRouteWithChildren
-  '/home': typeof HomeRouteWithChildren
-  '/login': typeof LoginRoute
-  '/logout': typeof LogoutRoute
+  '/campaigns': typeof CampaignsRouteRouteWithChildren
+  '/characters': typeof CharactersRouteRouteWithChildren
+  '/encounter': typeof EncounterRouteRouteWithChildren
+  '/home': typeof HomeRouteRouteWithChildren
+  '/sign-in': typeof SignInRoute
+  '/sign-out': typeof SignOutRoute
   '/sign-up': typeof SignUpRoute
   '/campaigns/$campaignId': typeof CampaignsCampaignIdRoute
   '/characters/$characterId': typeof CharactersCharacterIdRoute
@@ -120,8 +120,8 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/login': typeof LoginRoute
-  '/logout': typeof LogoutRoute
+  '/sign-in': typeof SignInRoute
+  '/sign-out': typeof SignOutRoute
   '/sign-up': typeof SignUpRoute
   '/campaigns/$campaignId': typeof CampaignsCampaignIdRoute
   '/characters/$characterId': typeof CharactersCharacterIdRoute
@@ -134,12 +134,12 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/campaigns': typeof CampaignsRouteWithChildren
-  '/characters': typeof CharactersRouteWithChildren
-  '/encounter': typeof EncounterRouteWithChildren
-  '/home': typeof HomeRouteWithChildren
-  '/login': typeof LoginRoute
-  '/logout': typeof LogoutRoute
+  '/campaigns': typeof CampaignsRouteRouteWithChildren
+  '/characters': typeof CharactersRouteRouteWithChildren
+  '/encounter': typeof EncounterRouteRouteWithChildren
+  '/home': typeof HomeRouteRouteWithChildren
+  '/sign-in': typeof SignInRoute
+  '/sign-out': typeof SignOutRoute
   '/sign-up': typeof SignUpRoute
   '/campaigns/$campaignId': typeof CampaignsCampaignIdRoute
   '/characters/$characterId': typeof CharactersCharacterIdRoute
@@ -157,8 +157,8 @@ export interface FileRouteTypes {
     | '/characters'
     | '/encounter'
     | '/home'
-    | '/login'
-    | '/logout'
+    | '/sign-in'
+    | '/sign-out'
     | '/sign-up'
     | '/campaigns/$campaignId'
     | '/characters/$characterId'
@@ -170,8 +170,8 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/login'
-    | '/logout'
+    | '/sign-in'
+    | '/sign-out'
     | '/sign-up'
     | '/campaigns/$campaignId'
     | '/characters/$characterId'
@@ -187,8 +187,8 @@ export interface FileRouteTypes {
     | '/characters'
     | '/encounter'
     | '/home'
-    | '/login'
-    | '/logout'
+    | '/sign-in'
+    | '/sign-out'
     | '/sign-up'
     | '/campaigns/$campaignId'
     | '/characters/$characterId'
@@ -201,12 +201,12 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  CampaignsRoute: typeof CampaignsRouteWithChildren
-  CharactersRoute: typeof CharactersRouteWithChildren
-  EncounterRoute: typeof EncounterRouteWithChildren
-  HomeRoute: typeof HomeRouteWithChildren
-  LoginRoute: typeof LoginRoute
-  LogoutRoute: typeof LogoutRoute
+  CampaignsRouteRoute: typeof CampaignsRouteRouteWithChildren
+  CharactersRouteRoute: typeof CharactersRouteRouteWithChildren
+  EncounterRouteRoute: typeof EncounterRouteRouteWithChildren
+  HomeRouteRoute: typeof HomeRouteRouteWithChildren
+  SignInRoute: typeof SignInRoute
+  SignOutRoute: typeof SignOutRoute
   SignUpRoute: typeof SignUpRoute
 }
 
@@ -219,46 +219,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignUpRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/logout': {
-      id: '/logout'
-      path: '/logout'
-      fullPath: '/logout'
-      preLoaderRoute: typeof LogoutRouteImport
+    '/sign-out': {
+      id: '/sign-out'
+      path: '/sign-out'
+      fullPath: '/sign-out'
+      preLoaderRoute: typeof SignOutRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
+    '/sign-in': {
+      id: '/sign-in'
+      path: '/sign-in'
+      fullPath: '/sign-in'
+      preLoaderRoute: typeof SignInRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/home': {
       id: '/home'
       path: '/home'
       fullPath: '/home'
-      preLoaderRoute: typeof HomeRouteImport
+      preLoaderRoute: typeof HomeRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/encounter': {
       id: '/encounter'
       path: '/encounter'
       fullPath: '/encounter'
-      preLoaderRoute: typeof EncounterRouteImport
+      preLoaderRoute: typeof EncounterRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/characters': {
       id: '/characters'
       path: '/characters'
       fullPath: '/characters'
-      preLoaderRoute: typeof CharactersRouteImport
+      preLoaderRoute: typeof CharactersRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/campaigns': {
       id: '/campaigns'
       path: '/campaigns'
       fullPath: '/campaigns'
-      preLoaderRoute: typeof CampaignsRouteImport
+      preLoaderRoute: typeof CampaignsRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -273,113 +273,115 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/home/'
       preLoaderRoute: typeof HomeIndexRouteImport
-      parentRoute: typeof HomeRoute
+      parentRoute: typeof HomeRouteRoute
     }
     '/encounter/': {
       id: '/encounter/'
       path: '/'
       fullPath: '/encounter/'
       preLoaderRoute: typeof EncounterIndexRouteImport
-      parentRoute: typeof EncounterRoute
+      parentRoute: typeof EncounterRouteRoute
     }
     '/characters/': {
       id: '/characters/'
       path: '/'
       fullPath: '/characters/'
       preLoaderRoute: typeof CharactersIndexRouteImport
-      parentRoute: typeof CharactersRoute
+      parentRoute: typeof CharactersRouteRoute
     }
     '/campaigns/': {
       id: '/campaigns/'
       path: '/'
       fullPath: '/campaigns/'
       preLoaderRoute: typeof CampaignsIndexRouteImport
-      parentRoute: typeof CampaignsRoute
+      parentRoute: typeof CampaignsRouteRoute
     }
     '/encounter/$encounterId': {
       id: '/encounter/$encounterId'
       path: '/$encounterId'
       fullPath: '/encounter/$encounterId'
       preLoaderRoute: typeof EncounterEncounterIdRouteImport
-      parentRoute: typeof EncounterRoute
+      parentRoute: typeof EncounterRouteRoute
     }
     '/characters/$characterId': {
       id: '/characters/$characterId'
       path: '/$characterId'
       fullPath: '/characters/$characterId'
       preLoaderRoute: typeof CharactersCharacterIdRouteImport
-      parentRoute: typeof CharactersRoute
+      parentRoute: typeof CharactersRouteRoute
     }
     '/campaigns/$campaignId': {
       id: '/campaigns/$campaignId'
       path: '/$campaignId'
       fullPath: '/campaigns/$campaignId'
       preLoaderRoute: typeof CampaignsCampaignIdRouteImport
-      parentRoute: typeof CampaignsRoute
+      parentRoute: typeof CampaignsRouteRoute
     }
   }
 }
 
-interface CampaignsRouteChildren {
+interface CampaignsRouteRouteChildren {
   CampaignsCampaignIdRoute: typeof CampaignsCampaignIdRoute
   CampaignsIndexRoute: typeof CampaignsIndexRoute
 }
 
-const CampaignsRouteChildren: CampaignsRouteChildren = {
+const CampaignsRouteRouteChildren: CampaignsRouteRouteChildren = {
   CampaignsCampaignIdRoute: CampaignsCampaignIdRoute,
   CampaignsIndexRoute: CampaignsIndexRoute,
 }
 
-const CampaignsRouteWithChildren = CampaignsRoute._addFileChildren(
-  CampaignsRouteChildren,
+const CampaignsRouteRouteWithChildren = CampaignsRouteRoute._addFileChildren(
+  CampaignsRouteRouteChildren,
 )
 
-interface CharactersRouteChildren {
+interface CharactersRouteRouteChildren {
   CharactersCharacterIdRoute: typeof CharactersCharacterIdRoute
   CharactersIndexRoute: typeof CharactersIndexRoute
 }
 
-const CharactersRouteChildren: CharactersRouteChildren = {
+const CharactersRouteRouteChildren: CharactersRouteRouteChildren = {
   CharactersCharacterIdRoute: CharactersCharacterIdRoute,
   CharactersIndexRoute: CharactersIndexRoute,
 }
 
-const CharactersRouteWithChildren = CharactersRoute._addFileChildren(
-  CharactersRouteChildren,
+const CharactersRouteRouteWithChildren = CharactersRouteRoute._addFileChildren(
+  CharactersRouteRouteChildren,
 )
 
-interface EncounterRouteChildren {
+interface EncounterRouteRouteChildren {
   EncounterEncounterIdRoute: typeof EncounterEncounterIdRoute
   EncounterIndexRoute: typeof EncounterIndexRoute
 }
 
-const EncounterRouteChildren: EncounterRouteChildren = {
+const EncounterRouteRouteChildren: EncounterRouteRouteChildren = {
   EncounterEncounterIdRoute: EncounterEncounterIdRoute,
   EncounterIndexRoute: EncounterIndexRoute,
 }
 
-const EncounterRouteWithChildren = EncounterRoute._addFileChildren(
-  EncounterRouteChildren,
+const EncounterRouteRouteWithChildren = EncounterRouteRoute._addFileChildren(
+  EncounterRouteRouteChildren,
 )
 
-interface HomeRouteChildren {
+interface HomeRouteRouteChildren {
   HomeIndexRoute: typeof HomeIndexRoute
 }
 
-const HomeRouteChildren: HomeRouteChildren = {
+const HomeRouteRouteChildren: HomeRouteRouteChildren = {
   HomeIndexRoute: HomeIndexRoute,
 }
 
-const HomeRouteWithChildren = HomeRoute._addFileChildren(HomeRouteChildren)
+const HomeRouteRouteWithChildren = HomeRouteRoute._addFileChildren(
+  HomeRouteRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  CampaignsRoute: CampaignsRouteWithChildren,
-  CharactersRoute: CharactersRouteWithChildren,
-  EncounterRoute: EncounterRouteWithChildren,
-  HomeRoute: HomeRouteWithChildren,
-  LoginRoute: LoginRoute,
-  LogoutRoute: LogoutRoute,
+  CampaignsRouteRoute: CampaignsRouteRouteWithChildren,
+  CharactersRouteRoute: CharactersRouteRouteWithChildren,
+  EncounterRouteRoute: EncounterRouteRouteWithChildren,
+  HomeRouteRoute: HomeRouteRouteWithChildren,
+  SignInRoute: SignInRoute,
+  SignOutRoute: SignOutRoute,
   SignUpRoute: SignUpRoute,
 }
 export const routeTree = rootRouteImport

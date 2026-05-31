@@ -18,7 +18,7 @@ const IndexComponent: FC = () => {
             {/* <Img alt="D&D Logo" src={dndLogo} sx={{ color: 'red', height: '1.5em', marginX: '12px', width: '1.5em' }} />{' '} */}
             DnD Encounter Runner
           </Typography>
-          <RouterLink sx={{ marginBottom: '12px' }} to="/login">
+          <RouterLink sx={{ marginBottom: '12px' }} to="/sign-in">
             Login
           </RouterLink>
         </Paper>
