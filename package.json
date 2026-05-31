@@ -23,7 +23,8 @@
     "lint": "eslint . --max-warnings=0",
     "test": "vitest",
     "test:ci": "vitest run --coverage",
-    "typecheck": "tsc -b"
+    "typecheck": "tsc -b",
+    "local-ci": "pnpm run typecheck && pnpm run lint && pnpm run test"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",

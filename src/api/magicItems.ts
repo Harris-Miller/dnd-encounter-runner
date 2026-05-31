@@ -75,5 +75,4 @@ export const queryMagicItem = (magicItemId: string) =>
   queryOptions({
     queryFn: () => fetchMagicItem(magicItemId),
     queryKey: ['magicItems', 'detail', magicItemId] as const,
-    staleTime: 5 * 60 * 1000,
   });

@@ -1,6 +1,8 @@
 import type { Session } from '@supabase/supabase-js';
 import { redirect } from '@tanstack/react-router';
 
+import { queryUser } from '../api/user';
+import { queryClient } from '../queryClient';
 import { supabase } from '../services/supabase';
 
 export const redirectToLogin = (): never => {
@@ -19,6 +21,12 @@ export const requireSession = async (): Promise<Session> => {
   } = await supabase.auth.getSession();
 
   if (session == null) {
+    return redirectToLogin();
+  }
+
+  try {
+    await queryClient.ensureQueryData(queryUser);
+  } catch {
     return redirectToLogin();
   }
 

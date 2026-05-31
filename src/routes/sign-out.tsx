@@ -1,6 +1,5 @@
 import { createFileRoute, redirect } from '@tanstack/react-router';
 
-import { clearProfileQuery } from '../api/profile';
 import { queryClient } from '../queryClient';
 import { supabase } from '../services/supabase';
 
@@ -17,7 +16,7 @@ export const Route = createFileRoute('/sign-out')({
       // Handle error as needed, e.g., show a notification or redirect to an error page
     }
 
-    clearProfileQuery(queryClient);
+    queryClient.getQueryCache().clear();
 
     // Throw a redirect to the home page ("/") immediately after the action
     // eslint-disable-next-line @typescript-eslint/only-throw-error

@@ -39,6 +39,7 @@ import { queryProfile } from '../../api/profile';
 import { EncounterListSection } from '../../components/encounter/encounterLists/EncounterListSection';
 import { RouterLink } from '../../components/RouterLink';
 import { queryClient } from '../../queryClient';
+import { fetchQueryOrNotFound } from '../../utils/fetchQueryOrNotFound';
 
 const routeApi = getRouteApi('/campaigns/$campaignId');
 
@@ -357,8 +358,8 @@ export const Route = createFileRoute('/campaigns/$campaignId')({
   component: CampaignDetailPage,
   loader: async ({ params }) => {
     const { campaignId } = params;
+    await fetchQueryOrNotFound(queryClient, queryCampaign(campaignId));
     await Promise.all([
-      queryClient.ensureQueryData(queryCampaign(campaignId)),
       queryClient.ensureQueryData(queryProfile),
       queryClient.ensureQueryData(queryCampaignCharacters(campaignId)),
       queryClient.ensureQueryData(queryEncountersList({ campaignId })),

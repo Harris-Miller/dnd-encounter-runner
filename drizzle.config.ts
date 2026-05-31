@@ -1,14 +1,14 @@
 import { config } from 'dotenv';
 import { defineConfig } from 'drizzle-kit';
 
-config({ path: '.env.development' });
+if (process.env.GITHUB_ACTIONS !== 'true') {
+  config({ path: '.env.development' });
+}
 
 const dbUrl = process.env.DATABASE_URL;
 
 if (dbUrl == null || dbUrl === '') {
   throw new Error('DATABASE_URL is not set');
-} else {
-  console.log(`DATABASE_URL is set as "${dbUrl}"`);
 }
 
 export default defineConfig({

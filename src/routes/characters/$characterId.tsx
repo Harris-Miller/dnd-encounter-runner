@@ -18,6 +18,7 @@ import type { CharacterFormValues } from '../../components/characters/characterF
 import { CharacterFormFields } from '../../components/characters/CharacterFormFields';
 import { RouterLink } from '../../components/RouterLink';
 import { queryClient } from '../../queryClient';
+import { fetchQueryOrNotFound } from '../../utils/fetchQueryOrNotFound';
 
 const routeApi = getRouteApi('/characters/$characterId');
 
@@ -147,6 +148,6 @@ const CharacterDetailPage: FC = () => {
 export const Route = createFileRoute('/characters/$characterId')({
   component: CharacterDetailPage,
   loader: async ({ params }) => {
-    await queryClient.ensureQueryData(queryCharacter(params.characterId));
+    await fetchQueryOrNotFound(queryClient, queryCharacter(params.characterId));
   },
 });

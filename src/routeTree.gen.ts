@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SignUpRouteImport } from './routes/sign-up'
 import { Route as SignOutRouteImport } from './routes/sign-out'
 import { Route as SignInRouteImport } from './routes/sign-in'
+import { Route as SplatRouteImport } from './routes/$'
 import { Route as InviteRouteRouteImport } from './routes/invite/route'
 import { Route as HomeRouteRouteImport } from './routes/home/route'
 import { Route as EncounterRouteRouteImport } from './routes/encounter/route'
@@ -40,6 +41,11 @@ const SignOutRoute = SignOutRouteImport.update({
 const SignInRoute = SignInRouteImport.update({
   id: '/sign-in',
   path: '/sign-in',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SplatRoute = SplatRouteImport.update({
+  id: '/$',
+  path: '/$',
   getParentRoute: () => rootRouteImport,
 } as any)
 const InviteRouteRoute = InviteRouteRouteImport.update({
@@ -120,6 +126,7 @@ export interface FileRoutesByFullPath {
   '/encounter': typeof EncounterRouteRouteWithChildren
   '/home': typeof HomeRouteRouteWithChildren
   '/invite': typeof InviteRouteRouteWithChildren
+  '/$': typeof SplatRoute
   '/sign-in': typeof SignInRoute
   '/sign-out': typeof SignOutRoute
   '/sign-up': typeof SignUpRoute
@@ -135,6 +142,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/invite': typeof InviteRouteRouteWithChildren
+  '/$': typeof SplatRoute
   '/sign-in': typeof SignInRoute
   '/sign-out': typeof SignOutRoute
   '/sign-up': typeof SignUpRoute
@@ -155,6 +163,7 @@ export interface FileRoutesById {
   '/encounter': typeof EncounterRouteRouteWithChildren
   '/home': typeof HomeRouteRouteWithChildren
   '/invite': typeof InviteRouteRouteWithChildren
+  '/$': typeof SplatRoute
   '/sign-in': typeof SignInRoute
   '/sign-out': typeof SignOutRoute
   '/sign-up': typeof SignUpRoute
@@ -176,6 +185,7 @@ export interface FileRouteTypes {
     | '/encounter'
     | '/home'
     | '/invite'
+    | '/$'
     | '/sign-in'
     | '/sign-out'
     | '/sign-up'
@@ -191,6 +201,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/invite'
+    | '/$'
     | '/sign-in'
     | '/sign-out'
     | '/sign-up'
@@ -210,6 +221,7 @@ export interface FileRouteTypes {
     | '/encounter'
     | '/home'
     | '/invite'
+    | '/$'
     | '/sign-in'
     | '/sign-out'
     | '/sign-up'
@@ -230,6 +242,7 @@ export interface RootRouteChildren {
   EncounterRouteRoute: typeof EncounterRouteRouteWithChildren
   HomeRouteRoute: typeof HomeRouteRouteWithChildren
   InviteRouteRoute: typeof InviteRouteRouteWithChildren
+  SplatRoute: typeof SplatRoute
   SignInRoute: typeof SignInRoute
   SignOutRoute: typeof SignOutRoute
   SignUpRoute: typeof SignUpRoute
@@ -256,6 +269,13 @@ declare module '@tanstack/react-router' {
       path: '/sign-in'
       fullPath: '/sign-in'
       preLoaderRoute: typeof SignInRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$': {
+      id: '/$'
+      path: '/$'
+      fullPath: '/$'
+      preLoaderRoute: typeof SplatRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/invite': {
@@ -432,6 +452,7 @@ const rootRouteChildren: RootRouteChildren = {
   EncounterRouteRoute: EncounterRouteRouteWithChildren,
   HomeRouteRoute: HomeRouteRouteWithChildren,
   InviteRouteRoute: InviteRouteRouteWithChildren,
+  SplatRoute: SplatRoute,
   SignInRoute: SignInRoute,
   SignOutRoute: SignOutRoute,
   SignUpRoute: SignUpRoute,

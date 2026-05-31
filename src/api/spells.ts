@@ -88,5 +88,4 @@ export const querySpell = (spellId: string) =>
   queryOptions({
     queryFn: () => fetchSpell(spellId),
     queryKey: ['spells', 'detail', spellId] as const,
-    staleTime: 5 * 60 * 1000,
   });

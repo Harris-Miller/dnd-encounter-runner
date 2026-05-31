@@ -2,7 +2,7 @@ import { Container } from '@mui/material';
 import { Outlet } from '@tanstack/react-router';
 import type { FC } from 'react';
 
-import { Header } from '../components/Header';
+import { Header } from './Header';
 
 export const AppLayout: FC = () => (
   <>

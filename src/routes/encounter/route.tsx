@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 
-import { AppLayout } from '../../routing/AppLayout';
-import { requireSession } from '../../routing/routeGuards';
+import { AppLayout } from '../../components/AppLayout';
+import { requireSession } from '../../utils/routeGuards';
 
 export const Route = createFileRoute('/encounter')({
   beforeLoad: async () => {
