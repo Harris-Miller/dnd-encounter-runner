@@ -10,12 +10,14 @@ import { mutateSignUpWithPassword } from '../api/auth';
 import { FullScreenCenter } from '../components/FullScreenCenter';
 import { RouterLink } from '../components/RouterLink';
 
+const MINIMUM_DISPLAY_NAME_LENGTH = 3;
 const MINIMUM_PASSWORD_LENGTH = 6;
 
 const SignUpComponent: FC = () => {
   const navigate = useNavigate();
 
   const [email, setEmail] = useState('');
+  const [displayName, setDisplayName] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPasswords, setShowPasswords] = useState(false);
@@ -28,16 +30,19 @@ const SignUpComponent: FC = () => {
   });
 
   const trimmedEmail = email.trim();
+  const trimmedDisplayName = displayName.trim();
   const isPasswordTooShort = password.length < MINIMUM_PASSWORD_LENGTH;
+  const isDisplayNameTooShort = trimmedDisplayName.length < MINIMUM_DISPLAY_NAME_LENGTH;
   const doPasswordsMatch = password === confirmPassword;
-  const isSubmitDisabled = trimmedEmail === '' || isPasswordTooShort || !doPasswordsMatch || signUpMutation.isPending;
+  const isSubmitDisabled =
+    trimmedEmail === '' || isPasswordTooShort || isDisplayNameTooShort || !doPasswordsMatch || signUpMutation.isPending;
 
   const handleSignUp = () => {
     if (isSubmitDisabled) {
       return;
     }
 
-    signUpMutation.mutate({ email: trimmedEmail, password });
+    signUpMutation.mutate({ displayName: trimmedDisplayName, email: trimmedEmail, password });
   };
 
   const confirmPasswordError = confirmPassword !== '' && !doPasswordsMatch;
@@ -81,7 +86,17 @@ const SignUpComponent: FC = () => {
             sx={{ width: '100%' }}
           >
             <TextField
-              autoComplete="email"
+              fullWidth
+              label="Display Name"
+              margin="dense"
+              onChange={event => {
+                setDisplayName(event.target.value);
+              }}
+              type="text"
+              value={displayName}
+              variant="standard"
+            />
+            <TextField
               fullWidth
               label="Email"
               margin="dense"
@@ -93,7 +108,6 @@ const SignUpComponent: FC = () => {
               variant="standard"
             />
             <TextField
-              autoComplete="new-password"
               fullWidth
               helperText={`Must be at least ${MINIMUM_PASSWORD_LENGTH} characters`}
               label="Password"
@@ -107,7 +121,6 @@ const SignUpComponent: FC = () => {
               variant="standard"
             />
             <TextField
-              autoComplete="new-password"
               error={confirmPasswordError}
               fullWidth
               helperText={confirmPasswordError ? 'Passwords do not match' : ' '}

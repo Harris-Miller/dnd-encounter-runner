@@ -9,6 +9,7 @@ export type SignInWithPasswordInput = {
 };
 
 export type SignUpWithPasswordInput = {
+  displayName: string;
   email: string;
   password: string;
 };
@@ -31,8 +32,8 @@ export const mutateSignInWithPassword = mutationOptions({
 });
 
 export const mutateSignUpWithPassword = mutationOptions({
-  mutationFn: async ({ email, password }: SignUpWithPasswordInput): Promise<User> => {
-    const { data, error } = await supabase.auth.signUp({ email, password });
+  mutationFn: async ({ displayName, email, password }: SignUpWithPasswordInput): Promise<User> => {
+    const { data, error } = await supabase.auth.signUp({ email, options: { data: { name: displayName } }, password });
 
     if (error != null) {
       throw error;
