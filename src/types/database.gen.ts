@@ -622,6 +622,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      character_profile_id: {
+        Args: { p_character_id: string }
+        Returns: string
+      }
       encounter_add_combatant: {
         Args: {
           p_combatant: Json
@@ -735,6 +739,15 @@ export type Database = {
         Args: { p_character_id: string; p_invite_id: string }
         Returns: string
       }
+      remove_character_from_campaign: {
+        Args: { p_campaign_id: string; p_character_id: string }
+        Returns: string
+      }
+      user_is_campaign_member: {
+        Args: { p_campaign_id: string }
+        Returns: boolean
+      }
+      user_owns_campaign: { Args: { p_campaign_id: string }; Returns: boolean }
     }
     Enums: {
       magic_item_variant_rarity:

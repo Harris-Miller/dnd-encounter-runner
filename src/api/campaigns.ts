@@ -178,19 +178,17 @@ export interface RemoveCharacterFromCampaignInput {
 }
 
 export const mutateRemoveCharacterFromCampaign = mutationOptions({
-  mutationFn: async ({ characterId }: RemoveCharacterFromCampaignInput): Promise<{ id: string }> => {
-    const { data, error } = await supabase
-      .from('characters')
-      .update({ campaign_id: null })
-      .eq('id', characterId)
-      .select()
-      .single();
+  mutationFn: async ({ campaignId, characterId }: RemoveCharacterFromCampaignInput): Promise<{ id: string }> => {
+    const { data, error } = await supabase.rpc('remove_character_from_campaign', {
+      p_campaign_id: campaignId,
+      p_character_id: characterId,
+    });
 
     if (error != null) {
       throw error;
     }
 
-    return { id: data.id };
+    return { id: data };
   },
   onSuccess: (_result, { campaignId, characterId }, _onMutateResult, { client }) => {
     client.invalidateQueries({ queryKey: queryCampaignCharacters(campaignId).queryKey });
