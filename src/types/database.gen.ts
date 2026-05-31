@@ -38,6 +38,7 @@ export type Database = {
         Row: {
           created_at: string
           id: string
+          invite_id: string | null
           name: string
           profile_id: string
           updated_at: string
@@ -45,6 +46,7 @@ export type Database = {
         Insert: {
           created_at?: string
           id?: string
+          invite_id?: string | null
           name?: string
           profile_id: string
           updated_at?: string
@@ -52,6 +54,7 @@ export type Database = {
         Update: {
           created_at?: string
           id?: string
+          invite_id?: string | null
           name?: string
           profile_id?: string
           updated_at?: string
@@ -720,6 +723,17 @@ export type Database = {
           isOneToOne: false
           isSetofReturn: true
         }
+      }
+      get_campaign_by_invite: {
+        Args: { p_invite_id: string }
+        Returns: {
+          id: string
+          name: string
+        }[]
+      }
+      join_campaign_via_invite: {
+        Args: { p_character_id: string; p_invite_id: string }
+        Returns: string
       }
     }
     Enums: {

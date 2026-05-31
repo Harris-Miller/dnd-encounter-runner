@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SignUpRouteImport } from './routes/sign-up'
 import { Route as SignOutRouteImport } from './routes/sign-out'
 import { Route as SignInRouteImport } from './routes/sign-in'
+import { Route as InviteRouteRouteImport } from './routes/invite/route'
 import { Route as HomeRouteRouteImport } from './routes/home/route'
 import { Route as EncounterRouteRouteImport } from './routes/encounter/route'
 import { Route as CharactersRouteRouteImport } from './routes/characters/route'
@@ -21,6 +22,7 @@ import { Route as HomeIndexRouteImport } from './routes/home/index'
 import { Route as EncounterIndexRouteImport } from './routes/encounter/index'
 import { Route as CharactersIndexRouteImport } from './routes/characters/index'
 import { Route as CampaignsIndexRouteImport } from './routes/campaigns/index'
+import { Route as InviteInviteIdRouteImport } from './routes/invite/$inviteId'
 import { Route as EncounterEncounterIdRouteImport } from './routes/encounter/$encounterId'
 import { Route as CharactersCharacterIdRouteImport } from './routes/characters/$characterId'
 import { Route as CampaignsCampaignIdRouteImport } from './routes/campaigns/$campaignId'
@@ -38,6 +40,11 @@ const SignOutRoute = SignOutRouteImport.update({
 const SignInRoute = SignInRouteImport.update({
   id: '/sign-in',
   path: '/sign-in',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InviteRouteRoute = InviteRouteRouteImport.update({
+  id: '/invite',
+  path: '/invite',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HomeRouteRoute = HomeRouteRouteImport.update({
@@ -85,6 +92,11 @@ const CampaignsIndexRoute = CampaignsIndexRouteImport.update({
   path: '/',
   getParentRoute: () => CampaignsRouteRoute,
 } as any)
+const InviteInviteIdRoute = InviteInviteIdRouteImport.update({
+  id: '/$inviteId',
+  path: '/$inviteId',
+  getParentRoute: () => InviteRouteRoute,
+} as any)
 const EncounterEncounterIdRoute = EncounterEncounterIdRouteImport.update({
   id: '/$encounterId',
   path: '/$encounterId',
@@ -107,12 +119,14 @@ export interface FileRoutesByFullPath {
   '/characters': typeof CharactersRouteRouteWithChildren
   '/encounter': typeof EncounterRouteRouteWithChildren
   '/home': typeof HomeRouteRouteWithChildren
+  '/invite': typeof InviteRouteRouteWithChildren
   '/sign-in': typeof SignInRoute
   '/sign-out': typeof SignOutRoute
   '/sign-up': typeof SignUpRoute
   '/campaigns/$campaignId': typeof CampaignsCampaignIdRoute
   '/characters/$characterId': typeof CharactersCharacterIdRoute
   '/encounter/$encounterId': typeof EncounterEncounterIdRoute
+  '/invite/$inviteId': typeof InviteInviteIdRoute
   '/campaigns/': typeof CampaignsIndexRoute
   '/characters/': typeof CharactersIndexRoute
   '/encounter/': typeof EncounterIndexRoute
@@ -120,12 +134,14 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/invite': typeof InviteRouteRouteWithChildren
   '/sign-in': typeof SignInRoute
   '/sign-out': typeof SignOutRoute
   '/sign-up': typeof SignUpRoute
   '/campaigns/$campaignId': typeof CampaignsCampaignIdRoute
   '/characters/$characterId': typeof CharactersCharacterIdRoute
   '/encounter/$encounterId': typeof EncounterEncounterIdRoute
+  '/invite/$inviteId': typeof InviteInviteIdRoute
   '/campaigns': typeof CampaignsIndexRoute
   '/characters': typeof CharactersIndexRoute
   '/encounter': typeof EncounterIndexRoute
@@ -138,12 +154,14 @@ export interface FileRoutesById {
   '/characters': typeof CharactersRouteRouteWithChildren
   '/encounter': typeof EncounterRouteRouteWithChildren
   '/home': typeof HomeRouteRouteWithChildren
+  '/invite': typeof InviteRouteRouteWithChildren
   '/sign-in': typeof SignInRoute
   '/sign-out': typeof SignOutRoute
   '/sign-up': typeof SignUpRoute
   '/campaigns/$campaignId': typeof CampaignsCampaignIdRoute
   '/characters/$characterId': typeof CharactersCharacterIdRoute
   '/encounter/$encounterId': typeof EncounterEncounterIdRoute
+  '/invite/$inviteId': typeof InviteInviteIdRoute
   '/campaigns/': typeof CampaignsIndexRoute
   '/characters/': typeof CharactersIndexRoute
   '/encounter/': typeof EncounterIndexRoute
@@ -157,12 +175,14 @@ export interface FileRouteTypes {
     | '/characters'
     | '/encounter'
     | '/home'
+    | '/invite'
     | '/sign-in'
     | '/sign-out'
     | '/sign-up'
     | '/campaigns/$campaignId'
     | '/characters/$characterId'
     | '/encounter/$encounterId'
+    | '/invite/$inviteId'
     | '/campaigns/'
     | '/characters/'
     | '/encounter/'
@@ -170,12 +190,14 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/invite'
     | '/sign-in'
     | '/sign-out'
     | '/sign-up'
     | '/campaigns/$campaignId'
     | '/characters/$characterId'
     | '/encounter/$encounterId'
+    | '/invite/$inviteId'
     | '/campaigns'
     | '/characters'
     | '/encounter'
@@ -187,12 +209,14 @@ export interface FileRouteTypes {
     | '/characters'
     | '/encounter'
     | '/home'
+    | '/invite'
     | '/sign-in'
     | '/sign-out'
     | '/sign-up'
     | '/campaigns/$campaignId'
     | '/characters/$characterId'
     | '/encounter/$encounterId'
+    | '/invite/$inviteId'
     | '/campaigns/'
     | '/characters/'
     | '/encounter/'
@@ -205,6 +229,7 @@ export interface RootRouteChildren {
   CharactersRouteRoute: typeof CharactersRouteRouteWithChildren
   EncounterRouteRoute: typeof EncounterRouteRouteWithChildren
   HomeRouteRoute: typeof HomeRouteRouteWithChildren
+  InviteRouteRoute: typeof InviteRouteRouteWithChildren
   SignInRoute: typeof SignInRoute
   SignOutRoute: typeof SignOutRoute
   SignUpRoute: typeof SignUpRoute
@@ -231,6 +256,13 @@ declare module '@tanstack/react-router' {
       path: '/sign-in'
       fullPath: '/sign-in'
       preLoaderRoute: typeof SignInRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/invite': {
+      id: '/invite'
+      path: '/invite'
+      fullPath: '/invite'
+      preLoaderRoute: typeof InviteRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/home': {
@@ -295,6 +327,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/campaigns/'
       preLoaderRoute: typeof CampaignsIndexRouteImport
       parentRoute: typeof CampaignsRouteRoute
+    }
+    '/invite/$inviteId': {
+      id: '/invite/$inviteId'
+      path: '/$inviteId'
+      fullPath: '/invite/$inviteId'
+      preLoaderRoute: typeof InviteInviteIdRouteImport
+      parentRoute: typeof InviteRouteRoute
     }
     '/encounter/$encounterId': {
       id: '/encounter/$encounterId'
@@ -374,12 +413,25 @@ const HomeRouteRouteWithChildren = HomeRouteRoute._addFileChildren(
   HomeRouteRouteChildren,
 )
 
+interface InviteRouteRouteChildren {
+  InviteInviteIdRoute: typeof InviteInviteIdRoute
+}
+
+const InviteRouteRouteChildren: InviteRouteRouteChildren = {
+  InviteInviteIdRoute: InviteInviteIdRoute,
+}
+
+const InviteRouteRouteWithChildren = InviteRouteRoute._addFileChildren(
+  InviteRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CampaignsRouteRoute: CampaignsRouteRouteWithChildren,
   CharactersRouteRoute: CharactersRouteRouteWithChildren,
   EncounterRouteRoute: EncounterRouteRouteWithChildren,
   HomeRouteRoute: HomeRouteRouteWithChildren,
+  InviteRouteRoute: InviteRouteRouteWithChildren,
   SignInRoute: SignInRoute,
   SignOutRoute: SignOutRoute,
   SignUpRoute: SignUpRoute,
