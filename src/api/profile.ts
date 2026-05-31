@@ -50,113 +50,6 @@ const fetchProfileForCurrentUser = async (): Promise<Profile> => {
   return data;
 };
 
-const updateProfileNameFn = async ({ name }: UpdateProfileNameInput): Promise<Profile> => {
-  const trimmedName = name.trim();
-
-  if (!hasProfileName(trimmedName)) {
-    throw new Error('Profile name cannot be empty');
-  }
-
-  const user = getCachedUser();
-
-  if (user == null) {
-    throw new Error('Not authenticated');
-  }
-
-  const { data, error } = await supabase.from('profiles').update({ name: trimmedName }).eq('user_id', user.id).single();
-
-  if (error != null) {
-    throw error;
-  }
-
-  return data;
-};
-
-const updateProfileAvatarSourceFn = async ({ avatarSource }: UpdateProfileAvatarSourceInput): Promise<Profile> => {
-  const user = getCachedUser();
-
-  if (user == null) {
-    throw new Error('Not authenticated');
-  }
-
-  if (avatarSource === 'uploaded') {
-    const { data: existingProfile, error: fetchError } = await supabase
-      .from('profiles')
-      .select('uploaded_avatar_id')
-      .eq('user_id', user.id)
-      .single();
-
-    if (fetchError != null) {
-      throw fetchError;
-    }
-
-    if (existingProfile.uploaded_avatar_id == null) {
-      throw new Error('Cannot use uploaded avatar before uploading an image');
-    }
-  }
-
-  const { data, error } = await supabase
-    .from('profiles')
-    .update({ avatar_source: avatarSource })
-    .eq('user_id', user.id)
-    .single();
-
-  if (error != null) {
-    throw error;
-  }
-
-  return data;
-};
-
-const updateProfileGravatarIdFn = async ({ gravatarId }: UpdateProfileGravatarIdInput): Promise<Profile> => {
-  const trimmedGravatarId = gravatarId.trim();
-
-  if (trimmedGravatarId.length !== 64) {
-    throw new Error('Gravatar ID must be 64 characters');
-  }
-
-  const user = getCachedUser();
-
-  if (user == null) {
-    throw new Error('Not authenticated');
-  }
-
-  const { data, error } = await supabase
-    .from('profiles')
-    .update({ gravatar_id: trimmedGravatarId })
-    .eq('user_id', user.id)
-    .single();
-
-  if (error != null) {
-    throw error;
-  }
-
-  return data;
-};
-
-const updateProfileAfterUploadFn = async ({
-  avatarSource,
-  uploadedAvatarId,
-}: UpdateProfileAfterUploadInput): Promise<Profile> => {
-  const user = getCachedUser();
-
-  if (user == null) {
-    throw new Error('Not authenticated');
-  }
-
-  const { data, error } = await supabase
-    .from('profiles')
-    .update({ avatar_source: avatarSource, uploaded_avatar_id: uploadedAvatarId })
-    .eq('user_id', user.id)
-    .single();
-
-  if (error != null) {
-    throw error;
-  }
-
-  return data;
-};
-
 export const queryProfile = queryOptions({
   queryFn: fetchProfileForCurrentUser,
   queryKey: ['profile'],
@@ -166,28 +59,128 @@ export const queryProfile = queryOptions({
 });
 
 export const mutateUpdateProfile = mutationOptions({
-  mutationFn: updateProfileNameFn,
+  mutationFn: async ({ name }: UpdateProfileNameInput): Promise<Profile> => {
+    const trimmedName = name.trim();
+
+    if (!hasProfileName(trimmedName)) {
+      throw new Error('Profile name cannot be empty');
+    }
+
+    const user = getCachedUser();
+
+    if (user == null) {
+      throw new Error('Not authenticated');
+    }
+
+    const { data, error } = await supabase
+      .from('profiles')
+      .update({ name: trimmedName })
+      .eq('user_id', user.id)
+      .single();
+
+    if (error != null) {
+      throw error;
+    }
+
+    return data;
+  },
   onSuccess: (updatedProfile, _variables, _onMutateResult, { client }) => {
     client.setQueryData(queryProfile.queryKey, updatedProfile);
   },
 });
 
 export const mutateUpdateProfileAvatarSource = mutationOptions({
-  mutationFn: updateProfileAvatarSourceFn,
+  mutationFn: async ({ avatarSource }: UpdateProfileAvatarSourceInput): Promise<Profile> => {
+    const user = getCachedUser();
+
+    if (user == null) {
+      throw new Error('Not authenticated');
+    }
+
+    if (avatarSource === 'uploaded') {
+      const { data: existingProfile, error: fetchError } = await supabase
+        .from('profiles')
+        .select('uploaded_avatar_id')
+        .eq('user_id', user.id)
+        .single();
+
+      if (fetchError != null) {
+        throw fetchError;
+      }
+
+      if (existingProfile.uploaded_avatar_id == null) {
+        throw new Error('Cannot use uploaded avatar before uploading an image');
+      }
+    }
+
+    const { data, error } = await supabase
+      .from('profiles')
+      .update({ avatar_source: avatarSource })
+      .eq('user_id', user.id)
+      .single();
+
+    if (error != null) {
+      throw error;
+    }
+
+    return data;
+  },
   onSuccess: (updatedProfile, _variables, _onMutateResult, { client }) => {
     client.setQueryData(queryProfile.queryKey, updatedProfile);
   },
 });
 
 export const mutateUpdateProfileAfterUpload = mutationOptions({
-  mutationFn: updateProfileAfterUploadFn,
+  mutationFn: async ({ avatarSource, uploadedAvatarId }: UpdateProfileAfterUploadInput): Promise<Profile> => {
+    const user = getCachedUser();
+
+    if (user == null) {
+      throw new Error('Not authenticated');
+    }
+
+    const { data, error } = await supabase
+      .from('profiles')
+      .update({ avatar_source: avatarSource, uploaded_avatar_id: uploadedAvatarId })
+      .eq('user_id', user.id)
+      .single();
+
+    if (error != null) {
+      throw error;
+    }
+
+    return data;
+  },
   onSuccess: (updatedProfile, _variables, _onMutateResult, { client }) => {
     client.setQueryData(queryProfile.queryKey, updatedProfile);
   },
 });
 
 export const mutateUpdateProfileGravatarId = mutationOptions({
-  mutationFn: updateProfileGravatarIdFn,
+  mutationFn: async ({ gravatarId }: UpdateProfileGravatarIdInput): Promise<Profile> => {
+    const trimmedGravatarId = gravatarId.trim();
+
+    if (trimmedGravatarId.length !== 64) {
+      throw new Error('Gravatar ID must be 64 characters');
+    }
+
+    const user = getCachedUser();
+
+    if (user == null) {
+      throw new Error('Not authenticated');
+    }
+
+    const { data, error } = await supabase
+      .from('profiles')
+      .update({ gravatar_id: trimmedGravatarId })
+      .eq('user_id', user.id)
+      .single();
+
+    if (error != null) {
+      throw error;
+    }
+
+    return data;
+  },
   onSuccess: (updatedProfile, _variables, _onMutateResult, { client }) => {
     client.setQueryData(queryProfile.queryKey, updatedProfile);
   },

@@ -9,11 +9,11 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SignUpRouteImport } from './routes/sign-up'
 import { Route as LogoutRouteImport } from './routes/logout'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as HomeRouteImport } from './routes/home'
 import { Route as EncounterRouteImport } from './routes/encounter'
-import { Route as CreateProfileRouteImport } from './routes/createProfile'
 import { Route as CharactersRouteImport } from './routes/characters'
 import { Route as CampaignsRouteImport } from './routes/campaigns'
 import { Route as IndexRouteImport } from './routes/index'
@@ -25,6 +25,11 @@ import { Route as EncounterEncounterIdRouteImport } from './routes/encounter/$en
 import { Route as CharactersCharacterIdRouteImport } from './routes/characters/$characterId'
 import { Route as CampaignsCampaignIdRouteImport } from './routes/campaigns/$campaignId'
 
+const SignUpRoute = SignUpRouteImport.update({
+  id: '/sign-up',
+  path: '/sign-up',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LogoutRoute = LogoutRouteImport.update({
   id: '/logout',
   path: '/logout',
@@ -43,11 +48,6 @@ const HomeRoute = HomeRouteImport.update({
 const EncounterRoute = EncounterRouteImport.update({
   id: '/encounter',
   path: '/encounter',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CreateProfileRoute = CreateProfileRouteImport.update({
-  id: '/createProfile',
-  path: '/createProfile',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CharactersRoute = CharactersRouteImport.update({
@@ -105,11 +105,11 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/campaigns': typeof CampaignsRouteWithChildren
   '/characters': typeof CharactersRouteWithChildren
-  '/createProfile': typeof CreateProfileRoute
   '/encounter': typeof EncounterRouteWithChildren
   '/home': typeof HomeRouteWithChildren
   '/login': typeof LoginRoute
   '/logout': typeof LogoutRoute
+  '/sign-up': typeof SignUpRoute
   '/campaigns/$campaignId': typeof CampaignsCampaignIdRoute
   '/characters/$characterId': typeof CharactersCharacterIdRoute
   '/encounter/$encounterId': typeof EncounterEncounterIdRoute
@@ -120,9 +120,9 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/createProfile': typeof CreateProfileRoute
   '/login': typeof LoginRoute
   '/logout': typeof LogoutRoute
+  '/sign-up': typeof SignUpRoute
   '/campaigns/$campaignId': typeof CampaignsCampaignIdRoute
   '/characters/$characterId': typeof CharactersCharacterIdRoute
   '/encounter/$encounterId': typeof EncounterEncounterIdRoute
@@ -136,11 +136,11 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/campaigns': typeof CampaignsRouteWithChildren
   '/characters': typeof CharactersRouteWithChildren
-  '/createProfile': typeof CreateProfileRoute
   '/encounter': typeof EncounterRouteWithChildren
   '/home': typeof HomeRouteWithChildren
   '/login': typeof LoginRoute
   '/logout': typeof LogoutRoute
+  '/sign-up': typeof SignUpRoute
   '/campaigns/$campaignId': typeof CampaignsCampaignIdRoute
   '/characters/$characterId': typeof CharactersCharacterIdRoute
   '/encounter/$encounterId': typeof EncounterEncounterIdRoute
@@ -155,11 +155,11 @@ export interface FileRouteTypes {
     | '/'
     | '/campaigns'
     | '/characters'
-    | '/createProfile'
     | '/encounter'
     | '/home'
     | '/login'
     | '/logout'
+    | '/sign-up'
     | '/campaigns/$campaignId'
     | '/characters/$characterId'
     | '/encounter/$encounterId'
@@ -170,9 +170,9 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/createProfile'
     | '/login'
     | '/logout'
+    | '/sign-up'
     | '/campaigns/$campaignId'
     | '/characters/$characterId'
     | '/encounter/$encounterId'
@@ -185,11 +185,11 @@ export interface FileRouteTypes {
     | '/'
     | '/campaigns'
     | '/characters'
-    | '/createProfile'
     | '/encounter'
     | '/home'
     | '/login'
     | '/logout'
+    | '/sign-up'
     | '/campaigns/$campaignId'
     | '/characters/$characterId'
     | '/encounter/$encounterId'
@@ -203,15 +203,22 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CampaignsRoute: typeof CampaignsRouteWithChildren
   CharactersRoute: typeof CharactersRouteWithChildren
-  CreateProfileRoute: typeof CreateProfileRoute
   EncounterRoute: typeof EncounterRouteWithChildren
   HomeRoute: typeof HomeRouteWithChildren
   LoginRoute: typeof LoginRoute
   LogoutRoute: typeof LogoutRoute
+  SignUpRoute: typeof SignUpRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sign-up': {
+      id: '/sign-up'
+      path: '/sign-up'
+      fullPath: '/sign-up'
+      preLoaderRoute: typeof SignUpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/logout': {
       id: '/logout'
       path: '/logout'
@@ -238,13 +245,6 @@ declare module '@tanstack/react-router' {
       path: '/encounter'
       fullPath: '/encounter'
       preLoaderRoute: typeof EncounterRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/createProfile': {
-      id: '/createProfile'
-      path: '/createProfile'
-      fullPath: '/createProfile'
-      preLoaderRoute: typeof CreateProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/characters': {
@@ -376,11 +376,11 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CampaignsRoute: CampaignsRouteWithChildren,
   CharactersRoute: CharactersRouteWithChildren,
-  CreateProfileRoute: CreateProfileRoute,
   EncounterRoute: EncounterRouteWithChildren,
   HomeRoute: HomeRouteWithChildren,
   LoginRoute: LoginRoute,
   LogoutRoute: LogoutRoute,
+  SignUpRoute: SignUpRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
