@@ -1,5 +1,8 @@
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import EditIcon from '@mui/icons-material/Edit';
+import LinkIcon from '@mui/icons-material/Link';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
+import RefreshIcon from '@mui/icons-material/Refresh';
 import {
   Alert,
   Box,
@@ -12,6 +15,7 @@ import {
   DialogContent,
   DialogTitle,
   IconButton,
+  InputAdornment,
   Skeleton,
   Stack,
   TextField,
@@ -25,27 +29,36 @@ import type { FC } from 'react';
 
 import {
   mutateRemoveCharacterFromCampaign,
+  mutateSetCampaignInvite,
   mutateUpdateCampaign,
   queryCampaign,
   queryCampaignCharacters,
 } from '../../api/campaigns';
 import { queryEncountersList } from '../../api/encounters';
+import { queryProfile } from '../../api/profile';
 import { EncounterListSection } from '../../components/encounter/encounterLists/EncounterListSection';
 import { RouterLink } from '../../components/RouterLink';
 import { queryClient } from '../../queryClient';
 
 const routeApi = getRouteApi('/campaigns/$campaignId');
 
+const buildInviteUrl = (inviteId: string): string => `${window.location.origin}/invite/${inviteId}`;
+
 const CampaignDetailPage: FC = () => {
   const navigate = useNavigate();
   const { campaignId } = routeApi.useParams();
   const campaignQuery = useQuery(queryCampaign(campaignId));
+  const profileQuery = useQuery(queryProfile);
   const charactersQuery = useQuery(queryCampaignCharacters(campaignId));
   const encountersQuery = useQuery(queryEncountersList({ campaignId }));
 
   const updateMutation = useMutation({
     ...mutateUpdateCampaign,
     mutationKey: ['campaigns', campaignId, 'update'],
+  });
+  const inviteMutation = useMutation({
+    ...mutateSetCampaignInvite,
+    mutationKey: ['campaigns', campaignId, 'invite'],
   });
   const removeCharacterMutation = useMutation({
     ...mutateRemoveCharacterFromCampaign,
@@ -56,8 +69,9 @@ const CampaignDetailPage: FC = () => {
   const renameOpen = renameDraft !== null;
 
   const [pendingRemoveCharacterId, setPendingRemoveCharacterId] = useState<null | string>(null);
+  const [copySuccess, setCopySuccess] = useState(false);
 
-  if (campaignQuery.isLoading) {
+  if (campaignQuery.isLoading || profileQuery.isLoading) {
     return (
       <Stack spacing={2}>
         <Skeleton height={48} variant="rectangular" />
@@ -71,6 +85,8 @@ const CampaignDetailPage: FC = () => {
   }
 
   const campaign = campaignQuery.data;
+  const profile = profileQuery.data;
+  const isOwner = campaign.profileId === profile?.id;
   const characters = charactersQuery.data ?? [];
   const pendingRemoveCharacter =
     pendingRemoveCharacterId == null
@@ -121,6 +137,30 @@ const CampaignDetailPage: FC = () => {
     );
   };
 
+  const handleEnableInvite = () => {
+    inviteMutation.mutate({ id: campaignId, inviteId: crypto.randomUUID() });
+  };
+
+  const handleRegenerateInvite = () => {
+    inviteMutation.mutate({ id: campaignId, inviteId: crypto.randomUUID() });
+  };
+
+  const handleDisableInvite = () => {
+    inviteMutation.mutate({ id: campaignId, inviteId: null });
+  };
+
+  const handleCopyInviteLink = async () => {
+    if (campaign.inviteId == null) {
+      return;
+    }
+
+    await navigator.clipboard.writeText(buildInviteUrl(campaign.inviteId));
+    setCopySuccess(true);
+    window.setTimeout(() => {
+      setCopySuccess(false);
+    }, 2000);
+  };
+
   return (
     <Stack spacing={4}>
       <Box>
@@ -129,11 +169,77 @@ const CampaignDetailPage: FC = () => {
         </Typography>
         <Box sx={{ alignItems: 'center', display: 'flex', flexWrap: 'wrap', gap: 2 }}>
           <Typography variant="h4">{campaign.name}</Typography>
-          <IconButton aria-label="Rename campaign" onClick={handleRenameOpen} size="small">
-            <EditIcon />
-          </IconButton>
+          {isOwner ? (
+            <IconButton aria-label="Rename campaign" onClick={handleRenameOpen} size="small">
+              <EditIcon />
+            </IconButton>
+          ) : null}
         </Box>
       </Box>
+
+      {isOwner ? (
+        <Stack spacing={2}>
+          <Typography variant="h5">Invite link</Typography>
+          {campaign.inviteId == null ? (
+            <Box>
+              <Typography sx={{ color: 'text.secondary', mb: 2 }} variant="body2">
+                Generate a link to invite others to join this campaign with one of their characters.
+              </Typography>
+              <Button
+                disabled={inviteMutation.isPending}
+                onClick={handleEnableInvite}
+                startIcon={<LinkIcon />}
+                variant="contained"
+              >
+                Enable invite link
+              </Button>
+            </Box>
+          ) : (
+            <Stack spacing={2}>
+              <TextField
+                fullWidth
+                label="Invite link"
+                slotProps={{
+                  input: {
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <Tooltip title={copySuccess ? 'Copied!' : 'Copy link'}>
+                          <IconButton aria-label="Copy invite link" edge="end" onClick={handleCopyInviteLink}>
+                            <ContentCopyIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </InputAdornment>
+                    ),
+                    readOnly: true,
+                  },
+                }}
+                value={buildInviteUrl(campaign.inviteId)}
+              />
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                <Button
+                  disabled={inviteMutation.isPending}
+                  onClick={handleRegenerateInvite}
+                  startIcon={<RefreshIcon />}
+                  variant="outlined"
+                >
+                  Regenerate
+                </Button>
+                <Button
+                  color="warning"
+                  disabled={inviteMutation.isPending}
+                  onClick={handleDisableInvite}
+                  variant="outlined"
+                >
+                  Disable
+                </Button>
+              </Box>
+              <Typography sx={{ color: 'text.secondary' }} variant="body2">
+                Regenerating creates a new link and invalidates the previous one.
+              </Typography>
+            </Stack>
+          )}
+        </Stack>
+      ) : null}
 
       <Stack spacing={2}>
         <Typography variant="h5">Characters</Typography>
@@ -171,19 +277,21 @@ const CampaignDetailPage: FC = () => {
                       </Typography>
                     </CardContent>
                   </CardActionArea>
-                  <Box sx={{ pr: 1 }}>
-                    <Tooltip title="Remove from campaign">
-                      <IconButton
-                        aria-label="Remove from campaign"
-                        color="warning"
-                        onClick={() => {
-                          handleRemoveCharacterRequest(character.id);
-                        }}
-                      >
-                        <PersonRemoveIcon />
-                      </IconButton>
-                    </Tooltip>
-                  </Box>
+                  {isOwner ? (
+                    <Box sx={{ pr: 1 }}>
+                      <Tooltip title="Remove from campaign">
+                        <IconButton
+                          aria-label="Remove from campaign"
+                          color="warning"
+                          onClick={() => {
+                            handleRemoveCharacterRequest(character.id);
+                          }}
+                        >
+                          <PersonRemoveIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Box>
+                  ) : null}
                 </Box>
               </Card>
             ))}
@@ -196,6 +304,7 @@ const CampaignDetailPage: FC = () => {
         encounters={encountersQuery.data ?? []}
         isError={encountersQuery.isError}
         isLoading={encountersQuery.isLoading}
+        isOwner={isOwner}
       />
 
       <Dialog fullWidth maxWidth="sm" onClose={handleRenameClose} open={renameOpen}>
@@ -250,6 +359,7 @@ export const Route = createFileRoute('/campaigns/$campaignId')({
     const { campaignId } = params;
     await Promise.all([
       queryClient.ensureQueryData(queryCampaign(campaignId)),
+      queryClient.ensureQueryData(queryProfile),
       queryClient.ensureQueryData(queryCampaignCharacters(campaignId)),
       queryClient.ensureQueryData(queryEncountersList({ campaignId })),
     ]);

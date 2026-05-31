@@ -38,6 +38,7 @@ export type Database = {
         Row: {
           created_at: string
           id: string
+          invite_id: string | null
           name: string
           profile_id: string
           updated_at: string
@@ -45,6 +46,7 @@ export type Database = {
         Insert: {
           created_at?: string
           id?: string
+          invite_id?: string | null
           name?: string
           profile_id: string
           updated_at?: string
@@ -52,6 +54,7 @@ export type Database = {
         Update: {
           created_at?: string
           id?: string
+          invite_id?: string | null
           name?: string
           profile_id?: string
           updated_at?: string
@@ -619,6 +622,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      character_profile_id: {
+        Args: { p_character_id: string }
+        Returns: string
+      }
       encounter_add_combatant: {
         Args: {
           p_combatant: Json
@@ -721,6 +728,26 @@ export type Database = {
           isSetofReturn: true
         }
       }
+      get_campaign_by_invite: {
+        Args: { p_invite_id: string }
+        Returns: {
+          id: string
+          name: string
+        }[]
+      }
+      join_campaign_via_invite: {
+        Args: { p_character_id: string; p_invite_id: string }
+        Returns: string
+      }
+      remove_character_from_campaign: {
+        Args: { p_campaign_id: string; p_character_id: string }
+        Returns: string
+      }
+      user_is_campaign_member: {
+        Args: { p_campaign_id: string }
+        Returns: boolean
+      }
+      user_owns_campaign: { Args: { p_campaign_id: string }; Returns: boolean }
     }
     Enums: {
       magic_item_variant_rarity:

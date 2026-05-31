@@ -12,6 +12,7 @@ type CampaignRow = Database['public']['Tables']['campaigns']['Row'];
 export interface Campaign {
   createdAt: string;
   id: string;
+  inviteId: null | string;
   name: string;
   profileId: string;
   updatedAt: string;
@@ -22,6 +23,7 @@ export type CampaignListItem = Campaign;
 const rowToCampaign = (row: CampaignRow): Campaign => ({
   createdAt: row.created_at,
   id: row.id,
+  inviteId: row.invite_id,
   name: row.name,
   profileId: row.profile_id,
   updatedAt: row.updated_at,
@@ -124,6 +126,32 @@ export const mutateUpdateCampaign = mutationOptions({
   },
 });
 
+export interface SetCampaignInviteInput {
+  id: string;
+  inviteId: null | string;
+}
+
+export const mutateSetCampaignInvite = mutationOptions({
+  mutationFn: async ({ id, inviteId }: SetCampaignInviteInput): Promise<Campaign> => {
+    const { data, error } = await supabase
+      .from('campaigns')
+      .update({ invite_id: inviteId })
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error != null) {
+      throw error;
+    }
+
+    return rowToCampaign(data);
+  },
+  onSuccess: (updated, _variables, _onMutateResult, { client }) => {
+    client.setQueryData(queryCampaign(updated.id).queryKey, updated);
+    client.invalidateQueries({ queryKey: queryCampaignsList.queryKey });
+  },
+});
+
 export const mutateDeleteCampaign = mutationOptions({
   mutationFn: async (campaignId: string): Promise<{ id: string }> => {
     const { error } = await supabase.from('campaigns').delete().eq('id', campaignId);
@@ -150,19 +178,17 @@ export interface RemoveCharacterFromCampaignInput {
 }
 
 export const mutateRemoveCharacterFromCampaign = mutationOptions({
-  mutationFn: async ({ characterId }: RemoveCharacterFromCampaignInput): Promise<{ id: string }> => {
-    const { data, error } = await supabase
-      .from('characters')
-      .update({ campaign_id: null })
-      .eq('id', characterId)
-      .select()
-      .single();
+  mutationFn: async ({ campaignId, characterId }: RemoveCharacterFromCampaignInput): Promise<{ id: string }> => {
+    const { data, error } = await supabase.rpc('remove_character_from_campaign', {
+      p_campaign_id: campaignId,
+      p_character_id: characterId,
+    });
 
     if (error != null) {
       throw error;
     }
 
-    return { id: data.id };
+    return { id: data };
   },
   onSuccess: (_result, { campaignId, characterId }, _onMutateResult, { client }) => {
     client.invalidateQueries({ queryKey: queryCampaignCharacters(campaignId).queryKey });

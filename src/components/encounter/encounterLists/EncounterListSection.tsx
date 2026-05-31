@@ -27,6 +27,7 @@ export interface EncounterListSectionProps {
   encounters: EncounterListItem[];
   isError: boolean;
   isLoading: boolean;
+  isOwner?: boolean;
   showHeading?: boolean;
 }
 
@@ -35,6 +36,7 @@ export const EncounterListSection: FC<EncounterListSectionProps> = ({
   encounters,
   isError,
   isLoading,
+  isOwner = true,
   showHeading = true,
 }) => {
   const navigate = useNavigate();
@@ -99,17 +101,19 @@ export const EncounterListSection: FC<EncounterListSectionProps> = ({
         <Box sx={{ alignItems: 'center', display: 'flex', gap: 2 }}>
           <Typography variant="h5">Encounters</Typography>
           <Box sx={{ flexGrow: 1 }} />
-          <Button onClick={handleCreateOpen} startIcon={<AddIcon />} variant="contained">
-            New encounter
-          </Button>
+          {isOwner ? (
+            <Button onClick={handleCreateOpen} startIcon={<AddIcon />} variant="contained">
+              New encounter
+            </Button>
+          ) : null}
         </Box>
-      ) : (
+      ) : isOwner ? (
         <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
           <Button onClick={handleCreateOpen} startIcon={<AddIcon />} variant="contained">
             New encounter
           </Button>
         </Box>
-      )}
+      ) : null}
 
       {isLoading ? (
         <Stack spacing={2}>
@@ -122,14 +126,20 @@ export const EncounterListSection: FC<EncounterListSectionProps> = ({
 
       {!isLoading && !isError && encounters.length === 0 && (
         <Alert severity="info">
-          No encounters yet. Click <strong>New encounter</strong> to get started.
+          {isOwner ? (
+            <>
+              No encounters yet. Click <strong>New encounter</strong> to get started.
+            </>
+          ) : (
+            'No encounters in this campaign yet.'
+          )}
         </Alert>
       )}
 
       {!isLoading && !isError && encounters.length > 0 && (
         <EncounterCards
           encounters={encounters}
-          onDeleteRequest={handleDeleteRequest}
+          onDeleteRequest={isOwner ? handleDeleteRequest : undefined}
           onSelectEncounter={encounterId => {
             navigate({ params: { encounterId }, to: '/encounter/$encounterId' });
           }}
