@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/unbound-method -- vi.mocked(supabase.storage.from) triggers false positives */
 import type { User } from '@supabase/supabase-js';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { supabase } from '../../services/supabase';
 import { AVATAR_BUCKET, uploadAvatar } from '../avatar';
@@ -25,10 +25,6 @@ const createPngFile = (sizeBytes: number): File =>
 const mockUser = (userId: string): User => ({ id: userId }) as unknown as User;
 
 describe('uploadAvatar', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
   it('rejects disallowed mime types', async () => {
     const file = new File(['data'], 'avatar.pdf', { type: 'application/pdf' });
 

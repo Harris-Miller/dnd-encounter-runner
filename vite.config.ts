@@ -7,6 +7,7 @@ import { defineConfig } from 'vitest/config';
 export default defineConfig({
   plugins: [tanstackRouter({ autoCodeSplitting: true, target: 'react' }), react(), basicSsl()],
   test: {
+    clearMocks: true,
     environment: 'jsdom',
     globals: true,
     setupFiles: './vitest.setup.ts',

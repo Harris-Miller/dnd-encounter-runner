@@ -38,6 +38,8 @@ const describeIfDb = databaseUrl != null && databaseUrl !== '' ? describe : desc
 const TEST_USER_ID = '11111111-1111-1111-1111-111111111111';
 const TEST_USER_EMAIL = 'rpc-parity@example.test';
 
+// needed because of how we're using describeIfDb
+/* eslint-disable vitest/require-top-level-describe */
 describeIfDb('RPC parity (server JSONB transforms vs client reducer)', () => {
   let sql: ReturnType<typeof postgres>;
   let profileId: string;
@@ -243,3 +245,4 @@ describeIfDb('RPC parity (server JSONB transforms vs client reducer)', () => {
     expect(firstResult(rows)).toStrictEqual(clientNextState);
   });
 });
+/* eslint-enable vitest/require-top-level-describe */
