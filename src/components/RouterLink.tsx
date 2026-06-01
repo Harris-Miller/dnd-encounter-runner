@@ -1,5 +1,3 @@
-import { createLink } from '@tanstack/react-router';
-
-import { Link } from './ui/Link';
+import { createLink, Link } from '@tanstack/react-router';
 
 export const RouterLink = createLink(Link);

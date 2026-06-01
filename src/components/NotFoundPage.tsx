@@ -1,27 +1,30 @@
 import { useNavigate } from '@tanstack/react-router';
 import type { FC } from 'react';
 
-import { Button } from './ui/Button';
-import { Stack } from './ui/Stack';
-import { Typography } from './ui/Typography';
-
 export const NotFoundPage: FC = () => {
   const navigate = useNavigate();
 
   return (
-    <Stack alignItems="center" spacing={2} style={{ padding: 48, textAlign: 'center' }}>
-      <Typography variant="h4">Page not found</Typography>
-      <Typography className="text-secondary" variant="body1">
-        The page you are looking for does not exist.
-      </Typography>
-      <Button
+    <div
+      style={{
+        alignItems: 'center',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '1rem',
+        padding: 48,
+        textAlign: 'center',
+      }}
+    >
+      <h1>Page not found</h1>
+      <p style={{ color: 'var(--color-text-secondary)', margin: 0 }}>The page you are looking for does not exist.</p>
+      <button
         onClick={() => {
           navigate({ to: '/home' });
         }}
-        variant="contained"
+        type="button"
       >
         Go home
-      </Button>
-    </Stack>
+      </button>
+    </div>
   );
 };

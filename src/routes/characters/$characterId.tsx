@@ -15,12 +15,6 @@ import {
 import type { CharacterFormValues } from '../../components/characters/characterForm';
 import { CharacterFormFields } from '../../components/characters/CharacterFormFields';
 import { RouterLink } from '../../components/RouterLink';
-import { Alert } from '../../components/ui/Alert';
-import { Box } from '../../components/ui/Box';
-import { Button } from '../../components/ui/Button';
-import { Skeleton } from '../../components/ui/Skeleton';
-import { Stack } from '../../components/ui/Stack';
-import { Typography } from '../../components/ui/Typography';
 import { queryClient } from '../../queryClient';
 import { fetchQueryOrNotFound } from '../../utils/fetchQueryOrNotFound';
 
@@ -62,16 +56,20 @@ const CharacterEditForm: FC<CharacterEditFormProps> = ({ character, characterId 
 
   return (
     <>
-      <Typography variant="h4">{character.name}</Typography>
+      <h1 style={{ fontSize: '1.5rem', margin: '0 0 1rem' }}>{character.name}</h1>
 
       <CharacterFormFields disabled={updateMutation.isPending} onChange={setForm} values={form} />
 
-      <Box style={{ display: 'flex', gap: 16 }}>
-        <Button disabled={!formValid || !isDirty || updateMutation.isPending} onClick={handleSave} variant="contained">
+      <div style={{ alignItems: 'center', display: 'flex', gap: 16, marginTop: '1rem' }}>
+        <button disabled={!formValid || !isDirty || updateMutation.isPending} onClick={handleSave} type="button">
           Save changes
-        </Button>
-        {updateMutation.isError ? <Alert severity="error">Failed to save character.</Alert> : null}
-      </Box>
+        </button>
+        {updateMutation.isError ? (
+          <div className="alert alert-error" role="alert">
+            Failed to save character.
+          </div>
+        ) : null}
+      </div>
     </>
   );
 };
@@ -97,43 +95,42 @@ const CharacterDetailPage: FC = () => {
 
   if (isLoading) {
     return (
-      <Stack spacing={3}>
-        <Skeleton height={40} style={{ maxWidth: 200 }} variant="rectangular" />
-        <Skeleton height={320} variant="rectangular" />
-      </Stack>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+        <div className="skeleton" style={{ height: 40, maxWidth: 200 }} />
+        <div className="skeleton" style={{ height: 320 }} />
+      </div>
     );
   }
 
   if (isError || data == null) {
     return (
-      <Stack spacing={2}>
-        <Alert severity="error">Character not found or failed to load.</Alert>
-        <Button asChild variant="outlined">
-          <RouterLink to="/characters">Back to characters</RouterLink>
-        </Button>
-      </Stack>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <div className="alert alert-error" role="alert">
+          Character not found or failed to load.
+        </div>
+        <RouterLink to="/characters">Back to characters</RouterLink>
+      </div>
     );
   }
 
   return (
-    <Stack spacing={3}>
-      <Box style={{ alignItems: 'center', display: 'flex', gap: 16 }}>
-        <Button asChild variant="text">
-          <RouterLink to="/characters">
-            <ArrowLeft size={18} /> Characters
-          </RouterLink>
-        </Button>
-        <Box style={{ flexGrow: 1 }} />
-        <Button
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+      <div style={{ alignItems: 'center', display: 'flex', gap: 16 }}>
+        <RouterLink style={{ alignItems: 'center', display: 'inline-flex', gap: '0.5rem' }} to="/characters">
+          <ArrowLeft size={18} /> Characters
+        </RouterLink>
+        <span className="flex-grow" />
+        <button
           onClick={() => {
             setDeleteOpen(true);
           }}
-          startIcon={<Trash2 />}
-          variant="outlined"
+          style={{ alignItems: 'center', display: 'inline-flex', gap: '0.5rem' }}
+          type="button"
         >
+          <Trash2 size={18} />
           Delete
-        </Button>
-      </Box>
+        </button>
+      </div>
 
       <CharacterEditForm character={data} characterId={characterId} key={`${data.id}-${data.updatedAt}`} />
 
@@ -146,7 +143,7 @@ const CharacterDetailPage: FC = () => {
         onConfirm={handleDeleteConfirm}
         open={deleteOpen}
       />
-    </Stack>
+    </div>
   );
 };
 

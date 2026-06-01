@@ -1,7 +1,11 @@
+import * as Avatar from '@radix-ui/react-avatar';
+import * as Dialog from '@radix-ui/react-dialog';
+import * as Label from '@radix-ui/react-label';
+import * as ToggleGroup from '@radix-ui/react-toggle-group';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Camera } from 'lucide-react';
 import { useRef, useState } from 'react';
-import type { ChangeEvent, FC, MouseEvent } from 'react';
+import type { ChangeEvent, FC } from 'react';
 
 import { uploadAvatar } from '../api/avatar';
 import {
@@ -13,14 +17,6 @@ import {
 import type { Profile, ProfileAvatarSource } from '../api/profile';
 import { queryUser } from '../api/user';
 import { resolveProfileAvatarUrl } from '../api/utils/resolveProfileAvatarUrl';
-
-import { Avatar } from './ui/Avatar';
-import { Button } from './ui/Button';
-import { Dialog, DialogActions, DialogContent, DialogTitle } from './ui/Dialog';
-import { Stack } from './ui/Stack';
-import { TextField } from './ui/TextField';
-import { ToggleButton, ToggleButtonGroup } from './ui/ToggleButtonGroup';
-import { Typography } from './ui/Typography';
 
 type ProfileEditDialogProps = {
   onClose: () => void;
@@ -67,6 +63,7 @@ const ProfileEditForm: FC<ProfileEditFormProps> = ({ onClose, profileData }) => 
   const trimmedName = draftName.trim();
   const isNameValid = trimmedName !== '';
   const hasUploadedAvatar = profileData.uploaded_avatar_id != null || pendingAvatarFile != null;
+  const avatarInitial = trimmedName.trim().charAt(0).toUpperCase() || '?';
 
   const previewAvatarUrl = (() => {
     if (pendingAvatarPreviewUrl != null && draftAvatarSource === 'uploaded') {
@@ -79,14 +76,6 @@ const ProfileEditForm: FC<ProfileEditFormProps> = ({ onClose, profileData }) => 
 
     return resolveProfileAvatarUrl({ ...profileData, avatar_source: draftAvatarSource }, user.data);
   })();
-
-  const handleAvatarSourceChange = (_event: MouseEvent<HTMLElement>, nextAvatarSource: null | string) => {
-    if (nextAvatarSource !== 'oauth' && nextAvatarSource !== 'uploaded') {
-      return;
-    }
-
-    setDraftAvatarSource(nextAvatarSource);
-  };
 
   const handlePhotoButtonClick = () => {
     fileInputRef.current?.click();
@@ -146,48 +135,64 @@ const ProfileEditForm: FC<ProfileEditFormProps> = ({ onClose, profileData }) => 
 
   return (
     <>
-      <DialogContent>
-        {mutationError != null ? (
-          <Typography color="error" style={{ marginBottom: 16 }}>
-            {mutationError}
-          </Typography>
-        ) : null}
-        <Stack alignItems="center" spacing={2} style={{ marginBottom: 16 }}>
-          <Avatar alt={trimmedName} src={previewAvatarUrl} />
-          <input accept="image/*" hidden onChange={handleFileChange} ref={fileInputRef} type="file" />
-          <Button onClick={handlePhotoButtonClick} startIcon={<Camera size={18} />} type="button" variant="outlined">
-            Change photo
-          </Button>
-          <ToggleButtonGroup exclusive onChange={handleAvatarSourceChange} value={draftAvatarSource}>
-            <ToggleButton value="oauth">OAuth</ToggleButton>
-            <ToggleButton disabled={!hasUploadedAvatar} value="uploaded">
-              Uploaded
-            </ToggleButton>
-          </ToggleButtonGroup>
-        </Stack>
-        <TextField
-          autoFocus
-          fullWidth
-          label="Name"
+      {mutationError != null ? <p style={{ color: 'var(--color-error)', marginBottom: 16 }}>{mutationError}</p> : null}
+      <div style={{ alignItems: 'center', display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: 16 }}>
+        <Avatar.Root className="radix-avatar-root">
+          <Avatar.Image alt={trimmedName} className="radix-avatar-image" src={previewAvatarUrl} />
+          <Avatar.Fallback className="radix-avatar-fallback" delayMs={300}>
+            {avatarInitial}
+          </Avatar.Fallback>
+        </Avatar.Root>
+        <input accept="image/*" hidden onChange={handleFileChange} ref={fileInputRef} type="file" />
+        <button
+          onClick={handlePhotoButtonClick}
+          style={{ alignItems: 'center', display: 'inline-flex', gap: '0.5rem' }}
+          type="button"
+        >
+          <Camera size={18} />
+          Change photo
+        </button>
+        <ToggleGroup.Root
+          aria-label="Avatar source"
+          className="radix-toggle-group"
+          disabled={!hasUploadedAvatar && draftAvatarSource === 'uploaded'}
+          onValueChange={value => {
+            if (value === 'oauth' || value === 'uploaded') {
+              setDraftAvatarSource(value);
+            }
+          }}
+          type="single"
+          value={draftAvatarSource}
+        >
+          <ToggleGroup.Item className="radix-toggle-item" value="oauth">
+            OAuth
+          </ToggleGroup.Item>
+          <ToggleGroup.Item className="radix-toggle-item" disabled={!hasUploadedAvatar} value="uploaded">
+            Uploaded
+          </ToggleGroup.Item>
+        </ToggleGroup.Root>
+      </div>
+      <div className="field">
+        <Label.Root className="field-label" htmlFor="profile-name">
+          Name
+        </Label.Root>
+        <input
+          className="field-input"
+          id="profile-name"
           onChange={event => {
             setDraftName(event.target.value);
           }}
           value={draftName}
         />
-      </DialogContent>
-      <DialogActions>
-        <Button disabled={isPending} onClick={handleCancel} type="button">
+      </div>
+      <div className="dialog-actions">
+        <button disabled={isPending} onClick={handleCancel} type="button">
           Cancel
-        </Button>
-        <Button
-          disabled={!isNameValid || isPending || user.isPending}
-          onClick={handleUpdate}
-          type="button"
-          variant="contained"
-        >
+        </button>
+        <button disabled={!isNameValid || isPending || user.isPending} onClick={handleUpdate} type="button">
           Update
-        </Button>
-      </DialogActions>
+        </button>
+      </div>
     </>
   );
 };
@@ -195,21 +200,25 @@ const ProfileEditForm: FC<ProfileEditFormProps> = ({ onClose, profileData }) => 
 export const ProfileEditDialog: FC<ProfileEditDialogProps> = ({ onClose, open }) => {
   const profile = useQuery({ ...queryProfile, enabled: open });
 
-  const handleCancel = () => {
-    onClose();
-  };
-
   const profileData = open ? profile.data : null;
 
   return (
-    <Dialog maxWidth="sm" onClose={handleCancel} open={open}>
-      <DialogTitle>Edit Profile</DialogTitle>
-      {profile.isError ? (
-        <DialogContent>
-          <Typography color="error">{profile.error.message}</Typography>
-        </DialogContent>
-      ) : null}
-      {profileData != null ? <ProfileEditForm onClose={onClose} profileData={profileData} /> : null}
-    </Dialog>
+    <Dialog.Root
+      onOpenChange={nextOpen => {
+        if (!nextOpen) {
+          onClose();
+        }
+      }}
+      open={open}
+    >
+      <Dialog.Portal>
+        <Dialog.Overlay className="radix-overlay" />
+        <Dialog.Content className="radix-dialog-content">
+          <Dialog.Title>Edit Profile</Dialog.Title>
+          {profile.isError ? <p style={{ color: 'var(--color-error)' }}>{profile.error.message}</p> : null}
+          {profileData != null ? <ProfileEditForm onClose={onClose} profileData={profileData} /> : null}
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
   );
 };

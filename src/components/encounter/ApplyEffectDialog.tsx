@@ -1,3 +1,6 @@
+import * as Dialog from '@radix-ui/react-dialog';
+import * as Label from '@radix-ui/react-label';
+import * as Tabs from '@radix-ui/react-tabs';
 import { useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 import type { FC, SyntheticEvent } from 'react';
@@ -17,16 +20,7 @@ import type {
   TriggerEvent,
 } from '../../types/encounterState';
 import { STANDARD_CONDITION_IDS, TRIGGER_EVENT_TYPES } from '../../types/encounterState';
-import { Autocomplete } from '../ui/Autocomplete';
-import { Box } from '../ui/Box';
-import { Button } from '../ui/Button';
-import { Dialog, DialogActions, DialogContent, DialogTitle } from '../ui/Dialog';
-import { FormControlLabel } from '../ui/FormControlLabel';
-import { Stack } from '../ui/Stack';
-import { Switch } from '../ui/Switch';
-import { Tab, Tabs } from '../ui/Tabs';
-import { MenuItem, TextField } from '../ui/TextField';
-import { Typography } from '../ui/Typography';
+import { Autocomplete } from '../Autocomplete';
 
 type Source = 'condition' | 'custom' | 'item' | 'spell';
 
@@ -172,7 +166,7 @@ export const ApplyEffectDialog: FC<ApplyEffectDialogProps> = ({ buildId, combata
     setSelectedSpell(null);
   };
 
-  const handleSourceChange = (_event: SyntheticEvent, nextSource: string) => {
+  const handleSourceChange = (nextSource: string) => {
     if (nextSource !== 'condition' && nextSource !== 'custom' && nextSource !== 'item' && nextSource !== 'spell') {
       return;
     }
@@ -297,187 +291,266 @@ export const ApplyEffectDialog: FC<ApplyEffectDialogProps> = ({ buildId, combata
   };
 
   return (
-    <Dialog maxWidth="sm" onClose={handleClose} open={open}>
-      <DialogTitle>Apply effect to {combatantName}</DialogTitle>
-      <DialogContent>
-        <Stack spacing={2} style={{ paddingTop: 8 }}>
-          <Tabs onChange={handleSourceChange} value={source}>
-            <Tab label="Condition" value="condition" />
-            <Tab label="Item" value="item" />
-            <Tab label="Spell" value="spell" />
-            <Tab label="Custom" value="custom" />
-          </Tabs>
+    <Dialog.Root
+      onOpenChange={nextOpen => {
+        if (!nextOpen) {
+          handleClose();
+        }
+      }}
+      open={open}
+    >
+      <Dialog.Portal>
+        <Dialog.Overlay className="radix-overlay" />
+        <Dialog.Content className="radix-dialog-content">
+          <Dialog.Title>Apply effect to {combatantName}</Dialog.Title>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', paddingTop: 8 }}>
+            <Tabs.Root onValueChange={handleSourceChange} value={source}>
+              <Tabs.List className="radix-tabs-list">
+                <Tabs.Trigger className="radix-tabs-trigger" value="condition">
+                  Condition
+                </Tabs.Trigger>
+                <Tabs.Trigger className="radix-tabs-trigger" value="item">
+                  Item
+                </Tabs.Trigger>
+                <Tabs.Trigger className="radix-tabs-trigger" value="spell">
+                  Spell
+                </Tabs.Trigger>
+                <Tabs.Trigger className="radix-tabs-trigger" value="custom">
+                  Custom
+                </Tabs.Trigger>
+              </Tabs.List>
+            </Tabs.Root>
 
-          {source === 'condition' && (
-            <TextField
-              label="Standard condition"
-              onChange={event => {
-                const next = event.target.value;
-                if (STANDARD_CONDITION_IDS.includes(next as StandardCondition)) {
-                  handleConditionSelect(next as StandardCondition);
-                }
-              }}
-              select
-              value={conditionId}
-            >
-              {conditions.map(condition => (
-                <MenuItem key={condition.id} value={condition.id}>
-                  {condition.name}
-                </MenuItem>
-              ))}
-            </TextField>
-          )}
-
-          {source === 'item' && (
-            <Autocomplete
-              filterOptions={candidates => candidates}
-              getOptionLabel={option => option.name}
-              loading={itemsQuery.isFetching}
-              onChange={handleItemSelect}
-              onInputChange={(_event, value) => {
-                setItemSearch(value);
-              }}
-              options={items}
-              renderInput={({ id, onChange, onFocus, value }) => (
-                <TextField
-                  id={id}
-                  label="Magic item"
-                  onChange={e => {
-                    onChange(e.target.value);
+            {source === 'condition' ? (
+              <div className="field">
+                <Label.Root className="field-label" htmlFor="apply-effect-condition">
+                  Standard condition
+                </Label.Root>
+                <select
+                  className="field-input"
+                  id="apply-effect-condition"
+                  onChange={event => {
+                    const next = event.target.value;
+                    if (STANDARD_CONDITION_IDS.includes(next as StandardCondition)) {
+                      handleConditionSelect(next as StandardCondition);
+                    }
                   }}
-                  onFocus={onFocus}
-                  value={value}
-                />
-              )}
-              value={selectedItem}
-            />
-          )}
+                  value={conditionId}
+                >
+                  {conditions.map(condition => (
+                    <option key={condition.id} value={condition.id}>
+                      {condition.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            ) : null}
 
-          {source === 'spell' && (
-            <Autocomplete
-              filterOptions={candidates => candidates}
-              getOptionLabel={option => option.name}
-              loading={spellsQuery.isFetching}
-              onChange={handleSpellSelect}
-              onInputChange={(_event, value) => {
-                setSpellSearch(value);
-              }}
-              options={spells}
-              renderInput={({ id, onChange, onFocus, value }) => (
-                <TextField
-                  id={id}
-                  label="Spell"
-                  onChange={e => {
-                    onChange(e.target.value);
-                  }}
-                  onFocus={onFocus}
-                  value={value}
-                />
-              )}
-              value={selectedSpell}
-            />
-          )}
+            {source === 'item' ? (
+              <Autocomplete
+                filterOptions={candidates => candidates}
+                getOptionLabel={option => option.name}
+                loading={itemsQuery.isFetching}
+                onChange={handleItemSelect}
+                onInputChange={(_event, value) => {
+                  setItemSearch(value);
+                }}
+                options={items}
+                renderInput={({ id, onChange, onFocus, value }) => (
+                  <div className="field">
+                    <Label.Root className="field-label" htmlFor={id}>
+                      Magic item
+                    </Label.Root>
+                    <input
+                      className="field-input"
+                      id={id}
+                      onChange={event => {
+                        onChange(event.target.value);
+                      }}
+                      onFocus={onFocus}
+                      value={value}
+                    />
+                  </div>
+                )}
+                value={selectedItem}
+              />
+            ) : null}
 
-          <TextField
-            label="Effect name"
-            onChange={event => {
-              setName(event.target.value);
-            }}
-            value={name}
-          />
+            {source === 'spell' ? (
+              <Autocomplete
+                filterOptions={candidates => candidates}
+                getOptionLabel={option => option.name}
+                loading={spellsQuery.isFetching}
+                onChange={handleSpellSelect}
+                onInputChange={(_event, value) => {
+                  setSpellSearch(value);
+                }}
+                options={spells}
+                renderInput={({ id, onChange, onFocus, value }) => (
+                  <div className="field">
+                    <Label.Root className="field-label" htmlFor={id}>
+                      Spell
+                    </Label.Root>
+                    <input
+                      className="field-input"
+                      id={id}
+                      onChange={event => {
+                        onChange(event.target.value);
+                      }}
+                      onFocus={onFocus}
+                      value={value}
+                    />
+                  </div>
+                )}
+                value={selectedSpell}
+              />
+            ) : null}
 
-          <TextField
-            label="Description"
-            multiline
-            onChange={event => {
-              setDescription(event.target.value);
-            }}
-            rows={2}
-            value={description}
-          />
+            <div className="field">
+              <Label.Root className="field-label" htmlFor="apply-effect-name">
+                Effect name
+              </Label.Root>
+              <input
+                className="field-input"
+                id="apply-effect-name"
+                onChange={event => {
+                  setName(event.target.value);
+                }}
+                value={name}
+              />
+            </div>
 
-          <TextField
-            label="Effect type"
-            onChange={event => {
-              const next = event.target.value as DescriptorKind;
-              setDescriptorForm(current => ({ ...current, kind: next }));
-            }}
-            select
-            value={descriptorForm.kind}
-          >
-            {Object.entries(DESCRIPTOR_KIND_LABELS).map(([value, label]) => (
-              <MenuItem key={value} value={value}>
-                {label}
-              </MenuItem>
-            ))}
-          </TextField>
+            <div className="field">
+              <Label.Root className="field-label" htmlFor="apply-effect-description">
+                Description
+              </Label.Root>
+              <textarea
+                className="field-input"
+                id="apply-effect-description"
+                onChange={event => {
+                  setDescription(event.target.value);
+                }}
+                rows={2}
+                value={description}
+              />
+            </div>
 
-          {(descriptorForm.kind === 'damage_resistance' ||
+            <div className="field">
+              <Label.Root className="field-label" htmlFor="apply-effect-kind">
+                Effect type
+              </Label.Root>
+              <select
+                className="field-input"
+                id="apply-effect-kind"
+                onChange={event => {
+                  const next = event.target.value as DescriptorKind;
+                  setDescriptorForm(current => ({ ...current, kind: next }));
+                }}
+                value={descriptorForm.kind}
+              >
+                {Object.entries(DESCRIPTOR_KIND_LABELS).map(([value, label]) => (
+                  <option key={value} value={value}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {descriptorForm.kind === 'damage_resistance' ||
             descriptorForm.kind === 'damage_immunity' ||
-            descriptorForm.kind === 'damage_vulnerability') && (
-            <TextField
-              label="Damage type"
-              onChange={event => {
-                setDescriptorForm(current => ({ ...current, damageType: event.target.value }));
-              }}
-              select
-              value={descriptorForm.damageType}
-            >
-              {COMMON_DAMAGE_TYPES.map(type => (
-                <MenuItem key={type} value={type}>
-                  {type}
-                </MenuItem>
-              ))}
-            </TextField>
-          )}
+            descriptorForm.kind === 'damage_vulnerability' ? (
+              <div className="field">
+                <Label.Root className="field-label" htmlFor="apply-effect-damage-type">
+                  Damage type
+                </Label.Root>
+                <select
+                  className="field-input"
+                  id="apply-effect-damage-type"
+                  onChange={event => {
+                    setDescriptorForm(current => ({ ...current, damageType: event.target.value }));
+                  }}
+                  value={descriptorForm.damageType}
+                >
+                  {COMMON_DAMAGE_TYPES.map(type => (
+                    <option key={type} value={type}>
+                      {type}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            ) : null}
 
-          {descriptorForm.kind === 'condition' && (
-            <TextField
-              label="Standard condition"
-              onChange={event => {
-                const next = event.target.value as StandardCondition;
-                setDescriptorForm(current => ({ ...current, conditionId: next }));
-              }}
-              select
-              value={descriptorForm.conditionId}
-            >
-              {conditions.map(condition => (
-                <MenuItem key={condition.id} value={condition.id}>
-                  {condition.name}
-                </MenuItem>
-              ))}
-            </TextField>
-          )}
+            {descriptorForm.kind === 'condition' ? (
+              <div className="field">
+                <Label.Root className="field-label" htmlFor="apply-effect-descriptor-condition">
+                  Standard condition
+                </Label.Root>
+                <select
+                  className="field-input"
+                  id="apply-effect-descriptor-condition"
+                  onChange={event => {
+                    const next = event.target.value as StandardCondition;
+                    setDescriptorForm(current => ({ ...current, conditionId: next }));
+                  }}
+                  value={descriptorForm.conditionId}
+                >
+                  {conditions.map(condition => (
+                    <option key={condition.id} value={condition.id}>
+                      {condition.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            ) : null}
 
-          {descriptorForm.kind === 'concentration' && (
-            <TextField
-              label="Concentrated spell"
-              onChange={event => {
-                setDescriptorForm(current => ({ ...current, spellName: event.target.value }));
-              }}
-              value={descriptorForm.spellName}
-            />
-          )}
+            {descriptorForm.kind === 'concentration' ? (
+              <div className="field">
+                <Label.Root className="field-label" htmlFor="apply-effect-spell-name">
+                  Concentrated spell
+                </Label.Root>
+                <input
+                  className="field-input"
+                  id="apply-effect-spell-name"
+                  onChange={event => {
+                    setDescriptorForm(current => ({ ...current, spellName: event.target.value }));
+                  }}
+                  value={descriptorForm.spellName}
+                />
+              </div>
+            ) : null}
 
-          {descriptorForm.kind === 'reaction_available' && (
-            <Stack spacing={2}>
-              <TextField
-                label="Reaction name"
-                onChange={event => {
-                  setDescriptorForm(current => ({ ...current, reactionName: event.target.value }));
-                }}
-                value={descriptorForm.reactionName}
-              />
-              <TextField
-                label="Prompt to DM"
-                onChange={event => {
-                  setDescriptorForm(current => ({ ...current, reactionPrompt: event.target.value }));
-                }}
-                value={descriptorForm.reactionPrompt}
-              />
-              <div className="field field-full-width">
-                <label className="field-label" htmlFor="reaction-triggers">
-                  Triggers on
+            {descriptorForm.kind === 'reaction_available' ? (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                <div className="field">
+                  <Label.Root className="field-label" htmlFor="apply-effect-reaction-name">
+                    Reaction name
+                  </Label.Root>
+                  <input
+                    className="field-input"
+                    id="apply-effect-reaction-name"
+                    onChange={event => {
+                      setDescriptorForm(current => ({ ...current, reactionName: event.target.value }));
+                    }}
+                    value={descriptorForm.reactionName}
+                  />
+                </div>
+                <div className="field">
+                  <Label.Root className="field-label" htmlFor="apply-effect-reaction-prompt">
+                    Prompt to DM
+                  </Label.Root>
+                  <input
+                    className="field-input"
+                    id="apply-effect-reaction-prompt"
+                    onChange={event => {
+                      setDescriptorForm(current => ({ ...current, reactionPrompt: event.target.value }));
+                    }}
+                    value={descriptorForm.reactionPrompt}
+                  />
+                </div>
+                <div className="field">
+                  <Label.Root className="field-label" htmlFor="reaction-triggers">
+                    Triggers on
+                  </Label.Root>
                   <select
                     className="field-input"
                     id="reaction-triggers"
@@ -494,85 +567,99 @@ export const ApplyEffectDialog: FC<ApplyEffectDialogProps> = ({ buildId, combata
                       </option>
                     ))}
                   </select>
-                </label>
+                </div>
               </div>
-            </Stack>
-          )}
+            ) : null}
 
-          {descriptorForm.kind === 'custom' && (
-            <TextField
-              label="Custom descriptor"
-              onChange={event => {
-                setDescriptorForm(current => ({ ...current, customDescriptor: event.target.value }));
-              }}
-              value={descriptorForm.customDescriptor}
-            />
-          )}
+            {descriptorForm.kind === 'custom' ? (
+              <div className="field">
+                <Label.Root className="field-label" htmlFor="apply-effect-custom-descriptor">
+                  Custom descriptor
+                </Label.Root>
+                <input
+                  className="field-input"
+                  id="apply-effect-custom-descriptor"
+                  onChange={event => {
+                    setDescriptorForm(current => ({ ...current, customDescriptor: event.target.value }));
+                  }}
+                  value={descriptorForm.customDescriptor}
+                />
+              </div>
+            ) : null}
 
-          <Box style={{ display: 'grid', gap: 16, gridTemplateColumns: '1fr 1fr' }}>
-            <TextField
-              label="Expires"
-              onChange={event => {
-                setExpiryKind(event.target.value as EffectExpiry['kind']);
-              }}
-              select
-              value={expiryKind}
-            >
-              <MenuItem value="never">Never</MenuItem>
-              <MenuItem value="end_of_combat">End of combat</MenuItem>
-              <MenuItem value="after_rounds">After N rounds</MenuItem>
-            </TextField>
-            {expiryKind === 'after_rounds' && (
-              <TextField
-                label="Rounds"
+            <div style={{ display: 'grid', gap: 16, gridTemplateColumns: '1fr 1fr' }}>
+              <div className="field">
+                <Label.Root className="field-label" htmlFor="apply-effect-expiry">
+                  Expires
+                </Label.Root>
+                <select
+                  className="field-input"
+                  id="apply-effect-expiry"
+                  onChange={event => {
+                    setExpiryKind(event.target.value as EffectExpiry['kind']);
+                  }}
+                  value={expiryKind}
+                >
+                  <option value="never">Never</option>
+                  <option value="end_of_combat">End of combat</option>
+                  <option value="after_rounds">After N rounds</option>
+                </select>
+              </div>
+              {expiryKind === 'after_rounds' ? (
+                <div className="field">
+                  <Label.Root className="field-label" htmlFor="apply-effect-rounds">
+                    Rounds
+                  </Label.Root>
+                  <input
+                    className="field-input"
+                    id="apply-effect-rounds"
+                    onChange={event => {
+                      setExpiryRounds(event.target.value);
+                    }}
+                    type="number"
+                    value={expiryRounds}
+                  />
+                </div>
+              ) : null}
+            </div>
+
+            <div className="field">
+              <Label.Root className="field-label" htmlFor="apply-effect-tick-on">
+                Tick on
+              </Label.Root>
+              <select
+                className="field-input"
+                id="apply-effect-tick-on"
                 onChange={event => {
-                  setExpiryRounds(event.target.value);
+                  setTickOn(event.target.value as TickOn);
                 }}
-                type="number"
-                value={expiryRounds}
-              />
-            )}
-          </Box>
+                value={tickOn}
+              >
+                {TICK_ON_OPTIONS.map(option => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-          <TextField
-            label="Tick on"
-            onChange={event => {
-              setTickOn(event.target.value as TickOn);
-            }}
-            select
-            value={tickOn}
-          >
-            {TICK_ON_OPTIONS.map(option => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </TextField>
-
-          <FormControlLabel
-            control={
-              <Switch
-                checked={notifyOn.length > 0}
-                disabled
-                onChange={() => {
-                  /* derived from descriptor */
-                }}
-              />
-            }
-            label={
-              <Typography className="text-secondary" variant="body2">
+            <div style={{ alignItems: 'center', display: 'flex', gap: 8 }}>
+              <input aria-hidden checked={notifyOn.length > 0} disabled readOnly tabIndex={-1} type="checkbox" />
+              <span className="text-secondary" style={{ fontSize: '0.875rem' }}>
                 Will notify the DM on: {notifyOn.length === 0 ? 'no automatic triggers' : notifyOn.join(', ')}
-              </Typography>
-            }
-          />
-        </Stack>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose}>Cancel</Button>
-        <Button disabled={!canConfirm} onClick={handleConfirm} variant="contained">
-          Apply
-        </Button>
-      </DialogActions>
-    </Dialog>
+              </span>
+            </div>
+          </div>
+          <div className="dialog-actions">
+            <button onClick={handleClose} type="button">
+              Cancel
+            </button>
+            <button disabled={!canConfirm} onClick={handleConfirm} type="button">
+              Apply
+            </button>
+          </div>
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
   );
 };

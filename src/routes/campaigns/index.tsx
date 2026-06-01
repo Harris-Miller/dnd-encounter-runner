@@ -1,3 +1,6 @@
+import * as Dialog from '@radix-ui/react-dialog';
+import * as Label from '@radix-ui/react-label';
+import * as Tooltip from '@radix-ui/react-tooltip';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { Plus, Trash2 } from 'lucide-react';
@@ -5,17 +8,6 @@ import { useState } from 'react';
 import type { FC } from 'react';
 
 import { mutateCreateCampaign, mutateDeleteCampaign, queryCampaignsList } from '../../api/campaigns';
-import { Alert } from '../../components/ui/Alert';
-import { Box } from '../../components/ui/Box';
-import { Button } from '../../components/ui/Button';
-import { Card, CardActionArea, CardContent } from '../../components/ui/Card';
-import { Dialog, DialogActions, DialogContent, DialogTitle } from '../../components/ui/Dialog';
-import { IconButton } from '../../components/ui/IconButton';
-import { Skeleton } from '../../components/ui/Skeleton';
-import { Stack } from '../../components/ui/Stack';
-import { TextField } from '../../components/ui/TextField';
-import { Tooltip } from '../../components/ui/Tooltip';
-import { Typography } from '../../components/ui/Typography';
 import { queryClient } from '../../queryClient';
 
 const formatTimestamp = (raw: string): string => {
@@ -82,106 +74,152 @@ const CampaignsPage: FC = () => {
     pendingDeleteId == null ? null : (campaigns.find(campaign => campaign.id === pendingDeleteId) ?? null);
 
   return (
-    <Stack spacing={3}>
-      <Box style={{ alignItems: 'center', display: 'flex', gap: 16 }}>
-        <Typography variant="h4">Campaigns</Typography>
-        <Box style={{ flexGrow: 1 }} />
-        <Button onClick={handleCreateOpen} startIcon={<Plus />} variant="contained">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+      <div style={{ alignItems: 'center', display: 'flex', gap: 16 }}>
+        <h1 style={{ fontSize: '1.5rem', margin: 0 }}>Campaigns</h1>
+        <span className="flex-grow" />
+        <button
+          onClick={handleCreateOpen}
+          style={{ alignItems: 'center', display: 'inline-flex', gap: '0.5rem' }}
+          type="button"
+        >
+          <Plus size={18} />
           New campaign
-        </Button>
-      </Box>
+        </button>
+      </div>
 
       {isLoading ? (
-        <Stack spacing={2}>
-          <Skeleton height={96} variant="rectangular" />
-          <Skeleton height={96} variant="rectangular" />
-        </Stack>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <div className="skeleton" style={{ height: 96 }} />
+          <div className="skeleton" style={{ height: 96 }} />
+        </div>
       ) : null}
 
-      {isError ? <Alert severity="error">Failed to load campaigns.</Alert> : null}
+      {isError ? (
+        <div className="alert alert-error" role="alert">
+          Failed to load campaigns.
+        </div>
+      ) : null}
 
-      {!isLoading && !isError && campaigns.length === 0 && (
-        <Alert severity="info">
+      {!isLoading && !isError && campaigns.length === 0 ? (
+        <div className="alert alert-info" role="status">
           No campaigns yet. Click <strong>New campaign</strong> to get started.
-        </Alert>
-      )}
+        </div>
+      ) : null}
 
-      {!isLoading && !isError && campaigns.length > 0 && (
-        <Stack spacing={2}>
+      {!isLoading && !isError && campaigns.length > 0 ? (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           {campaigns.map(campaign => (
-            <Card key={campaign.id} variant="outlined">
-              <Box style={{ alignItems: 'center', display: 'flex' }}>
-                <CardActionArea
+            <article className="card-outlined" key={campaign.id}>
+              <div style={{ alignItems: 'center', display: 'flex' }}>
+                <button
+                  className="card-action"
                   onClick={() => {
                     navigate({ params: { campaignId: campaign.id }, to: '/campaigns/$campaignId' });
                   }}
                   style={{ flexGrow: 1 }}
+                  type="button"
                 >
-                  <CardContent>
-                    <Typography style={{ marginBottom: 32 }} variant="h6">
-                      {campaign.name}
-                    </Typography>
-                    <Typography style={{ color: 'var(--color-text-secondary)' }} variant="body2">
+                  <div className="card-content">
+                    <h2 style={{ fontSize: '1.125rem', margin: '0 0 0.5rem' }}>{campaign.name}</h2>
+                    <p className="text-secondary" style={{ margin: 0 }}>
                       Updated {formatTimestamp(campaign.updatedAt)}
-                    </Typography>
-                  </CardContent>
-                </CardActionArea>
-                <Box style={{ paddingRight: 8 }}>
-                  <Tooltip title="Delete campaign">
-                    <IconButton
-                      aria-label="Delete campaign"
-                      onClick={() => {
-                        handleDeleteRequest(campaign.id);
-                      }}
-                    >
-                      <Trash2 />
-                    </IconButton>
-                  </Tooltip>
-                </Box>
-              </Box>
-            </Card>
+                    </p>
+                  </div>
+                </button>
+                <div style={{ paddingRight: 8 }}>
+                  <Tooltip.Root>
+                    <Tooltip.Trigger asChild>
+                      <button
+                        aria-label="Delete campaign"
+                        onClick={() => {
+                          handleDeleteRequest(campaign.id);
+                        }}
+                        style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '0.5rem' }}
+                        type="button"
+                      >
+                        <Trash2 size={20} />
+                      </button>
+                    </Tooltip.Trigger>
+                    <Tooltip.Portal>
+                      <Tooltip.Content className="radix-tooltip-content" sideOffset={4}>
+                        Delete campaign
+                      </Tooltip.Content>
+                    </Tooltip.Portal>
+                  </Tooltip.Root>
+                </div>
+              </div>
+            </article>
           ))}
-        </Stack>
-      )}
+        </div>
+      ) : null}
 
-      <Dialog maxWidth="sm" onClose={handleCreateClose} open={createOpen}>
-        <DialogTitle>New campaign</DialogTitle>
-        <DialogContent>
-          <Box style={{ paddingTop: 8 }}>
-            <TextField
-              label="Campaign name"
-              onChange={event => {
-                setCreateDraft(event.target.value);
-              }}
-              placeholder="Untitled Campaign"
-              value={createDraft ?? ''}
-            />
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCreateClose}>Cancel</Button>
-          <Button disabled={createMutation.isPending} onClick={handleCreateConfirm} variant="contained">
-            Create
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <Dialog.Root
+        onOpenChange={nextOpen => {
+          if (!nextOpen) {
+            handleCreateClose();
+          }
+        }}
+        open={createOpen}
+      >
+        <Dialog.Portal>
+          <Dialog.Overlay className="radix-overlay" />
+          <Dialog.Content className="radix-dialog-content">
+            <Dialog.Title>New campaign</Dialog.Title>
+            <div className="field" style={{ paddingTop: 8 }}>
+              <Label.Root className="field-label" htmlFor="campaign-create-name">
+                Campaign name
+              </Label.Root>
+              <input
+                className="field-input"
+                id="campaign-create-name"
+                onChange={event => {
+                  setCreateDraft(event.target.value);
+                }}
+                placeholder="Untitled Campaign"
+                value={createDraft ?? ''}
+              />
+            </div>
+            <div className="dialog-actions">
+              <button onClick={handleCreateClose} type="button">
+                Cancel
+              </button>
+              <button disabled={createMutation.isPending} onClick={handleCreateConfirm} type="button">
+                Create
+              </button>
+            </div>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
 
-      <Dialog maxWidth="sm" onClose={handleDeleteCancel} open={pendingDeleteId !== null}>
-        <DialogTitle>Delete campaign</DialogTitle>
-        <DialogContent>
-          <Typography variant="body2">
-            Delete <strong>{pendingDeleteCampaign?.name ?? 'this campaign'}</strong>? All encounters in this campaign
-            will also be deleted. Characters will be unlinked but not deleted.
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleDeleteCancel}>Cancel</Button>
-          <Button disabled={deleteMutation.isPending} onClick={handleDeleteConfirm} variant="contained">
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </Stack>
+      <Dialog.Root
+        onOpenChange={nextOpen => {
+          if (!nextOpen) {
+            handleDeleteCancel();
+          }
+        }}
+        open={pendingDeleteId !== null}
+      >
+        <Dialog.Portal>
+          <Dialog.Overlay className="radix-overlay" />
+          <Dialog.Content className="radix-dialog-content">
+            <Dialog.Title>Delete campaign</Dialog.Title>
+            <p style={{ margin: '1rem 0' }}>
+              Delete <strong>{pendingDeleteCampaign?.name ?? 'this campaign'}</strong>? All encounters in this campaign
+              will also be deleted. Characters will be unlinked but not deleted.
+            </p>
+            <div className="dialog-actions">
+              <button onClick={handleDeleteCancel} type="button">
+                Cancel
+              </button>
+              <button disabled={deleteMutation.isPending} onClick={handleDeleteConfirm} type="button">
+                Delete
+              </button>
+            </div>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
+    </div>
   );
 };
 

@@ -5,10 +5,6 @@ import type { FC } from 'react';
 
 import { queryProfile } from '../../api/profile';
 import { RouterLink } from '../../components/RouterLink';
-import { Box } from '../../components/ui/Box';
-import { Card, CardActionArea, CardContent } from '../../components/ui/Card';
-import { Stack } from '../../components/ui/Stack';
-import { Typography } from '../../components/ui/Typography';
 import { queryClient } from '../../queryClient';
 
 const HomePage: FC = () => {
@@ -16,54 +12,50 @@ const HomePage: FC = () => {
   const displayName = profile?.name ?? 'there';
 
   return (
-    <Stack spacing={4}>
-      <Box>
-        <Typography style={{ marginBottom: 8 }} variant="h4">
-          Welcome, {displayName}
-        </Typography>
-        <Typography className="text-secondary" variant="body1">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+      <div>
+        <h1 style={{ fontSize: '1.5rem', margin: '0 0 0.5rem' }}>Welcome, {displayName}</h1>
+        <p className="text-secondary" style={{ margin: 0 }}>
           Organize campaigns and manage your party from here.
-        </Typography>
-      </Box>
+        </p>
+      </div>
 
-      <Stack direction={{ sm: 'row', xs: 'column' }} spacing={2}>
-        <Card className="flex-1" variant="outlined">
+      <div
+        style={{
+          display: 'grid',
+          gap: '1rem',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(16rem, 1fr))',
+        }}
+      >
+        <article className="card-outlined">
           <RouterLink style={{ color: 'inherit', textDecoration: 'none' }} to="/campaigns">
-            <CardActionArea>
-              <CardContent>
-                <Stack alignItems="center" direction="row" spacing={2}>
-                  <BookOpen color="var(--color-primary)" size={32} />
-                  <Box>
-                    <Typography variant="h6">Campaigns</Typography>
-                    <Typography className="text-secondary" variant="body2">
-                      Organize characters and encounters by campaign
-                    </Typography>
-                  </Box>
-                </Stack>
-              </CardContent>
-            </CardActionArea>
+            <div className="card-content" style={{ alignItems: 'center', display: 'flex', gap: '1rem' }}>
+              <BookOpen color="var(--color-primary)" size={32} />
+              <div>
+                <h2 style={{ fontSize: '1.125rem', margin: '0 0 0.25rem' }}>Campaigns</h2>
+                <p className="text-secondary" style={{ margin: 0 }}>
+                  Organize characters and encounters by campaign
+                </p>
+              </div>
+            </div>
           </RouterLink>
-        </Card>
+        </article>
 
-        <Card className="flex-1" variant="outlined">
+        <article className="card-outlined">
           <RouterLink style={{ color: 'inherit', textDecoration: 'none' }} to="/characters">
-            <CardActionArea>
-              <CardContent>
-                <Stack alignItems="center" direction="row" spacing={2}>
-                  <Users color="var(--color-primary)" size={32} />
-                  <Box>
-                    <Typography variant="h6">Characters</Typography>
-                    <Typography className="text-secondary" variant="body2">
-                      Manage player characters and stats
-                    </Typography>
-                  </Box>
-                </Stack>
-              </CardContent>
-            </CardActionArea>
+            <div className="card-content" style={{ alignItems: 'center', display: 'flex', gap: '1rem' }}>
+              <Users color="var(--color-primary)" size={32} />
+              <div>
+                <h2 style={{ fontSize: '1.125rem', margin: '0 0 0.25rem' }}>Characters</h2>
+                <p className="text-secondary" style={{ margin: 0 }}>
+                  Manage player characters and stats
+                </p>
+              </div>
+            </div>
           </RouterLink>
-        </Card>
-      </Stack>
-    </Stack>
+        </article>
+      </div>
+    </div>
   );
 };
 

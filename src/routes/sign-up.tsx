@@ -1,3 +1,4 @@
+import * as Label from '@radix-ui/react-label';
 import { useMutation } from '@tanstack/react-query';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { Eye, EyeOff } from 'lucide-react';
@@ -7,13 +8,6 @@ import type { FC } from 'react';
 import { mutateSignUpWithPassword } from '../api/auth';
 import { FullScreenCenter } from '../components/FullScreenCenter';
 import { RouterLink } from '../components/RouterLink';
-import { Button } from '../components/ui/Button';
-import { Container } from '../components/ui/Container';
-import { IconButton } from '../components/ui/IconButton';
-import { InputAdornment } from '../components/ui/InputAdornment';
-import { Paper } from '../components/ui/Paper';
-import { TextField } from '../components/ui/TextField';
-import { Typography } from '../components/ui/Typography';
 
 const MINIMUM_DISPLAY_NAME_LENGTH = 3;
 const MINIMUM_PASSWORD_LENGTH = 6;
@@ -53,34 +47,34 @@ const SignUpComponent: FC = () => {
   const confirmPasswordError = confirmPassword !== '' && !doPasswordsMatch;
 
   const passwordFieldType = showPasswords ? 'text' : 'password';
-  const passwordVisibilityAdornment = (
-    <InputAdornment position="end">
-      <IconButton
-        aria-label={showPasswords ? 'Hide password' : 'Show password'}
-        onClick={() => {
-          setShowPasswords(previousShowPasswords => !previousShowPasswords);
-        }}
-        type="button"
-      >
-        {showPasswords ? <EyeOff size={20} /> : <Eye size={20} />}
-      </IconButton>
-    </InputAdornment>
+
+  const passwordToggleButton = (
+    <button
+      aria-label={showPasswords ? 'Hide password' : 'Show password'}
+      onClick={() => {
+        setShowPasswords(previousShowPasswords => !previousShowPasswords);
+      }}
+      style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '0.25rem' }}
+      type="button"
+    >
+      {showPasswords ? <EyeOff size={20} /> : <Eye size={20} />}
+    </button>
   );
+
+  const passwordInputWrapperStyle = {
+    alignItems: 'center',
+    display: 'flex',
+    gap: '0.25rem',
+  } as const;
 
   return (
     <FullScreenCenter>
-      <Container maxWidth="sm">
-        <Paper elevation={6} style={{ alignItems: 'center', display: 'flex', flexDirection: 'column', padding: 24 }}>
-          <Typography style={{ marginBottom: 24 }} variant="h3">
-            DnD Encounter Runner
-          </Typography>
-          <Typography style={{ marginBottom: 24 }} variant="h5">
-            Create Account
-          </Typography>
+      <div className="auth-container">
+        <div className="auth-paper">
+          <h1 style={{ fontSize: '1.75rem', margin: '0 0 1.5rem' }}>DnD Encounter Runner</h1>
+          <h2 style={{ fontSize: '1.25rem', margin: '0 0 1.5rem' }}>Create Account</h2>
           {signUpMutation.isError ? (
-            <Typography color="error" style={{ marginBottom: 16 }}>
-              {signUpMutation.error.message}
-            </Typography>
+            <p style={{ color: 'var(--color-error)', marginBottom: 16 }}>{signUpMutation.error.message}</p>
           ) : null}
           <form
             onSubmit={event => {
@@ -89,60 +83,93 @@ const SignUpComponent: FC = () => {
             }}
             style={{ width: '100%' }}
           >
-            <TextField
-              fullWidth
-              label="Display Name"
-              onChange={event => {
-                setDisplayName(event.target.value);
-              }}
-              style={{ marginTop: 8 }}
-              type="text"
-              value={displayName}
-            />
-            <TextField
-              fullWidth
-              label="Email"
-              onChange={event => {
-                setEmail(event.target.value);
-              }}
-              style={{ marginTop: 8 }}
-              type="email"
-              value={email}
-            />
-            <TextField
-              fullWidth
-              helperText={`Must be at least ${String(MINIMUM_PASSWORD_LENGTH)} characters`}
-              InputProps={{ endAdornment: passwordVisibilityAdornment }}
-              label="Password"
-              onChange={event => {
-                setPassword(event.target.value);
-              }}
-              style={{ marginTop: 8 }}
-              type={passwordFieldType}
-              value={password}
-            />
-            <TextField
-              error={confirmPasswordError}
-              fullWidth
-              helperText={confirmPasswordError ? 'Passwords do not match' : ' '}
-              InputProps={{ endAdornment: passwordVisibilityAdornment }}
-              label="Confirm password"
-              onChange={event => {
-                setConfirmPassword(event.target.value);
-              }}
-              style={{ marginBottom: 16, marginTop: 8 }}
-              type={passwordFieldType}
-              value={confirmPassword}
-            />
-            <Button disabled={isSubmitDisabled} fullWidth type="submit" variant="contained">
+            <div className="field" style={{ marginTop: 8 }}>
+              <Label.Root className="field-label" htmlFor="sign-up-display-name">
+                Display Name
+              </Label.Root>
+              <input
+                className="field-input"
+                id="sign-up-display-name"
+                onChange={event => {
+                  setDisplayName(event.target.value);
+                }}
+                type="text"
+                value={displayName}
+              />
+            </div>
+            <div className="field" style={{ marginTop: 8 }}>
+              <Label.Root className="field-label" htmlFor="sign-up-email">
+                Email
+              </Label.Root>
+              <input
+                className="field-input"
+                id="sign-up-email"
+                onChange={event => {
+                  setEmail(event.target.value);
+                }}
+                type="email"
+                value={email}
+              />
+            </div>
+            <div className="field" style={{ marginTop: 8 }}>
+              <Label.Root className="field-label" htmlFor="sign-up-password">
+                Password
+              </Label.Root>
+              <div style={passwordInputWrapperStyle}>
+                <input
+                  className="field-input"
+                  id="sign-up-password"
+                  onChange={event => {
+                    setPassword(event.target.value);
+                  }}
+                  style={{ flex: 1 }}
+                  type={passwordFieldType}
+                  value={password}
+                />
+                {passwordToggleButton}
+              </div>
+              <span className="text-secondary" style={{ fontSize: '0.75rem' }}>
+                Must be at least {String(MINIMUM_PASSWORD_LENGTH)} characters
+              </span>
+            </div>
+            <div className="field" style={{ marginBottom: 16, marginTop: 8 }}>
+              <Label.Root className="field-label" htmlFor="sign-up-confirm-password">
+                Confirm password
+              </Label.Root>
+              <div style={passwordInputWrapperStyle}>
+                <input
+                  aria-invalid={confirmPasswordError}
+                  className="field-input"
+                  id="sign-up-confirm-password"
+                  onChange={event => {
+                    setConfirmPassword(event.target.value);
+                  }}
+                  style={{
+                    borderColor: confirmPasswordError ? 'var(--color-error)' : undefined,
+                    flex: 1,
+                  }}
+                  type={passwordFieldType}
+                  value={confirmPassword}
+                />
+                {passwordToggleButton}
+              </div>
+              {confirmPasswordError ? (
+                <span style={{ color: 'var(--color-error)', fontSize: '0.75rem' }}>Passwords do not match</span>
+              ) : (
+                <span aria-hidden style={{ fontSize: '0.75rem', visibility: 'hidden' }}>
+                  &nbsp;
+                </span>
+              )}
+            </div>
+            <button disabled={isSubmitDisabled} style={{ width: '100%' }} type="submit">
               Create account
-            </Button>
+            </button>
           </form>
-          <Typography style={{ marginTop: 16 }} variant="body2">
+          <p className="text-secondary" style={{ fontSize: '0.875rem', marginTop: 16 }}>
             Already have an account? <RouterLink to="/sign-in">Sign in</RouterLink>
-          </Typography>
-        </Paper>
-      </Container>
+          </p>
+        </div>
+      </div>
     </FullScreenCenter>
   );
 };

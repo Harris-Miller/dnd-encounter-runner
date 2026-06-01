@@ -2,11 +2,6 @@ import { SkipForward } from 'lucide-react';
 import type { FC } from 'react';
 
 import type { EncounterState } from '../../types/encounterState';
-import { Box } from '../ui/Box';
-import { Button } from '../ui/Button';
-import { Card, CardContent } from '../ui/Card';
-import { Stack } from '../ui/Stack';
-import { Typography } from '../ui/Typography';
 
 import { CombatantCard } from './CombatantCard';
 
@@ -28,30 +23,30 @@ export const InitiativeTracker: FC<InitiativeTrackerProps> = ({
   const ordered = state.initiativeOrder.map(id => state.combatants[id]).filter(combatant => combatant != null);
 
   return (
-    <Card variant="outlined">
-      <CardContent>
-        <Box style={{ alignItems: 'center', display: 'flex', gap: 16, marginBottom: 16 }}>
-          <Typography variant="h6">Initiative</Typography>
+    <article className="card-outlined">
+      <div className="card-content">
+        <div style={{ alignItems: 'center', display: 'flex', gap: 16, marginBottom: 16 }}>
+          <h2 style={{ fontSize: '1.125rem', margin: 0 }}>Initiative</h2>
           <span className="flex-grow" />
-          <Typography className="text-secondary" variant="body2">
+          <p className="text-secondary" style={{ margin: 0 }}>
             Round {String(state.round)}
-          </Typography>
-          <Button
+          </p>
+          <button
             disabled={isAdvancing === true || ordered.length === 0}
             onClick={onAdvanceTurn}
-            startIcon={<SkipForward size={18} />}
+            style={{ alignItems: 'center', display: 'inline-flex', gap: '0.5rem' }}
             type="button"
-            variant="contained"
           >
+            <SkipForward size={18} />
             Next turn
-          </Button>
-        </Box>
+          </button>
+        </div>
         {ordered.length === 0 ? (
-          <Typography className="text-secondary" variant="body2">
+          <p className="text-secondary" style={{ margin: 0 }}>
             No combatants yet. Add players and monsters to start tracking initiative.
-          </Typography>
+          </p>
         ) : (
-          <Stack spacing={1}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
             {ordered.map((combatant, index) => (
               <CombatantCard
                 combatant={combatant}
@@ -61,9 +56,9 @@ export const InitiativeTracker: FC<InitiativeTrackerProps> = ({
                 selected={combatant.id === selectedCombatantId}
               />
             ))}
-          </Stack>
+          </div>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </article>
   );
 };

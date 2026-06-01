@@ -2,13 +2,12 @@ import { Outlet } from '@tanstack/react-router';
 import type { FC } from 'react';
 
 import { Header } from './Header';
-import { Container } from './ui/Container';
 
 export const AppLayout: FC = () => (
   <>
     <Header />
-    <Container className="app-main" maxWidth="xl">
+    <main className="app-main" style={{ marginInline: 'auto', maxWidth: 1536, padding: '0 1rem', width: '100%' }}>
       <Outlet />
-    </Container>
+    </main>
   </>
 );

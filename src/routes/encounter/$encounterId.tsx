@@ -1,3 +1,5 @@
+import * as Dialog from '@radix-ui/react-dialog';
+import * as Label from '@radix-ui/react-label';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { createFileRoute, getRouteApi } from '@tanstack/react-router';
 import { Pencil, Plus } from 'lucide-react';
@@ -17,16 +19,6 @@ import { InitiativeTracker } from '../../components/encounter/InitiativeTracker'
 import { RecordEventToolbar } from '../../components/encounter/RecordEventToolbar';
 import { ReminderPanel } from '../../components/encounter/ReminderPanel';
 import { RouterLink } from '../../components/RouterLink';
-import { Alert } from '../../components/ui/Alert';
-import { Box } from '../../components/ui/Box';
-import { Button } from '../../components/ui/Button';
-import { Chip } from '../../components/ui/Chip';
-import { Dialog, DialogActions, DialogContent, DialogTitle } from '../../components/ui/Dialog';
-import { IconButton } from '../../components/ui/IconButton';
-import { Skeleton } from '../../components/ui/Skeleton';
-import { Stack } from '../../components/ui/Stack';
-import { TextField } from '../../components/ui/TextField';
-import { Typography } from '../../components/ui/Typography';
 import { queryClient } from '../../queryClient';
 import { fetchQueryOrNotFound } from '../../utils/fetchQueryOrNotFound';
 
@@ -79,15 +71,19 @@ const EncounterPage: FC = () => {
 
   if (isLoading) {
     return (
-      <Stack spacing={2}>
-        <Skeleton height={48} variant="rectangular" />
-        <Skeleton height={240} variant="rectangular" />
-      </Stack>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <div className="skeleton" style={{ height: 48 }} />
+        <div className="skeleton" style={{ height: 240 }} />
+      </div>
     );
   }
 
   if (isError || data == null) {
-    return <Alert severity="error">Encounter not found.</Alert>;
+    return (
+      <div className="alert alert-error" role="alert">
+        Encounter not found.
+      </div>
+    );
   }
 
   const handleRenameOpen = () => {
@@ -118,40 +114,49 @@ const EncounterPage: FC = () => {
   };
 
   return (
-    <Stack spacing={3}>
-      <Box>
-        <Typography style={{ marginBottom: 8 }} variant="body2">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+      <div>
+        <p style={{ margin: '0 0 0.5rem' }}>
           <RouterLink to="/encounter">Back to encounters</RouterLink>
-        </Typography>
-        <Box style={{ alignItems: 'center', display: 'flex', flexWrap: 'wrap', gap: 16 }}>
-          <Typography variant="h4">{data.name}</Typography>
-          <IconButton onClick={handleRenameOpen}>
-            <Pencil />
-          </IconButton>
-          <Chip
-            color={data.active ? 'success' : 'default'}
-            label={data.active ? 'Active' : 'Inactive'}
+        </p>
+        <div style={{ alignItems: 'center', display: 'flex', flexWrap: 'wrap', gap: 16 }}>
+          <h1 style={{ fontSize: '1.5rem', margin: 0 }}>{data.name}</h1>
+          <button
+            aria-label="Rename encounter"
+            onClick={handleRenameOpen}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '0.25rem' }}
+            type="button"
+          >
+            <Pencil size={20} />
+          </button>
+          <button
+            className={data.active ? 'chip chip-success' : 'chip chip-default'}
             onClick={handleToggleActive}
-          />
-          <Box style={{ flexGrow: 1 }} />
-          <Typography style={{ color: 'var(--color-text-secondary)' }} variant="body2">
+            style={{ border: 'none', cursor: 'pointer' }}
+            type="button"
+          >
+            {data.active ? 'Active' : 'Inactive'}
+          </button>
+          <span className="flex-grow" />
+          <p className="text-secondary" style={{ margin: 0 }}>
             Round {String(data.state.round)} · Turn {String(data.state.turnIndex + 1)} of{' '}
             {String(data.state.initiativeOrder.length)}
-          </Typography>
-        </Box>
-      </Box>
+          </p>
+        </div>
+      </div>
 
-      <Box>
-        <Button
+      <div>
+        <button
           onClick={() => {
             setAddCombatantOpen(true);
           }}
-          startIcon={<Plus />}
-          variant="outlined"
+          style={{ alignItems: 'center', display: 'inline-flex', gap: '0.5rem' }}
+          type="button"
         >
+          <Plus size={18} />
           Add combatant
-        </Button>
-      </Box>
+        </button>
+      </div>
 
       <InitiativeTracker
         isAdvancing={applyTransform.isPending}
@@ -227,27 +232,43 @@ const EncounterPage: FC = () => {
         }}
       />
 
-      <Dialog maxWidth="sm" onClose={handleRenameClose} open={renameOpen}>
-        <DialogTitle>Rename Encounter</DialogTitle>
-        <DialogContent>
-          <Box style={{ paddingTop: 8 }}>
-            <TextField
-              label="Encounter name"
-              onChange={event => {
-                setRenameDraft(event.target.value);
-              }}
-              value={renameDraft ?? ''}
-            />
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleRenameClose}>Cancel</Button>
-          <Button onClick={handleRenameConfirm} variant="contained">
-            Save
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </Stack>
+      <Dialog.Root
+        onOpenChange={nextOpen => {
+          if (!nextOpen) {
+            handleRenameClose();
+          }
+        }}
+        open={renameOpen}
+      >
+        <Dialog.Portal>
+          <Dialog.Overlay className="radix-overlay" />
+          <Dialog.Content className="radix-dialog-content">
+            <Dialog.Title>Rename Encounter</Dialog.Title>
+            <div className="field" style={{ paddingTop: 8 }}>
+              <Label.Root className="field-label" htmlFor="encounter-rename">
+                Encounter name
+              </Label.Root>
+              <input
+                className="field-input"
+                id="encounter-rename"
+                onChange={event => {
+                  setRenameDraft(event.target.value);
+                }}
+                value={renameDraft ?? ''}
+              />
+            </div>
+            <div className="dialog-actions">
+              <button onClick={handleRenameClose} type="button">
+                Cancel
+              </button>
+              <button onClick={handleRenameConfirm} type="button">
+                Save
+              </button>
+            </div>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
+    </div>
   );
 };
 

@@ -1,3 +1,5 @@
+import * as Dialog from '@radix-ui/react-dialog';
+import * as Tooltip from '@radix-ui/react-tooltip';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { Plus, Trash2 } from 'lucide-react';
@@ -13,16 +15,6 @@ import {
 } from '../../components/characters/characterForm';
 import type { CharacterFormValues } from '../../components/characters/characterForm';
 import { CharacterFormFields } from '../../components/characters/CharacterFormFields';
-import { Alert } from '../../components/ui/Alert';
-import { Box } from '../../components/ui/Box';
-import { Button } from '../../components/ui/Button';
-import { Card, CardActionArea, CardContent } from '../../components/ui/Card';
-import { Dialog, DialogActions, DialogContent, DialogTitle } from '../../components/ui/Dialog';
-import { IconButton } from '../../components/ui/IconButton';
-import { Skeleton } from '../../components/ui/Skeleton';
-import { Stack } from '../../components/ui/Stack';
-import { Tooltip } from '../../components/ui/Tooltip';
-import { Typography } from '../../components/ui/Typography';
 import { queryClient } from '../../queryClient';
 
 const formatTimestamp = (raw: string): string => {
@@ -87,98 +79,130 @@ const CharactersPage: FC = () => {
   const createFormValid = isCharacterFormValid(createForm);
 
   return (
-    <Stack spacing={3}>
-      <Box style={{ alignItems: 'center', display: 'flex', gap: 16 }}>
-        <Typography variant="h4">Characters</Typography>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+      <div style={{ alignItems: 'center', display: 'flex', gap: 16 }}>
+        <h1 style={{ fontSize: '1.5rem', margin: 0 }}>Characters</h1>
         <span className="flex-grow" />
-        <Button onClick={handleCreateOpen} startIcon={<Plus size={18} />} type="button" variant="contained">
+        <button
+          onClick={handleCreateOpen}
+          style={{ alignItems: 'center', display: 'inline-flex', gap: '0.5rem' }}
+          type="button"
+        >
+          <Plus size={18} />
           New character
-        </Button>
-      </Box>
+        </button>
+      </div>
 
       {isLoading ? (
-        <Stack spacing={2}>
-          <Skeleton height={96} variant="rectangular" />
-          <Skeleton height={96} variant="rectangular" />
-        </Stack>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <div className="skeleton" style={{ height: 96 }} />
+          <div className="skeleton" style={{ height: 96 }} />
+        </div>
       ) : null}
 
-      {isError ? <Alert severity="error">Failed to load characters.</Alert> : null}
+      {isError ? (
+        <div className="alert alert-error" role="alert">
+          Failed to load characters.
+        </div>
+      ) : null}
 
-      {!isLoading && !isError && characters.length === 0 && (
-        <Alert severity="info">
+      {!isLoading && !isError && characters.length === 0 ? (
+        <div className="alert alert-info" role="status">
           No characters yet. Click <strong>New character</strong> to add one to your roster.
-        </Alert>
-      )}
+        </div>
+      ) : null}
 
-      {!isLoading && !isError && characters.length > 0 && (
-        <Stack spacing={2}>
+      {!isLoading && !isError && characters.length > 0 ? (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           {characters.map(character => (
-            <Card key={character.id} variant="outlined">
-              <Box style={{ alignItems: 'center', display: 'flex' }}>
-                <CardActionArea
+            <article className="card-outlined" key={character.id}>
+              <div style={{ alignItems: 'center', display: 'flex' }}>
+                <button
+                  className="card-action"
                   onClick={() => {
                     navigate({ params: { characterId: character.id }, to: '/characters/$characterId' });
                   }}
                   style={{ flexGrow: 1 }}
+                  type="button"
                 >
-                  <CardContent>
-                    <Typography variant="h6">{character.name}</Typography>
-                    <Typography className="text-secondary" variant="body2">
+                  <div className="card-content">
+                    <h2 style={{ fontSize: '1.125rem', margin: '0 0 0.25rem' }}>{character.name}</h2>
+                    <p className="text-secondary" style={{ margin: 0 }}>
                       Level {String(character.level)} · AC {String(character.armorClass)} ·{' '}
                       {String(character.maxHitPoints)} HP · Updated {formatTimestamp(character.updatedAt)}
-                    </Typography>
-                    {character.notes != null && character.notes !== '' && (
-                      <Typography
+                    </p>
+                    {character.notes != null && character.notes !== '' ? (
+                      <p
                         className="text-secondary"
-                        style={{ marginTop: 32, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
-                        variant="body2"
+                        style={{
+                          margin: '0.5rem 0 0',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap',
+                        }}
                       >
                         {character.notes}
-                      </Typography>
-                    )}
-                  </CardContent>
-                </CardActionArea>
-                <Box style={{ paddingRight: 8 }}>
-                  <Tooltip title="Delete character">
-                    <IconButton
-                      aria-label="Delete character"
-                      onClick={() => {
-                        handleDeleteRequest(character.id);
-                      }}
-                      type="button"
-                    >
-                      <Trash2 color="var(--color-error)" size={20} />
-                    </IconButton>
-                  </Tooltip>
-                </Box>
-              </Box>
-            </Card>
+                      </p>
+                    ) : null}
+                  </div>
+                </button>
+                <div style={{ paddingRight: 8 }}>
+                  <Tooltip.Root>
+                    <Tooltip.Trigger asChild>
+                      <button
+                        aria-label="Delete character"
+                        onClick={() => {
+                          handleDeleteRequest(character.id);
+                        }}
+                        style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '0.5rem' }}
+                        type="button"
+                      >
+                        <Trash2 color="var(--color-error)" size={20} />
+                      </button>
+                    </Tooltip.Trigger>
+                    <Tooltip.Portal>
+                      <Tooltip.Content className="radix-tooltip-content" sideOffset={4}>
+                        Delete character
+                      </Tooltip.Content>
+                    </Tooltip.Portal>
+                  </Tooltip.Root>
+                </div>
+              </div>
+            </article>
           ))}
-        </Stack>
-      )}
+        </div>
+      ) : null}
 
-      <Dialog maxWidth="sm" onClose={handleCreateClose} open={createOpen}>
-        <DialogTitle>New character</DialogTitle>
-        <DialogContent>
-          <Box style={{ paddingTop: 8 }}>
-            <CharacterFormFields disabled={createMutation.isPending} onChange={setCreateForm} values={createForm} />
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCreateClose} type="button">
-            Cancel
-          </Button>
-          <Button
-            disabled={!createFormValid || createMutation.isPending}
-            onClick={handleCreateConfirm}
-            type="button"
-            variant="contained"
-          >
-            Create
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <Dialog.Root
+        onOpenChange={nextOpen => {
+          if (!nextOpen) {
+            handleCreateClose();
+          }
+        }}
+        open={createOpen}
+      >
+        <Dialog.Portal>
+          <Dialog.Overlay className="radix-overlay" />
+          <Dialog.Content className="radix-dialog-content">
+            <Dialog.Title>New character</Dialog.Title>
+            <div style={{ paddingTop: 8 }}>
+              <CharacterFormFields disabled={createMutation.isPending} onChange={setCreateForm} values={createForm} />
+            </div>
+            <div className="dialog-actions">
+              <button onClick={handleCreateClose} type="button">
+                Cancel
+              </button>
+              <button
+                disabled={!createFormValid || createMutation.isPending}
+                onClick={handleCreateConfirm}
+                type="button"
+              >
+                Create
+              </button>
+            </div>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
 
       <CharacterDeleteDialog
         characterName={pendingDeleteCharacter?.name ?? null}
@@ -187,7 +211,7 @@ const CharactersPage: FC = () => {
         onConfirm={handleDeleteConfirm}
         open={pendingDeleteId !== null}
       />
-    </Stack>
+    </div>
   );
 };
 

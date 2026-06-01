@@ -1,9 +1,9 @@
 import { createRouter, RouterProvider } from '@tanstack/react-router';
+import { Loader2 } from 'lucide-react';
 import type { FC } from 'react';
 
 import { FullScreenCenter } from './components/FullScreenCenter';
 import { NotFoundPage } from './components/NotFoundPage';
-import { CircularProgress } from './components/ui/CircularProgress';
 import { routeTree } from './routeTree.gen';
 
 export const basepath = import.meta.env.BASE_URL === '/' ? '/' : import.meta.env.BASE_URL.replace(/\/$/, '');
@@ -13,7 +13,7 @@ const router = createRouter({
   defaultNotFoundComponent: NotFoundPage,
   defaultPendingComponent: () => (
     <FullScreenCenter>
-      <CircularProgress />
+      <Loader2 aria-hidden className="spin" size={40} />
     </FullScreenCenter>
   ),
   routeTree,

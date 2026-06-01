@@ -1,8 +1,6 @@
 import type { FC, ReactNode, SyntheticEvent } from 'react';
 import { useEffect, useId, useRef, useState } from 'react';
 
-import { cn } from '../../styles/cn';
-
 export type AutocompleteProps<T> = {
   filterOptions?: (options: T[]) => T[];
   getOptionLabel: (option: T) => string;
@@ -64,7 +62,7 @@ export const Autocomplete = <T,>({
   };
 
   return (
-    <div className="field field-full-width" ref={containerRef}>
+    <div ref={containerRef} style={{ position: 'relative', width: '100%' }}>
       {renderInput({
         id: inputId,
         onChange: handleInputChange,
@@ -74,12 +72,26 @@ export const Autocomplete = <T,>({
         value: inputValue,
       })}
       {open && filtered.length > 0 ? (
-        <ul className="autocomplete-list" id={listId} role="listbox">
+        <ul
+          id={listId}
+          role="listbox"
+          style={{
+            backgroundColor: 'var(--color-bg-paper)',
+            border: '1px solid var(--color-divider)',
+            borderRadius: 6,
+            listStyle: 'none',
+            margin: '4px 0 0',
+            maxHeight: 240,
+            overflow: 'auto',
+            padding: 4,
+            position: 'absolute',
+            width: '100%',
+            zIndex: 1300,
+          }}
+        >
           {filtered.map((option, index) => (
             <li
               aria-selected={index === activeIndex}
-              className={cn('autocomplete-item', index === activeIndex && 'autocomplete-item-active')}
-              data-active={index === activeIndex ? 'true' : undefined}
               key={getOptionLabel(option)}
               onMouseDown={event => {
                 event.preventDefault();
@@ -89,6 +101,14 @@ export const Autocomplete = <T,>({
                 setActiveIndex(index);
               }}
               role="option"
+              style={{
+                backgroundColor:
+                  index === activeIndex ? 'color-mix(in srgb, var(--color-text-primary) 8%, transparent)' : undefined,
+                borderRadius: 4,
+                cursor: 'pointer',
+                fontSize: '0.875rem',
+                padding: '8px 12px',
+              }}
             >
               {getOptionLabel(option)}
             </li>

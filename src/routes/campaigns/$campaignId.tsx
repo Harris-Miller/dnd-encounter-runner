@@ -1,3 +1,6 @@
+import * as Dialog from '@radix-ui/react-dialog';
+import * as Label from '@radix-ui/react-label';
+import * as Tooltip from '@radix-ui/react-tooltip';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { createFileRoute, getRouteApi, useNavigate } from '@tanstack/react-router';
 import { Copy, Link as LinkIcon, Pencil, RefreshCw, UserMinus } from 'lucide-react';
@@ -15,18 +18,6 @@ import { queryEncountersList } from '../../api/encounters';
 import { queryProfile } from '../../api/profile';
 import { EncounterListSection } from '../../components/encounter/encounterLists/EncounterListSection';
 import { RouterLink } from '../../components/RouterLink';
-import { Alert } from '../../components/ui/Alert';
-import { Box } from '../../components/ui/Box';
-import { Button } from '../../components/ui/Button';
-import { Card, CardActionArea, CardContent } from '../../components/ui/Card';
-import { Dialog, DialogActions, DialogContent, DialogTitle } from '../../components/ui/Dialog';
-import { IconButton } from '../../components/ui/IconButton';
-import { InputAdornment } from '../../components/ui/InputAdornment';
-import { Skeleton } from '../../components/ui/Skeleton';
-import { Stack } from '../../components/ui/Stack';
-import { TextField } from '../../components/ui/TextField';
-import { Tooltip } from '../../components/ui/Tooltip';
-import { Typography } from '../../components/ui/Typography';
 import { queryClient } from '../../queryClient';
 import { fetchQueryOrNotFound } from '../../utils/fetchQueryOrNotFound';
 
@@ -63,15 +54,19 @@ const CampaignDetailPage: FC = () => {
 
   if (campaignQuery.isLoading || profileQuery.isLoading) {
     return (
-      <Stack spacing={2}>
-        <Skeleton height={48} variant="rectangular" />
-        <Skeleton height={240} variant="rectangular" />
-      </Stack>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <div className="skeleton" style={{ height: 48 }} />
+        <div className="skeleton" style={{ height: 240 }} />
+      </div>
     );
   }
 
   if (campaignQuery.isError || campaignQuery.data == null) {
-    return <Alert severity="error">Campaign not found.</Alert>;
+    return (
+      <div className="alert alert-error" role="alert">
+        Campaign not found.
+      </div>
+    );
   }
 
   const campaign = campaignQuery.data;
@@ -152,133 +147,155 @@ const CampaignDetailPage: FC = () => {
   };
 
   return (
-    <Stack spacing={4}>
-      <Box>
-        <Typography style={{ marginBottom: 8 }} variant="body2">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+      <div>
+        <p style={{ margin: '0 0 0.5rem' }}>
           <RouterLink to="/campaigns">Back to campaigns</RouterLink>
-        </Typography>
-        <Box style={{ alignItems: 'center', display: 'flex', flexWrap: 'wrap', gap: 16 }}>
-          <Typography variant="h4">{campaign.name}</Typography>
+        </p>
+        <div style={{ alignItems: 'center', display: 'flex', flexWrap: 'wrap', gap: 16 }}>
+          <h1 style={{ fontSize: '1.5rem', margin: 0 }}>{campaign.name}</h1>
           {isOwner ? (
-            <IconButton aria-label="Rename campaign" onClick={handleRenameOpen}>
-              <Pencil />
-            </IconButton>
+            <button
+              aria-label="Rename campaign"
+              onClick={handleRenameOpen}
+              style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '0.25rem' }}
+              type="button"
+            >
+              <Pencil size={20} />
+            </button>
           ) : null}
-        </Box>
-      </Box>
+        </div>
+      </div>
 
       {isOwner ? (
-        <Stack spacing={2}>
-          <Typography variant="h5">Invite link</Typography>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <h2 style={{ fontSize: '1.25rem', margin: 0 }}>Invite link</h2>
           {campaign.inviteId == null ? (
-            <Box>
-              <Typography style={{ color: 'var(--color-text-secondary)', marginBottom: 16 }} variant="body2">
+            <div>
+              <p className="text-secondary" style={{ margin: '0 0 1rem' }}>
                 Generate a link to invite others to join this campaign with one of their characters.
-              </Typography>
-              <Button
+              </p>
+              <button
                 disabled={inviteMutation.isPending}
                 onClick={handleEnableInvite}
-                startIcon={<LinkIcon size={18} />}
-                variant="contained"
+                style={{ alignItems: 'center', display: 'inline-flex', gap: '0.5rem' }}
+                type="button"
               >
+                <LinkIcon size={18} />
                 Enable invite link
-              </Button>
-            </Box>
+              </button>
+            </div>
           ) : (
-            <Stack spacing={2}>
-              <TextField
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <Tooltip title={copySuccess ? 'Copied!' : 'Copy link'}>
-                        <IconButton aria-label="Copy invite link" onClick={handleCopyInviteLink} type="button">
-                          <Copy size={18} />
-                        </IconButton>
-                      </Tooltip>
-                    </InputAdornment>
-                  ),
-                }}
-                label="Invite link"
-                readOnly
-                value={buildInviteUrl(campaign.inviteId)}
-              />
-              <Box style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-                <Button
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <div className="field">
+                <Label.Root className="field-label" htmlFor="invite-link">
+                  Invite link
+                </Label.Root>
+                <div style={{ alignItems: 'center', display: 'flex', gap: '0.5rem' }}>
+                  <input className="field-input" id="invite-link" readOnly value={buildInviteUrl(campaign.inviteId)} />
+                  <Tooltip.Root>
+                    <Tooltip.Trigger asChild>
+                      <button aria-label="Copy invite link" onClick={handleCopyInviteLink} type="button">
+                        <Copy size={18} />
+                      </button>
+                    </Tooltip.Trigger>
+                    <Tooltip.Portal>
+                      <Tooltip.Content className="radix-tooltip-content" sideOffset={4}>
+                        {copySuccess ? 'Copied!' : 'Copy link'}
+                      </Tooltip.Content>
+                    </Tooltip.Portal>
+                  </Tooltip.Root>
+                </div>
+              </div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                <button
                   disabled={inviteMutation.isPending}
                   onClick={handleRegenerateInvite}
-                  startIcon={<RefreshCw />}
-                  variant="outlined"
+                  style={{ alignItems: 'center', display: 'inline-flex', gap: '0.5rem' }}
+                  type="button"
                 >
+                  <RefreshCw size={18} />
                   Regenerate
-                </Button>
-                <Button disabled={inviteMutation.isPending} onClick={handleDisableInvite} variant="outlined">
+                </button>
+                <button disabled={inviteMutation.isPending} onClick={handleDisableInvite} type="button">
                   Disable
-                </Button>
-              </Box>
-              <Typography style={{ color: 'var(--color-text-secondary)' }} variant="body2">
+                </button>
+              </div>
+              <p className="text-secondary" style={{ margin: 0 }}>
                 Regenerating creates a new link and invalidates the previous one.
-              </Typography>
-            </Stack>
+              </p>
+            </div>
           )}
-        </Stack>
+        </div>
       ) : null}
 
-      <Stack spacing={2}>
-        <Typography variant="h5">Characters</Typography>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <h2 style={{ fontSize: '1.25rem', margin: 0 }}>Characters</h2>
 
-        {charactersQuery.isLoading ? (
-          <Stack spacing={2}>
-            <Skeleton height={72} variant="rectangular" />
-          </Stack>
+        {charactersQuery.isLoading ? <div className="skeleton" style={{ height: 72 }} /> : null}
+
+        {charactersQuery.isError ? (
+          <div className="alert alert-error" role="alert">
+            Failed to load characters.
+          </div>
         ) : null}
 
-        {charactersQuery.isError ? <Alert severity="error">Failed to load characters.</Alert> : null}
+        {!charactersQuery.isLoading && !charactersQuery.isError && characters.length === 0 ? (
+          <div className="alert alert-info" role="status">
+            No characters in this campaign yet.
+          </div>
+        ) : null}
 
-        {!charactersQuery.isLoading && !charactersQuery.isError && characters.length === 0 && (
-          <Alert severity="info">No characters in this campaign yet.</Alert>
-        )}
-
-        {!charactersQuery.isLoading && !charactersQuery.isError && characters.length > 0 && (
-          <Stack spacing={2}>
+        {!charactersQuery.isLoading && !charactersQuery.isError && characters.length > 0 ? (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             {characters.map(character => (
-              <Card key={character.id} variant="outlined">
-                <Box style={{ alignItems: 'center', display: 'flex' }}>
-                  <CardActionArea
+              <article className="card-outlined" key={character.id}>
+                <div style={{ alignItems: 'center', display: 'flex' }}>
+                  <button
+                    className="card-action"
                     onClick={() => {
                       navigate({ params: { characterId: character.id }, to: '/characters/$characterId' });
                     }}
                     style={{ flexGrow: 1 }}
+                    type="button"
                   >
-                    <CardContent>
-                      <Typography style={{ marginBottom: 32 }} variant="h6">
-                        {character.name}
-                      </Typography>
-                      <Typography style={{ color: 'var(--color-text-secondary)' }} variant="body2">
+                    <div className="card-content">
+                      <h3 style={{ fontSize: '1.125rem', margin: '0 0 0.5rem' }}>{character.name}</h3>
+                      <p className="text-secondary" style={{ margin: 0 }}>
                         Level {String(character.level)} · AC {String(character.armorClass)} ·{' '}
                         {String(character.maxHitPoints)} HP
-                      </Typography>
-                    </CardContent>
-                  </CardActionArea>
+                      </p>
+                    </div>
+                  </button>
                   {isOwner ? (
-                    <Box style={{ paddingRight: 8 }}>
-                      <Tooltip title="Remove from campaign">
-                        <IconButton
-                          aria-label="Remove from campaign"
-                          onClick={() => {
-                            handleRemoveCharacterRequest(character.id);
-                          }}
-                        >
-                          <UserMinus />
-                        </IconButton>
-                      </Tooltip>
-                    </Box>
+                    <div style={{ paddingRight: 8 }}>
+                      <Tooltip.Root>
+                        <Tooltip.Trigger asChild>
+                          <button
+                            aria-label="Remove from campaign"
+                            onClick={() => {
+                              handleRemoveCharacterRequest(character.id);
+                            }}
+                            style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '0.5rem' }}
+                            type="button"
+                          >
+                            <UserMinus size={20} />
+                          </button>
+                        </Tooltip.Trigger>
+                        <Tooltip.Portal>
+                          <Tooltip.Content className="radix-tooltip-content" sideOffset={4}>
+                            Remove from campaign
+                          </Tooltip.Content>
+                        </Tooltip.Portal>
+                      </Tooltip.Root>
+                    </div>
                   ) : null}
-                </Box>
-              </Card>
+                </div>
+              </article>
             ))}
-          </Stack>
-        )}
-      </Stack>
+          </div>
+        ) : null}
+      </div>
 
       <EncounterListSection
         campaignId={campaignId}
@@ -288,47 +305,71 @@ const CampaignDetailPage: FC = () => {
         isOwner={isOwner}
       />
 
-      <Dialog maxWidth="sm" onClose={handleRenameClose} open={renameOpen}>
-        <DialogTitle>Rename campaign</DialogTitle>
-        <DialogContent>
-          <Box style={{ paddingTop: 8 }}>
-            <TextField
-              label="Campaign name"
-              onChange={event => {
-                setRenameDraft(event.target.value);
-              }}
-              value={renameDraft ?? ''}
-            />
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleRenameClose}>Cancel</Button>
-          <Button disabled={updateMutation.isPending} onClick={handleRenameConfirm} variant="contained">
-            Save
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <Dialog.Root
+        onOpenChange={nextOpen => {
+          if (!nextOpen) {
+            handleRenameClose();
+          }
+        }}
+        open={renameOpen}
+      >
+        <Dialog.Portal>
+          <Dialog.Overlay className="radix-overlay" />
+          <Dialog.Content className="radix-dialog-content">
+            <Dialog.Title>Rename campaign</Dialog.Title>
+            <div className="field" style={{ paddingTop: 8 }}>
+              <Label.Root className="field-label" htmlFor="campaign-rename">
+                Campaign name
+              </Label.Root>
+              <input
+                className="field-input"
+                id="campaign-rename"
+                onChange={event => {
+                  setRenameDraft(event.target.value);
+                }}
+                value={renameDraft ?? ''}
+              />
+            </div>
+            <div className="dialog-actions">
+              <button onClick={handleRenameClose} type="button">
+                Cancel
+              </button>
+              <button disabled={updateMutation.isPending} onClick={handleRenameConfirm} type="button">
+                Save
+              </button>
+            </div>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
 
-      <Dialog maxWidth="sm" onClose={handleRemoveCharacterCancel} open={pendingRemoveCharacterId !== null}>
-        <DialogTitle>Remove from campaign</DialogTitle>
-        <DialogContent>
-          <Typography variant="body2">
-            Remove <strong>{pendingRemoveCharacter?.name ?? 'this character'}</strong> from this campaign? The character
-            will not be deleted.
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleRemoveCharacterCancel}>Cancel</Button>
-          <Button
-            disabled={removeCharacterMutation.isPending}
-            onClick={handleRemoveCharacterConfirm}
-            variant="contained"
-          >
-            Remove
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </Stack>
+      <Dialog.Root
+        onOpenChange={nextOpen => {
+          if (!nextOpen) {
+            handleRemoveCharacterCancel();
+          }
+        }}
+        open={pendingRemoveCharacterId !== null}
+      >
+        <Dialog.Portal>
+          <Dialog.Overlay className="radix-overlay" />
+          <Dialog.Content className="radix-dialog-content">
+            <Dialog.Title>Remove from campaign</Dialog.Title>
+            <p style={{ margin: '1rem 0' }}>
+              Remove <strong>{pendingRemoveCharacter?.name ?? 'this character'}</strong> from this campaign? The
+              character will not be deleted.
+            </p>
+            <div className="dialog-actions">
+              <button onClick={handleRemoveCharacterCancel} type="button">
+                Cancel
+              </button>
+              <button disabled={removeCharacterMutation.isPending} onClick={handleRemoveCharacterConfirm} type="button">
+                Remove
+              </button>
+            </div>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
+    </div>
   );
 };
 

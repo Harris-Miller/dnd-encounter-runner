@@ -1,14 +1,9 @@
+import * as Dialog from '@radix-ui/react-dialog';
+import * as Label from '@radix-ui/react-label';
 import { useMemo, useState } from 'react';
 import type { FC } from 'react';
 
 import type { Combatant, EncounterEvent, EncounterState, TriggerEvent } from '../../types/encounterState';
-import { Box } from '../ui/Box';
-import { Button } from '../ui/Button';
-import { Card, CardContent } from '../ui/Card';
-import { Dialog, DialogActions, DialogContent, DialogTitle } from '../ui/Dialog';
-import { Stack } from '../ui/Stack';
-import { MenuItem, TextField } from '../ui/TextField';
-import { Typography } from '../ui/Typography';
 
 const DAMAGE_TYPES = [
   'acid',
@@ -142,224 +137,289 @@ export const RecordEventToolbar: FC<RecordEventToolbarProps> = ({ onAdvanceRound
     closeDialog();
   };
 
+  const combatantOptions = combatants.map(combatant => (
+    <option key={combatant.id} value={combatant.id}>
+      {combatant.name}
+    </option>
+  ));
+
   return (
-    <Card variant="outlined">
-      <CardContent>
-        <Typography style={{ marginBottom: 16 }} variant="h6">
-          Record Event
-        </Typography>
-        <Stack direction="row" spacing={1} style={{ flexWrap: 'wrap' }}>
+    <article className="card-outlined">
+      <div className="card-content">
+        <h2 style={{ fontSize: '1.125rem', margin: '0 0 1rem' }}>Record Event</h2>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
           {ATTACK_EVENT_TYPES.map(eventType => {
             const kind = eventType.replace('ON_', '') as AttackForm['kind'];
             const label = kind.charAt(0) + kind.slice(1).toLowerCase();
             return (
-              <Button
+              <button
                 key={eventType}
                 onClick={() => {
                   setAttackForm(prev => ({ ...prev, kind }));
                   setOpenDialog('attack');
                 }}
-                variant="outlined"
+                type="button"
               >
                 {label}
-              </Button>
+              </button>
             );
           })}
-          <Button
+          <button
             onClick={() => {
               setOpenDialog('damage');
             }}
-            variant="outlined"
+            type="button"
           >
             Damage
-          </Button>
-          <Button
+          </button>
+          <button
             onClick={() => {
               setOpenDialog('spell');
             }}
-            variant="outlined"
+            type="button"
           >
             Spell cast
-          </Button>
-          <Box style={{ flexGrow: 1 }} />
-          <Button onClick={onAdvanceRound} variant="outlined">
+          </button>
+          <span className="flex-grow" />
+          <button onClick={onAdvanceRound} type="button">
             Advance round
-          </Button>
-        </Stack>
-      </CardContent>
+          </button>
+        </div>
+      </div>
 
-      <Dialog maxWidth="sm" onClose={closeDialog} open={openDialog === 'attack'}>
-        <DialogTitle>Record {attackForm.kind.charAt(0) + attackForm.kind.slice(1).toLowerCase()}</DialogTitle>
-        <DialogContent>
-          <Stack spacing={2} style={{ paddingTop: 8 }}>
-            <TextField
-              label="Attacker"
-              onChange={event => {
-                setAttackForm(prev => ({ ...prev, attackerId: event.target.value }));
-              }}
-              select
-              value={attackForm.attackerId}
-            >
-              {combatants.map(combatant => (
-                <MenuItem key={combatant.id} value={combatant.id}>
-                  {combatant.name}
-                </MenuItem>
-              ))}
-            </TextField>
-            <TextField
-              label="Target"
-              onChange={event => {
-                setAttackForm(prev => ({ ...prev, targetId: event.target.value }));
-              }}
-              select
-              value={attackForm.targetId}
-            >
-              {combatants.map(combatant => (
-                <MenuItem key={combatant.id} value={combatant.id}>
-                  {combatant.name}
-                </MenuItem>
-              ))}
-            </TextField>
-          </Stack>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={closeDialog}>Cancel</Button>
-          <Button onClick={handleAttackSubmit} variant="contained">
-            Record
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <Dialog.Root
+        onOpenChange={nextOpen => {
+          if (!nextOpen) {
+            closeDialog();
+          }
+        }}
+        open={openDialog === 'attack'}
+      >
+        <Dialog.Portal>
+          <Dialog.Overlay className="radix-overlay" />
+          <Dialog.Content className="radix-dialog-content">
+            <Dialog.Title>Record {attackForm.kind.charAt(0) + attackForm.kind.slice(1).toLowerCase()}</Dialog.Title>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', paddingTop: 8 }}>
+              <div className="field">
+                <Label.Root className="field-label" htmlFor="attack-attacker">
+                  Attacker
+                </Label.Root>
+                <select
+                  className="field-input"
+                  id="attack-attacker"
+                  onChange={event => {
+                    setAttackForm(prev => ({ ...prev, attackerId: event.target.value }));
+                  }}
+                  value={attackForm.attackerId}
+                >
+                  {combatantOptions}
+                </select>
+              </div>
+              <div className="field">
+                <Label.Root className="field-label" htmlFor="attack-target">
+                  Target
+                </Label.Root>
+                <select
+                  className="field-input"
+                  id="attack-target"
+                  onChange={event => {
+                    setAttackForm(prev => ({ ...prev, targetId: event.target.value }));
+                  }}
+                  value={attackForm.targetId}
+                >
+                  {combatantOptions}
+                </select>
+              </div>
+            </div>
+            <div className="dialog-actions">
+              <button onClick={closeDialog} type="button">
+                Cancel
+              </button>
+              <button onClick={handleAttackSubmit} type="button">
+                Record
+              </button>
+            </div>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
 
-      <Dialog maxWidth="sm" onClose={closeDialog} open={openDialog === 'damage'}>
-        <DialogTitle>Record Damage</DialogTitle>
-        <DialogContent>
-          <Stack spacing={2} style={{ paddingTop: 8 }}>
-            <TextField
-              label="Target"
-              onChange={event => {
-                setDamageForm(prev => ({ ...prev, targetId: event.target.value }));
-              }}
-              select
-              value={damageForm.targetId}
-            >
-              {combatants.map(combatant => (
-                <MenuItem key={combatant.id} value={combatant.id}>
-                  {combatant.name}
-                </MenuItem>
-              ))}
-            </TextField>
-            <TextField
-              label="Source (optional)"
-              onChange={event => {
-                setDamageForm(prev => ({ ...prev, sourceId: event.target.value }));
-              }}
-              select
-              value={damageForm.sourceId}
-            >
-              <MenuItem value="">None</MenuItem>
-              {combatants.map(combatant => (
-                <MenuItem key={combatant.id} value={combatant.id}>
-                  {combatant.name}
-                </MenuItem>
-              ))}
-            </TextField>
-            <TextField
-              label="Amount"
-              min={0}
-              onChange={event => {
-                setDamageForm(prev => ({ ...prev, amount: Number(event.target.value) || 0 }));
-              }}
-              type="number"
-              value={damageForm.amount}
-            />
-            <TextField
-              label="Damage type"
-              onChange={event => {
-                setDamageForm(prev => ({ ...prev, damageType: event.target.value }));
-              }}
-              select
-              value={damageForm.damageType}
-            >
-              {DAMAGE_TYPES.map(damageType => (
-                <MenuItem key={damageType} value={damageType}>
-                  {damageType}
-                </MenuItem>
-              ))}
-            </TextField>
-          </Stack>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={closeDialog}>Cancel</Button>
-          <Button onClick={handleDamageSubmit} variant="contained">
-            Record
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <Dialog.Root
+        onOpenChange={nextOpen => {
+          if (!nextOpen) {
+            closeDialog();
+          }
+        }}
+        open={openDialog === 'damage'}
+      >
+        <Dialog.Portal>
+          <Dialog.Overlay className="radix-overlay" />
+          <Dialog.Content className="radix-dialog-content">
+            <Dialog.Title>Record Damage</Dialog.Title>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', paddingTop: 8 }}>
+              <div className="field">
+                <Label.Root className="field-label" htmlFor="damage-target">
+                  Target
+                </Label.Root>
+                <select
+                  className="field-input"
+                  id="damage-target"
+                  onChange={event => {
+                    setDamageForm(prev => ({ ...prev, targetId: event.target.value }));
+                  }}
+                  value={damageForm.targetId}
+                >
+                  {combatantOptions}
+                </select>
+              </div>
+              <div className="field">
+                <Label.Root className="field-label" htmlFor="damage-source">
+                  Source (optional)
+                </Label.Root>
+                <select
+                  className="field-input"
+                  id="damage-source"
+                  onChange={event => {
+                    setDamageForm(prev => ({ ...prev, sourceId: event.target.value }));
+                  }}
+                  value={damageForm.sourceId}
+                >
+                  <option value="">None</option>
+                  {combatantOptions}
+                </select>
+              </div>
+              <div className="field">
+                <Label.Root className="field-label" htmlFor="damage-amount">
+                  Amount
+                </Label.Root>
+                <input
+                  className="field-input"
+                  id="damage-amount"
+                  min={0}
+                  onChange={event => {
+                    setDamageForm(prev => ({ ...prev, amount: Number(event.target.value) || 0 }));
+                  }}
+                  type="number"
+                  value={damageForm.amount}
+                />
+              </div>
+              <div className="field">
+                <Label.Root className="field-label" htmlFor="damage-type">
+                  Damage type
+                </Label.Root>
+                <select
+                  className="field-input"
+                  id="damage-type"
+                  onChange={event => {
+                    setDamageForm(prev => ({ ...prev, damageType: event.target.value }));
+                  }}
+                  value={damageForm.damageType}
+                >
+                  {DAMAGE_TYPES.map(damageType => (
+                    <option key={damageType} value={damageType}>
+                      {damageType}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            <div className="dialog-actions">
+              <button onClick={closeDialog} type="button">
+                Cancel
+              </button>
+              <button onClick={handleDamageSubmit} type="button">
+                Record
+              </button>
+            </div>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
 
-      <Dialog maxWidth="sm" onClose={closeDialog} open={openDialog === 'spell'}>
-        <DialogTitle>Record Spell Cast</DialogTitle>
-        <DialogContent>
-          <Stack spacing={2} style={{ paddingTop: 8 }}>
-            <TextField
-              label="Caster"
-              onChange={event => {
-                setSpellForm(prev => ({ ...prev, casterId: event.target.value }));
-              }}
-              select
-              value={spellForm.casterId}
-            >
-              {combatants.map(combatant => (
-                <MenuItem key={combatant.id} value={combatant.id}>
-                  {combatant.name}
-                </MenuItem>
-              ))}
-            </TextField>
-            <TextField
-              label="Spell name"
-              onChange={event => {
-                setSpellForm(prev => ({ ...prev, spellName: event.target.value }));
-              }}
-              value={spellForm.spellName}
-            />
-            <TextField
-              label="Targets"
-              multiple
-              onChange={event => {
-                const { value } = event.target;
-                setSpellForm(prev => ({
-                  ...prev,
-                  targetIds: typeof value === 'string' ? value.split(',') : value,
-                }));
-              }}
-              select
-              value={spellForm.targetIds}
-            >
-              {combatants.map(combatant => (
-                <MenuItem key={combatant.id} value={combatant.id}>
-                  {combatant.name}
-                </MenuItem>
-              ))}
-            </TextField>
-            <TextField
-              label="Concentration"
-              onChange={event => {
-                setSpellForm(prev => ({ ...prev, isConcentration: event.target.value === 'true' }));
-              }}
-              select
-              value={String(spellForm.isConcentration)}
-            >
-              <MenuItem value="false">No</MenuItem>
-              <MenuItem value="true">Yes (caster will be marked concentrating)</MenuItem>
-            </TextField>
-          </Stack>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={closeDialog}>Cancel</Button>
-          <Button onClick={handleSpellSubmit} variant="contained">
-            Record
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </Card>
+      <Dialog.Root
+        onOpenChange={nextOpen => {
+          if (!nextOpen) {
+            closeDialog();
+          }
+        }}
+        open={openDialog === 'spell'}
+      >
+        <Dialog.Portal>
+          <Dialog.Overlay className="radix-overlay" />
+          <Dialog.Content className="radix-dialog-content">
+            <Dialog.Title>Record Spell Cast</Dialog.Title>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', paddingTop: 8 }}>
+              <div className="field">
+                <Label.Root className="field-label" htmlFor="spell-caster">
+                  Caster
+                </Label.Root>
+                <select
+                  className="field-input"
+                  id="spell-caster"
+                  onChange={event => {
+                    setSpellForm(prev => ({ ...prev, casterId: event.target.value }));
+                  }}
+                  value={spellForm.casterId}
+                >
+                  {combatantOptions}
+                </select>
+              </div>
+              <div className="field">
+                <Label.Root className="field-label" htmlFor="spell-name">
+                  Spell name
+                </Label.Root>
+                <input
+                  className="field-input"
+                  id="spell-name"
+                  onChange={event => {
+                    setSpellForm(prev => ({ ...prev, spellName: event.target.value }));
+                  }}
+                  value={spellForm.spellName}
+                />
+              </div>
+              <div className="field">
+                <Label.Root className="field-label" htmlFor="spell-targets">
+                  Targets
+                </Label.Root>
+                <select
+                  className="field-input"
+                  id="spell-targets"
+                  multiple
+                  onChange={event => {
+                    const selected = [...event.target.selectedOptions].map(option => option.value);
+                    setSpellForm(prev => ({ ...prev, targetIds: selected }));
+                  }}
+                  value={spellForm.targetIds}
+                >
+                  {combatantOptions}
+                </select>
+              </div>
+              <div className="field">
+                <Label.Root className="field-label" htmlFor="spell-concentration">
+                  Concentration
+                </Label.Root>
+                <select
+                  className="field-input"
+                  id="spell-concentration"
+                  onChange={event => {
+                    setSpellForm(prev => ({ ...prev, isConcentration: event.target.value === 'true' }));
+                  }}
+                  value={String(spellForm.isConcentration)}
+                >
+                  <option value="false">No</option>
+                  <option value="true">Yes (caster will be marked concentrating)</option>
+                </select>
+              </div>
+            </div>
+            <div className="dialog-actions">
+              <button onClick={closeDialog} type="button">
+                Cancel
+              </button>
+              <button onClick={handleSpellSubmit} type="button">
+                Record
+              </button>
+            </div>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
+    </article>
   );
 };

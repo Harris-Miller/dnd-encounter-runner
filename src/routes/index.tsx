@@ -5,18 +5,15 @@ import { queryUser } from '../api/user';
 import dndLogo from '../assets/dnd-logo.svg';
 import { FullScreenCenter } from '../components/FullScreenCenter';
 import { RouterLink } from '../components/RouterLink';
-import { Container } from '../components/ui/Container';
-import { Paper } from '../components/ui/Paper';
-import { Typography } from '../components/ui/Typography';
 import { queryClient } from '../queryClient';
 import { supabase } from '../services/supabase';
 
 const IndexComponent: FC = () => {
   return (
     <FullScreenCenter>
-      <Container maxWidth="md">
-        <Paper elevation={6} style={{ alignItems: 'center', display: 'flex', flexDirection: 'column', padding: 24 }}>
-          <Typography style={{ alignItems: 'center', display: 'flex', gap: 12, marginBottom: 24 }} variant="h3">
+      <div className="auth-container" style={{ maxWidth: '48rem' }}>
+        <div className="auth-paper">
+          <h1 style={{ alignItems: 'center', display: 'flex', fontSize: '1.75rem', gap: 12, margin: '0 0 1.5rem' }}>
             <img
               alt="D&D Logo"
               src={dndLogo}
@@ -28,12 +25,12 @@ const IndexComponent: FC = () => {
               }}
             />
             Encounter Runner
-          </Typography>
+          </h1>
           <RouterLink style={{ marginBottom: 12 }} to="/sign-in">
             Login
           </RouterLink>
-        </Paper>
-      </Container>
+        </div>
+      </div>
     </FullScreenCenter>
   );
 };

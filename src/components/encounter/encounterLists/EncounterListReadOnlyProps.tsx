@@ -2,9 +2,6 @@ import { useNavigate } from '@tanstack/react-router';
 import type { FC } from 'react';
 
 import type { EncounterListItem } from '../../../api/encounters';
-import { Alert } from '../../ui/Alert';
-import { Skeleton } from '../../ui/Skeleton';
-import { Stack } from '../../ui/Stack';
 
 import { EncounterCards } from './EncounterCards';
 
@@ -24,26 +21,34 @@ export const EncounterListReadOnly: FC<EncounterListReadOnlyProps> = ({
   const navigate = useNavigate();
 
   return (
-    <Stack spacing={2}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
       {isLoading ? (
-        <Stack spacing={2}>
-          <Skeleton height={96} variant="rectangular" />
-          <Skeleton height={96} variant="rectangular" />
-        </Stack>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <div className="skeleton" style={{ height: 96 }} />
+          <div className="skeleton" style={{ height: 96 }} />
+        </div>
       ) : null}
 
-      {isError ? <Alert severity="error">Failed to load encounters.</Alert> : null}
+      {isError ? (
+        <div className="alert alert-error" role="alert">
+          Failed to load encounters.
+        </div>
+      ) : null}
 
-      {!isLoading && !isError && encounters.length === 0 && <Alert severity="info">{emptyMessage}</Alert>}
+      {!isLoading && !isError && encounters.length === 0 ? (
+        <div className="alert alert-info" role="status">
+          {emptyMessage}
+        </div>
+      ) : null}
 
-      {!isLoading && !isError && encounters.length > 0 && (
+      {!isLoading && !isError && encounters.length > 0 ? (
         <EncounterCards
           encounters={encounters}
           onSelectEncounter={encounterId => {
             navigate({ params: { encounterId }, to: '/encounter/$encounterId' });
           }}
         />
-      )}
-    </Stack>
+      ) : null}
+    </div>
   );
 };

@@ -1,3 +1,5 @@
+import * as Dialog from '@radix-ui/react-dialog';
+import * as Label from '@radix-ui/react-label';
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
 import { Plus } from 'lucide-react';
@@ -6,14 +8,6 @@ import type { FC } from 'react';
 
 import { mutateCreateEncounter, mutateDeleteEncounter } from '../../../api/encounters';
 import type { EncounterListItem } from '../../../api/encounters';
-import { Alert } from '../../ui/Alert';
-import { Box } from '../../ui/Box';
-import { Button } from '../../ui/Button';
-import { Dialog, DialogActions, DialogContent, DialogTitle } from '../../ui/Dialog';
-import { Skeleton } from '../../ui/Skeleton';
-import { Stack } from '../../ui/Stack';
-import { TextField } from '../../ui/TextField';
-import { Typography } from '../../ui/Typography';
 
 import { EncounterCards } from './EncounterCards';
 
@@ -91,36 +85,50 @@ export const EncounterListSection: FC<EncounterListSectionProps> = ({
     pendingDeleteId == null ? null : (encounters.find(encounter => encounter.id === pendingDeleteId) ?? null);
 
   return (
-    <Stack spacing={2}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
       {showHeading ? (
-        <Box style={{ alignItems: 'center', display: 'flex', gap: 16 }}>
-          <Typography variant="h5">Encounters</Typography>
+        <div style={{ alignItems: 'center', display: 'flex', gap: 16 }}>
+          <h2 style={{ fontSize: '1.25rem', margin: 0 }}>Encounters</h2>
           <span className="flex-grow" />
           {isOwner ? (
-            <Button onClick={handleCreateOpen} startIcon={<Plus size={18} />} type="button" variant="contained">
+            <button
+              onClick={handleCreateOpen}
+              style={{ alignItems: 'center', display: 'inline-flex', gap: '0.5rem' }}
+              type="button"
+            >
+              <Plus size={18} />
               New encounter
-            </Button>
+            </button>
           ) : null}
-        </Box>
+        </div>
       ) : isOwner ? (
-        <Box style={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <Button onClick={handleCreateOpen} startIcon={<Plus size={18} />} type="button" variant="contained">
+        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <button
+            onClick={handleCreateOpen}
+            style={{ alignItems: 'center', display: 'inline-flex', gap: '0.5rem' }}
+            type="button"
+          >
+            <Plus size={18} />
             New encounter
-          </Button>
-        </Box>
+          </button>
+        </div>
       ) : null}
 
       {isLoading ? (
-        <Stack spacing={2}>
-          <Skeleton height={96} variant="rectangular" />
-          <Skeleton height={96} variant="rectangular" />
-        </Stack>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <div className="skeleton" style={{ height: 96 }} />
+          <div className="skeleton" style={{ height: 96 }} />
+        </div>
       ) : null}
 
-      {isError ? <Alert severity="error">Failed to load encounters.</Alert> : null}
+      {isError ? (
+        <div className="alert alert-error" role="alert">
+          Failed to load encounters.
+        </div>
+      ) : null}
 
-      {!isLoading && !isError && encounters.length === 0 && (
-        <Alert severity="info">
+      {!isLoading && !isError && encounters.length === 0 ? (
+        <div className="alert alert-info" role="status">
           {isOwner ? (
             <>
               No encounters yet. Click <strong>New encounter</strong> to get started.
@@ -128,10 +136,10 @@ export const EncounterListSection: FC<EncounterListSectionProps> = ({
           ) : (
             'No encounters in this campaign yet.'
           )}
-        </Alert>
-      )}
+        </div>
+      ) : null}
 
-      {!isLoading && !isError && encounters.length > 0 && (
+      {!isLoading && !isError && encounters.length > 0 ? (
         <EncounterCards
           encounters={encounters}
           onDeleteRequest={isOwner ? handleDeleteRequest : undefined}
@@ -139,49 +147,72 @@ export const EncounterListSection: FC<EncounterListSectionProps> = ({
             navigate({ params: { encounterId }, to: '/encounter/$encounterId' });
           }}
         />
-      )}
+      ) : null}
 
-      <Dialog maxWidth="sm" onClose={handleCreateClose} open={createOpen}>
-        <DialogTitle>New encounter</DialogTitle>
-        <DialogContent>
-          <Box style={{ paddingTop: 8 }}>
-            <TextField
-              fullWidth
-              label="Encounter name"
-              onChange={event => {
-                setCreateDraft(event.target.value);
-              }}
-              placeholder="Untitled Encounter"
-              value={createDraft ?? ''}
-            />
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCreateClose} type="button">
-            Cancel
-          </Button>
-          <Button disabled={createMutation.isPending} onClick={handleCreateConfirm} type="button" variant="contained">
-            Create
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <Dialog.Root
+        onOpenChange={nextOpen => {
+          if (!nextOpen) {
+            handleCreateClose();
+          }
+        }}
+        open={createOpen}
+      >
+        <Dialog.Portal>
+          <Dialog.Overlay className="radix-overlay" />
+          <Dialog.Content className="radix-dialog-content">
+            <Dialog.Title>New encounter</Dialog.Title>
+            <div className="field" style={{ paddingTop: 8 }}>
+              <Label.Root className="field-label" htmlFor="encounter-create-name">
+                Encounter name
+              </Label.Root>
+              <input
+                className="field-input"
+                id="encounter-create-name"
+                onChange={event => {
+                  setCreateDraft(event.target.value);
+                }}
+                placeholder="Untitled Encounter"
+                value={createDraft ?? ''}
+              />
+            </div>
+            <div className="dialog-actions">
+              <button onClick={handleCreateClose} type="button">
+                Cancel
+              </button>
+              <button disabled={createMutation.isPending} onClick={handleCreateConfirm} type="button">
+                Create
+              </button>
+            </div>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
 
-      <Dialog maxWidth="sm" onClose={handleDeleteCancel} open={pendingDeleteId !== null}>
-        <DialogTitle>Delete encounter</DialogTitle>
-        <DialogContent>
-          <Typography variant="body2">
-            Delete <strong>{pendingDeleteEncounter?.name ?? 'this encounter'}</strong>? This cannot be undone.
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleDeleteCancel} type="button">
-            Cancel
-          </Button>
-          <Button disabled={deleteMutation.isPending} onClick={handleDeleteConfirm} type="button" variant="contained">
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </Stack>
+      <Dialog.Root
+        onOpenChange={nextOpen => {
+          if (!nextOpen) {
+            handleDeleteCancel();
+          }
+        }}
+        open={pendingDeleteId !== null}
+      >
+        <Dialog.Portal>
+          <Dialog.Overlay className="radix-overlay" />
+          <Dialog.Content className="radix-dialog-content">
+            <Dialog.Title>Delete encounter</Dialog.Title>
+            <p style={{ margin: '1rem 0' }}>
+              Delete <strong>{pendingDeleteEncounter?.name ?? 'this encounter'}</strong>? This cannot be undone.
+            </p>
+            <div className="dialog-actions">
+              <button onClick={handleDeleteCancel} type="button">
+                Cancel
+              </button>
+              <button disabled={deleteMutation.isPending} onClick={handleDeleteConfirm} type="button">
+                Delete
+              </button>
+            </div>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
+    </div>
   );
 };

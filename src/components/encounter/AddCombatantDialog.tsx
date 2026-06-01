@@ -1,3 +1,6 @@
+import * as Dialog from '@radix-ui/react-dialog';
+import * as Label from '@radix-ui/react-label';
+import * as Tabs from '@radix-ui/react-tabs';
 import { useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 import type { FC, SyntheticEvent } from 'react';
@@ -7,13 +10,7 @@ import { queryMonster, queryMonstersSearch } from '../../api/monsters';
 import type { MonsterSummary } from '../../api/monsters';
 import type { Combatant, CombatantType } from '../../types/encounterState';
 import { DEFAULT_ACTION_ECONOMY } from '../../types/encounterState';
-import { Autocomplete } from '../ui/Autocomplete';
-import { Box } from '../ui/Box';
-import { Button } from '../ui/Button';
-import { Dialog, DialogActions, DialogContent, DialogTitle } from '../ui/Dialog';
-import { Stack } from '../ui/Stack';
-import { Tab, Tabs } from '../ui/Tabs';
-import { MenuItem, TextField } from '../ui/TextField';
+import { Autocomplete } from '../Autocomplete';
 
 type Mode = 'character-roster' | 'custom' | 'monster-index';
 
@@ -62,7 +59,7 @@ export const AddCombatantDialog: FC<AddCombatantDialogProps> = ({
   const characters = charactersQuery.data ?? [];
   const monsters: MonsterSummary[] = monstersQuery.data ?? [];
 
-  const handleModeChange = (_event: SyntheticEvent, nextMode: string) => {
+  const handleModeChange = (nextMode: string) => {
     if (nextMode !== 'character-roster' && nextMode !== 'custom' && nextMode !== 'monster-index') return;
     const modeValue = nextMode;
     setMode(modeValue);
@@ -169,131 +166,186 @@ export const AddCombatantDialog: FC<AddCombatantDialogProps> = ({
   };
 
   return (
-    <Dialog maxWidth="sm" onClose={handleClose} open={open}>
-      <DialogTitle>Add combatant</DialogTitle>
-      <DialogContent>
-        <Stack spacing={2} style={{ paddingTop: 8 }}>
-          <Tabs onChange={handleModeChange} value={mode}>
-            <Tab label="From roster" value="character-roster" />
-            <Tab label="From monster index" value="monster-index" />
-            <Tab label="Custom" value="custom" />
-          </Tabs>
+    <Dialog.Root
+      onOpenChange={nextOpen => {
+        if (!nextOpen) {
+          handleClose();
+        }
+      }}
+      open={open}
+    >
+      <Dialog.Portal>
+        <Dialog.Overlay className="radix-overlay" />
+        <Dialog.Content className="radix-dialog-content">
+          <Dialog.Title>Add combatant</Dialog.Title>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', paddingTop: 8 }}>
+            <Tabs.Root onValueChange={handleModeChange} value={mode}>
+              <Tabs.List className="radix-tabs-list">
+                <Tabs.Trigger className="radix-tabs-trigger" value="character-roster">
+                  From roster
+                </Tabs.Trigger>
+                <Tabs.Trigger className="radix-tabs-trigger" value="monster-index">
+                  From monster index
+                </Tabs.Trigger>
+                <Tabs.Trigger className="radix-tabs-trigger" value="custom">
+                  Custom
+                </Tabs.Trigger>
+              </Tabs.List>
+            </Tabs.Root>
 
-          {mode === 'character-roster' && (
-            <TextField
-              fullWidth
-              label="Character"
-              onChange={event => {
-                handleCharacterSelect(event.target.value);
-              }}
-              select
-              value={selectedCharacterId ?? ''}
-            >
-              {characters.length === 0 ? (
-                <MenuItem disabled value="">
-                  No saved characters
-                </MenuItem>
-              ) : (
-                characters.map(character => (
-                  <MenuItem key={character.id} value={character.id}>
-                    {character.name} · AC {String(character.armorClass)} · {String(character.maxHitPoints)} HP
-                  </MenuItem>
-                ))
-              )}
-            </TextField>
-          )}
-
-          {mode === 'monster-index' && (
-            <Autocomplete
-              filterOptions={candidates => candidates}
-              getOptionLabel={option => option.name}
-              loading={monstersQuery.isFetching}
-              onChange={handleMonsterSelect}
-              onInputChange={(_event, value) => {
-                setMonsterSearch(value);
-              }}
-              options={monsters}
-              renderInput={({ id, onChange, onFocus, value }) => (
-                <TextField
-                  id={id}
-                  label="Monster"
-                  onChange={e => {
-                    onChange(e.target.value);
+            {mode === 'character-roster' ? (
+              <div className="field">
+                <Label.Root className="field-label" htmlFor="add-combatant-character">
+                  Character
+                </Label.Root>
+                <select
+                  className="field-input"
+                  id="add-combatant-character"
+                  onChange={event => {
+                    handleCharacterSelect(event.target.value);
                   }}
-                  onFocus={onFocus}
-                  value={value}
+                  value={selectedCharacterId ?? ''}
+                >
+                  {characters.length === 0 ? (
+                    <option disabled value="">
+                      No saved characters
+                    </option>
+                  ) : (
+                    characters.map(character => (
+                      <option key={character.id} value={character.id}>
+                        {character.name} · AC {String(character.armorClass)} · {String(character.maxHitPoints)} HP
+                      </option>
+                    ))
+                  )}
+                </select>
+              </div>
+            ) : null}
+
+            {mode === 'monster-index' ? (
+              <Autocomplete
+                filterOptions={candidates => candidates}
+                getOptionLabel={option => option.name}
+                loading={monstersQuery.isFetching}
+                onChange={handleMonsterSelect}
+                onInputChange={(_event, value) => {
+                  setMonsterSearch(value);
+                }}
+                options={monsters}
+                renderInput={({ id, onChange, onFocus, value }) => (
+                  <div className="field">
+                    <Label.Root className="field-label" htmlFor={id}>
+                      Monster
+                    </Label.Root>
+                    <input
+                      className="field-input"
+                      id={id}
+                      onChange={event => {
+                        onChange(event.target.value);
+                      }}
+                      onFocus={onFocus}
+                      value={value}
+                    />
+                  </div>
+                )}
+                value={monsters.find(option => option.id === selectedMonsterId) ?? null}
+              />
+            ) : null}
+
+            <div className="field">
+              <Label.Root className="field-label" htmlFor="add-combatant-name">
+                Name
+              </Label.Root>
+              <input
+                className="field-input"
+                id="add-combatant-name"
+                onChange={event => {
+                  setName(event.target.value);
+                }}
+                value={name}
+              />
+            </div>
+
+            <div className="grid-3">
+              <div className="field">
+                <Label.Root className="field-label" htmlFor="add-combatant-ac">
+                  AC
+                </Label.Root>
+                <input
+                  className="field-input"
+                  id="add-combatant-ac"
+                  onChange={event => {
+                    setArmorClass(event.target.value);
+                  }}
+                  type="number"
+                  value={armorClass}
                 />
-              )}
-              value={monsters.find(option => option.id === selectedMonsterId) ?? null}
-            />
-          )}
+              </div>
+              <div className="field">
+                <Label.Root className="field-label" htmlFor="add-combatant-max-hp">
+                  Max HP
+                </Label.Root>
+                <input
+                  className="field-input"
+                  id="add-combatant-max-hp"
+                  onChange={event => {
+                    setMaxHp(event.target.value);
+                  }}
+                  type="number"
+                  value={maxHp}
+                />
+              </div>
+              <div className="field">
+                <Label.Root className="field-label" htmlFor="add-combatant-initiative">
+                  Initiative
+                </Label.Root>
+                <input
+                  className="field-input"
+                  id="add-combatant-initiative"
+                  onChange={event => {
+                    setInitiative(event.target.value);
+                  }}
+                  type="number"
+                  value={initiative}
+                />
+              </div>
+            </div>
 
-          <TextField
-            label="Name"
-            onChange={event => {
-              setName(event.target.value);
-            }}
-            value={name}
-          />
-
-          <Box className="grid-3">
-            <TextField
-              label="AC"
-              onChange={event => {
-                setArmorClass(event.target.value);
-              }}
-              type="number"
-              value={armorClass}
-            />
-            <TextField
-              label="Max HP"
-              onChange={event => {
-                setMaxHp(event.target.value);
-              }}
-              type="number"
-              value={maxHp}
-            />
-            <TextField
-              label="Initiative"
-              onChange={event => {
-                setInitiative(event.target.value);
-              }}
-              type="number"
-              value={initiative}
-            />
-          </Box>
-
-          <TextField
-            label="Type"
-            onChange={event => {
-              const next = event.target.value;
-              if (next === 'character' || next === 'monster') {
-                setCombatantType(next);
+            <div className="field">
+              <Label.Root className="field-label" htmlFor="add-combatant-type">
+                Type
+              </Label.Root>
+              <select
+                className="field-input"
+                id="add-combatant-type"
+                onChange={event => {
+                  const next = event.target.value;
+                  if (next === 'character' || next === 'monster') {
+                    setCombatantType(next);
+                  }
+                }}
+                value={combatantType}
+              >
+                <option value="character">Character (Player)</option>
+                <option value="monster">Monster</option>
+              </select>
+            </div>
+          </div>
+          <div className="dialog-actions">
+            <button onClick={handleClose} type="button">
+              Cancel
+            </button>
+            <button
+              disabled={
+                !canConfirm || (mode === 'monster-index' && monsterDetailQuery.isFetching) || parseIntOrZero(maxHp) <= 0
               }
-            }}
-            select
-            value={combatantType}
-          >
-            <MenuItem value="character">Character (Player)</MenuItem>
-            <MenuItem value="monster">Monster</MenuItem>
-          </TextField>
-        </Stack>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose} type="button">
-          Cancel
-        </Button>
-        <Button
-          disabled={
-            !canConfirm || (mode === 'monster-index' && monsterDetailQuery.isFetching) || parseIntOrZero(maxHp) <= 0
-          }
-          onClick={handleConfirm}
-          type="button"
-          variant="contained"
-        >
-          Add
-        </Button>
-      </DialogActions>
-    </Dialog>
+              onClick={handleConfirm}
+              type="button"
+            >
+              Add
+            </button>
+          </div>
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
   );
 };
