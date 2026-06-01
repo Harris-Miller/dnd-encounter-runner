@@ -1,23 +1,17 @@
-import CheckIcon from '@mui/icons-material/Check';
-import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
-import {
-  Alert,
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Chip,
-  IconButton,
-  Stack,
-  ToggleButton,
-  ToggleButtonGroup,
-  Tooltip,
-  Typography,
-} from '@mui/material';
+import { Bell, Check } from 'lucide-react';
 import { useState } from 'react';
 import type { FC } from 'react';
 
 import type { EncounterState, Reminder } from '../../types/encounterState';
+import { Alert } from '../ui/Alert';
+import { Box } from '../ui/Box';
+import { Button } from '../ui/Button';
+import { Card, CardContent } from '../ui/Card';
+import { Chip } from '../ui/Chip';
+import { IconButton } from '../ui/IconButton';
+import { Stack } from '../ui/Stack';
+import { ToggleButton, ToggleButtonGroup } from '../ui/ToggleButtonGroup';
+import { Typography } from '../ui/Typography';
 
 const REMINDER_KIND_LABEL: Record<Reminder['kind'], string> = {
   concentration_save: 'Concentration save',
@@ -57,8 +51,8 @@ export const ReminderPanel: FC<ReminderPanelProps> = ({ onDismissReminder, state
   const visibleReminders = filter === 'active' ? allReminders.filter(reminder => !reminder.dismissed) : allReminders;
   const activeCount = allReminders.filter(reminder => !reminder.dismissed).length;
 
-  const handleFilterChange = (_event: unknown, next: FilterMode | null) => {
-    if (next !== null) {
+  const handleFilterChange = (_event: unknown, next: null | string) => {
+    if (next === 'active' || next === 'all') {
       setFilter(next);
     }
   };
@@ -66,12 +60,12 @@ export const ReminderPanel: FC<ReminderPanelProps> = ({ onDismissReminder, state
   return (
     <Card variant="outlined">
       <CardContent>
-        <Box sx={{ alignItems: 'center', display: 'flex', gap: 2, mb: 2 }}>
-          <NotificationsActiveIcon color={activeCount > 0 ? 'error' : 'disabled'} />
+        <Box style={{ alignItems: 'center', display: 'flex', gap: 16, marginBottom: 16 }}>
+          <Bell color={activeCount > 0 ? 'var(--color-error)' : 'var(--color-text-secondary)'} size={24} />
           <Typography variant="h6">Reminders</Typography>
           <Chip color={activeCount > 0 ? 'error' : 'default'} label={`${String(activeCount)} active`} size="small" />
-          <Box sx={{ flexGrow: 1 }} />
-          <ToggleButtonGroup exclusive onChange={handleFilterChange} size="small" value={filter}>
+          <span className="flex-grow" />
+          <ToggleButtonGroup exclusive onChange={handleFilterChange} value={filter}>
             <ToggleButton value="active">Active</ToggleButton>
             <ToggleButton value="all">All</ToggleButton>
           </ToggleButtonGroup>
@@ -88,21 +82,23 @@ export const ReminderPanel: FC<ReminderPanelProps> = ({ onDismissReminder, state
               return (
                 <Box
                   key={reminder.id}
-                  sx={{
+                  style={{
                     alignItems: 'flex-start',
-                    border: theme => `1px solid ${theme.palette.divider}`,
-                    borderRadius: 1,
+                    border: '1px solid var(--color-divider)',
+                    borderRadius: 8,
                     display: 'flex',
-                    gap: 1,
+                    gap: 8,
                     opacity: reminder.dismissed ? 0.5 : 1,
-                    p: 1.5,
+                    padding: 12,
                   }}
                 >
-                  <Box sx={{ flexGrow: 1 }}>
+                  <Box style={{ flexGrow: 1 }}>
                     <Stack
+                      alignItems="center"
                       direction="row"
+                      flexWrap="wrap"
                       spacing={1}
-                      sx={{ alignItems: 'center', flexWrap: 'wrap', gap: 0.5, mb: 0.5 }}
+                      style={{ gap: 4, marginBottom: 4 }}
                     >
                       <Chip
                         color={REMINDER_KIND_COLOR[reminder.kind]}
@@ -114,17 +110,15 @@ export const ReminderPanel: FC<ReminderPanelProps> = ({ onDismissReminder, state
                     <Typography variant="body2">{reminder.message}</Typography>
                   </Box>
                   {!reminder.dismissed && (
-                    <Tooltip title="Dismiss">
-                      <IconButton
-                        aria-label="Dismiss reminder"
-                        onClick={() => {
-                          onDismissReminder(reminder.id);
-                        }}
-                        size="small"
-                      >
-                        <CheckIcon fontSize="small" />
-                      </IconButton>
-                    </Tooltip>
+                    <IconButton
+                      aria-label="Dismiss reminder"
+                      onClick={() => {
+                        onDismissReminder(reminder.id);
+                      }}
+                      type="button"
+                    >
+                      <Check size={16} />
+                    </IconButton>
                   )}
                 </Box>
               );
@@ -133,7 +127,7 @@ export const ReminderPanel: FC<ReminderPanelProps> = ({ onDismissReminder, state
         )}
 
         {filter === 'active' && activeCount > 0 && (
-          <Box sx={{ mt: 2 }}>
+          <Box style={{ marginTop: 16 }}>
             <Button
               onClick={() => {
                 allReminders
@@ -142,7 +136,7 @@ export const ReminderPanel: FC<ReminderPanelProps> = ({ onDismissReminder, state
                     onDismissReminder(reminder.id);
                   });
               }}
-              size="small"
+              type="button"
             >
               Dismiss all
             </Button>

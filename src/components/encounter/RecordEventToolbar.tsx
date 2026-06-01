@@ -1,21 +1,14 @@
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  MenuItem,
-  Stack,
-  TextField,
-  Typography,
-} from '@mui/material';
 import { useMemo, useState } from 'react';
 import type { FC } from 'react';
 
 import type { Combatant, EncounterEvent, EncounterState, TriggerEvent } from '../../types/encounterState';
+import { Box } from '../ui/Box';
+import { Button } from '../ui/Button';
+import { Card, CardContent } from '../ui/Card';
+import { Dialog, DialogActions, DialogContent, DialogTitle } from '../ui/Dialog';
+import { Stack } from '../ui/Stack';
+import { MenuItem, TextField } from '../ui/TextField';
+import { Typography } from '../ui/Typography';
 
 const DAMAGE_TYPES = [
   'acid',
@@ -152,10 +145,10 @@ export const RecordEventToolbar: FC<RecordEventToolbarProps> = ({ onAdvanceRound
   return (
     <Card variant="outlined">
       <CardContent>
-        <Typography sx={{ mb: 2 }} variant="h6">
+        <Typography style={{ marginBottom: 16 }} variant="h6">
           Record Event
         </Typography>
-        <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap' }} useFlexGap>
+        <Stack direction="row" spacing={1} style={{ flexWrap: 'wrap' }}>
           {ATTACK_EVENT_TYPES.map(eventType => {
             const kind = eventType.replace('ON_', '') as AttackForm['kind'];
             const label = kind.charAt(0) + kind.slice(1).toLowerCase();
@@ -166,7 +159,6 @@ export const RecordEventToolbar: FC<RecordEventToolbarProps> = ({ onAdvanceRound
                   setAttackForm(prev => ({ ...prev, kind }));
                   setOpenDialog('attack');
                 }}
-                size="small"
                 variant="outlined"
               >
                 {label}
@@ -177,7 +169,6 @@ export const RecordEventToolbar: FC<RecordEventToolbarProps> = ({ onAdvanceRound
             onClick={() => {
               setOpenDialog('damage');
             }}
-            size="small"
             variant="outlined"
           >
             Damage
@@ -186,22 +177,21 @@ export const RecordEventToolbar: FC<RecordEventToolbarProps> = ({ onAdvanceRound
             onClick={() => {
               setOpenDialog('spell');
             }}
-            size="small"
             variant="outlined"
           >
             Spell cast
           </Button>
-          <Box sx={{ flexGrow: 1 }} />
-          <Button color="secondary" onClick={onAdvanceRound} size="small" variant="outlined">
+          <Box style={{ flexGrow: 1 }} />
+          <Button onClick={onAdvanceRound} variant="outlined">
             Advance round
           </Button>
         </Stack>
       </CardContent>
 
-      <Dialog fullWidth maxWidth="sm" onClose={closeDialog} open={openDialog === 'attack'}>
+      <Dialog maxWidth="sm" onClose={closeDialog} open={openDialog === 'attack'}>
         <DialogTitle>Record {attackForm.kind.charAt(0) + attackForm.kind.slice(1).toLowerCase()}</DialogTitle>
         <DialogContent>
-          <Stack spacing={2} sx={{ pt: 1 }}>
+          <Stack spacing={2} style={{ paddingTop: 8 }}>
             <TextField
               label="Attacker"
               onChange={event => {
@@ -240,10 +230,10 @@ export const RecordEventToolbar: FC<RecordEventToolbarProps> = ({ onAdvanceRound
         </DialogActions>
       </Dialog>
 
-      <Dialog fullWidth maxWidth="sm" onClose={closeDialog} open={openDialog === 'damage'}>
+      <Dialog maxWidth="sm" onClose={closeDialog} open={openDialog === 'damage'}>
         <DialogTitle>Record Damage</DialogTitle>
         <DialogContent>
-          <Stack spacing={2} sx={{ pt: 1 }}>
+          <Stack spacing={2} style={{ paddingTop: 8 }}>
             <TextField
               label="Target"
               onChange={event => {
@@ -275,10 +265,10 @@ export const RecordEventToolbar: FC<RecordEventToolbarProps> = ({ onAdvanceRound
             </TextField>
             <TextField
               label="Amount"
+              min={0}
               onChange={event => {
                 setDamageForm(prev => ({ ...prev, amount: Number(event.target.value) || 0 }));
               }}
-              slotProps={{ htmlInput: { min: 0 } }}
               type="number"
               value={damageForm.amount}
             />
@@ -306,10 +296,10 @@ export const RecordEventToolbar: FC<RecordEventToolbarProps> = ({ onAdvanceRound
         </DialogActions>
       </Dialog>
 
-      <Dialog fullWidth maxWidth="sm" onClose={closeDialog} open={openDialog === 'spell'}>
+      <Dialog maxWidth="sm" onClose={closeDialog} open={openDialog === 'spell'}>
         <DialogTitle>Record Spell Cast</DialogTitle>
         <DialogContent>
-          <Stack spacing={2} sx={{ pt: 1 }}>
+          <Stack spacing={2} style={{ paddingTop: 8 }}>
             <TextField
               label="Caster"
               onChange={event => {
@@ -333,6 +323,7 @@ export const RecordEventToolbar: FC<RecordEventToolbarProps> = ({ onAdvanceRound
             />
             <TextField
               label="Targets"
+              multiple
               onChange={event => {
                 const { value } = event.target;
                 setSpellForm(prev => ({
@@ -341,7 +332,6 @@ export const RecordEventToolbar: FC<RecordEventToolbarProps> = ({ onAdvanceRound
                 }));
               }}
               select
-              slotProps={{ select: { multiple: true } }}
               value={spellForm.targetIds}
             >
               {combatants.map(combatant => (

@@ -1,12 +1,14 @@
-import AutoStoriesIcon from '@mui/icons-material/AutoStories';
-import GroupsIcon from '@mui/icons-material/Groups';
-import { Box, Card, CardActionArea, CardContent, Stack, Typography } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
+import { BookOpen, Users } from 'lucide-react';
 import type { FC } from 'react';
 
 import { queryProfile } from '../../api/profile';
 import { RouterLink } from '../../components/RouterLink';
+import { Box } from '../../components/ui/Box';
+import { Card, CardActionArea, CardContent } from '../../components/ui/Card';
+import { Stack } from '../../components/ui/Stack';
+import { Typography } from '../../components/ui/Typography';
 import { queryClient } from '../../queryClient';
 
 const HomePage: FC = () => {
@@ -16,24 +18,24 @@ const HomePage: FC = () => {
   return (
     <Stack spacing={4}>
       <Box>
-        <Typography sx={{ mb: 1 }} variant="h4">
+        <Typography style={{ marginBottom: 8 }} variant="h4">
           Welcome, {displayName}
         </Typography>
-        <Typography sx={{ color: 'text.secondary' }} variant="body1">
+        <Typography className="text-secondary" variant="body1">
           Organize campaigns and manage your party from here.
         </Typography>
       </Box>
 
       <Stack direction={{ sm: 'row', xs: 'column' }} spacing={2}>
-        <Card sx={{ flex: 1 }} variant="outlined">
-          <RouterLink sx={{ color: 'inherit', textDecoration: 'none' }} to="/campaigns">
+        <Card className="flex-1" variant="outlined">
+          <RouterLink style={{ color: 'inherit', textDecoration: 'none' }} to="/campaigns">
             <CardActionArea>
               <CardContent>
-                <Stack direction="row" spacing={2} sx={{ alignItems: 'center' }}>
-                  <AutoStoriesIcon color="primary" fontSize="large" />
+                <Stack alignItems="center" direction="row" spacing={2}>
+                  <BookOpen color="var(--color-primary)" size={32} />
                   <Box>
                     <Typography variant="h6">Campaigns</Typography>
-                    <Typography sx={{ color: 'text.secondary' }} variant="body2">
+                    <Typography className="text-secondary" variant="body2">
                       Organize characters and encounters by campaign
                     </Typography>
                   </Box>
@@ -43,15 +45,15 @@ const HomePage: FC = () => {
           </RouterLink>
         </Card>
 
-        <Card sx={{ flex: 1 }} variant="outlined">
-          <RouterLink sx={{ color: 'inherit', textDecoration: 'none' }} to="/characters">
+        <Card className="flex-1" variant="outlined">
+          <RouterLink style={{ color: 'inherit', textDecoration: 'none' }} to="/characters">
             <CardActionArea>
               <CardContent>
-                <Stack direction="row" spacing={2} sx={{ alignItems: 'center' }}>
-                  <GroupsIcon color="primary" fontSize="large" />
+                <Stack alignItems="center" direction="row" spacing={2}>
+                  <Users color="var(--color-primary)" size={32} />
                   <Box>
                     <Typography variant="h6">Characters</Typography>
-                    <Typography sx={{ color: 'text.secondary' }} variant="body2">
+                    <Typography className="text-secondary" variant="body2">
                       Manage player characters and stats
                     </Typography>
                   </Box>

@@ -1,20 +1,3 @@
-import {
-  Autocomplete,
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  FormControlLabel,
-  MenuItem,
-  Stack,
-  Switch,
-  Tab,
-  Tabs,
-  TextField,
-  Typography,
-} from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 import type { FC, SyntheticEvent } from 'react';
@@ -34,6 +17,16 @@ import type {
   TriggerEvent,
 } from '../../types/encounterState';
 import { STANDARD_CONDITION_IDS, TRIGGER_EVENT_TYPES } from '../../types/encounterState';
+import { Autocomplete } from '../ui/Autocomplete';
+import { Box } from '../ui/Box';
+import { Button } from '../ui/Button';
+import { Dialog, DialogActions, DialogContent, DialogTitle } from '../ui/Dialog';
+import { FormControlLabel } from '../ui/FormControlLabel';
+import { Stack } from '../ui/Stack';
+import { Switch } from '../ui/Switch';
+import { Tab, Tabs } from '../ui/Tabs';
+import { MenuItem, TextField } from '../ui/TextField';
+import { Typography } from '../ui/Typography';
 
 type Source = 'condition' | 'custom' | 'item' | 'spell';
 
@@ -179,13 +172,17 @@ export const ApplyEffectDialog: FC<ApplyEffectDialogProps> = ({ buildId, combata
     setSelectedSpell(null);
   };
 
-  const handleSourceChange = (_event: SyntheticEvent, nextSource: Source) => {
-    setSource(nextSource);
+  const handleSourceChange = (_event: SyntheticEvent, nextSource: string) => {
+    if (nextSource !== 'condition' && nextSource !== 'custom' && nextSource !== 'item' && nextSource !== 'spell') {
+      return;
+    }
+    const sourceValue = nextSource;
+    setSource(sourceValue);
     setRefId(null);
     setSelectedItem(null);
     setSelectedSpell(null);
 
-    switch (nextSource) {
+    switch (sourceValue) {
       case 'condition': {
         const def = STANDARD_CONDITIONS[conditionId];
         setName(def.name);
@@ -300,11 +297,11 @@ export const ApplyEffectDialog: FC<ApplyEffectDialogProps> = ({ buildId, combata
   };
 
   return (
-    <Dialog fullWidth maxWidth="sm" onClose={handleClose} open={open}>
+    <Dialog maxWidth="sm" onClose={handleClose} open={open}>
       <DialogTitle>Apply effect to {combatantName}</DialogTitle>
       <DialogContent>
-        <Stack spacing={2} sx={{ pt: 1 }}>
-          <Tabs onChange={handleSourceChange} value={source} variant="fullWidth">
+        <Stack spacing={2} style={{ paddingTop: 8 }}>
+          <Tabs onChange={handleSourceChange} value={source}>
             <Tab label="Condition" value="condition" />
             <Tab label="Item" value="item" />
             <Tab label="Spell" value="spell" />
@@ -341,7 +338,17 @@ export const ApplyEffectDialog: FC<ApplyEffectDialogProps> = ({ buildId, combata
                 setItemSearch(value);
               }}
               options={items}
-              renderInput={params => <TextField {...params} label="Magic item" />}
+              renderInput={({ id, onChange, onFocus, value }) => (
+                <TextField
+                  id={id}
+                  label="Magic item"
+                  onChange={e => {
+                    onChange(e.target.value);
+                  }}
+                  onFocus={onFocus}
+                  value={value}
+                />
+              )}
               value={selectedItem}
             />
           )}
@@ -356,7 +363,17 @@ export const ApplyEffectDialog: FC<ApplyEffectDialogProps> = ({ buildId, combata
                 setSpellSearch(value);
               }}
               options={spells}
-              renderInput={params => <TextField {...params} label="Spell" />}
+              renderInput={({ id, onChange, onFocus, value }) => (
+                <TextField
+                  id={id}
+                  label="Spell"
+                  onChange={e => {
+                    onChange(e.target.value);
+                  }}
+                  onFocus={onFocus}
+                  value={value}
+                />
+              )}
               value={selectedSpell}
             />
           )}
@@ -458,16 +475,27 @@ export const ApplyEffectDialog: FC<ApplyEffectDialogProps> = ({ buildId, combata
                 }}
                 value={descriptorForm.reactionPrompt}
               />
-              <Autocomplete
-                getOptionLabel={option => option}
-                multiple
-                onChange={(_event, value) => {
-                  setDescriptorForm(current => ({ ...current, reactionTriggers: value }));
-                }}
-                options={[...TRIGGER_EVENT_TYPES]}
-                renderInput={params => <TextField {...params} label="Triggers on" />}
-                value={descriptorForm.reactionTriggers}
-              />
+              <div className="field field-full-width">
+                <label className="field-label" htmlFor="reaction-triggers">
+                  Triggers on
+                  <select
+                    className="field-input"
+                    id="reaction-triggers"
+                    multiple
+                    onChange={event => {
+                      const selected = [...event.target.selectedOptions].map(option => option.value as TriggerEvent);
+                      setDescriptorForm(current => ({ ...current, reactionTriggers: selected }));
+                    }}
+                    value={descriptorForm.reactionTriggers}
+                  >
+                    {TRIGGER_EVENT_TYPES.map(trigger => (
+                      <option key={trigger} value={trigger}>
+                        {trigger}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              </div>
             </Stack>
           )}
 
@@ -481,7 +509,7 @@ export const ApplyEffectDialog: FC<ApplyEffectDialogProps> = ({ buildId, combata
             />
           )}
 
-          <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: '1fr 1fr' }}>
+          <Box style={{ display: 'grid', gap: 16, gridTemplateColumns: '1fr 1fr' }}>
             <TextField
               label="Expires"
               onChange={event => {
@@ -532,7 +560,7 @@ export const ApplyEffectDialog: FC<ApplyEffectDialogProps> = ({ buildId, combata
               />
             }
             label={
-              <Typography sx={{ color: 'text.secondary' }} variant="body2">
+              <Typography className="text-secondary" variant="body2">
                 Will notify the DM on: {notifyOn.length === 0 ? 'no automatic triggers' : notifyOn.join(', ')}
               </Typography>
             }

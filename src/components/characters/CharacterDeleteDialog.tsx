@@ -1,5 +1,8 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from '@mui/material';
 import type { FC } from 'react';
+
+import { Button } from '../ui/Button';
+import { Dialog, DialogActions, DialogContent, DialogTitle } from '../ui/Dialog';
+import { Typography } from '../ui/Typography';
 
 export interface CharacterDeleteDialogProps {
   characterName: null | string;
@@ -16,7 +19,7 @@ export const CharacterDeleteDialog: FC<CharacterDeleteDialogProps> = ({
   onConfirm,
   open,
 }) => (
-  <Dialog fullWidth maxWidth="xs" onClose={onCancel} open={open}>
+  <Dialog maxWidth="sm" onClose={onCancel} open={open}>
     <DialogTitle>Delete character</DialogTitle>
     <DialogContent>
       <Typography variant="body2">
@@ -24,8 +27,10 @@ export const CharacterDeleteDialog: FC<CharacterDeleteDialogProps> = ({
       </Typography>
     </DialogContent>
     <DialogActions>
-      <Button onClick={onCancel}>Cancel</Button>
-      <Button color="error" disabled={isPending} onClick={onConfirm} variant="contained">
+      <Button onClick={onCancel} type="button">
+        Cancel
+      </Button>
+      <Button disabled={isPending} onClick={onConfirm} type="button" variant="contained">
         Delete
       </Button>
     </DialogActions>

@@ -1,7 +1,11 @@
-import { Stack, TextField } from '@mui/material';
 import type { ChangeEvent, FC } from 'react';
 
+import { Stack } from '../ui/Stack';
+import { TextField } from '../ui/TextField';
+
 import type { CharacterFormValues } from './characterForm';
+
+type FieldChangeEvent = ChangeEvent<HTMLInputElement | HTMLTextAreaElement>;
 
 export interface CharacterFormFieldsProps {
   disabled?: boolean;
@@ -10,7 +14,7 @@ export interface CharacterFormFieldsProps {
 }
 
 export const CharacterFormFields: FC<CharacterFormFieldsProps> = ({ disabled = false, onChange, values }) => {
-  const handleFieldChange = (field: keyof CharacterFormValues) => (event: ChangeEvent<HTMLInputElement>) => {
+  const handleFieldChange = (field: keyof CharacterFormValues) => (event: FieldChangeEvent) => {
     onChange({ ...values, [field]: event.target.value });
   };
 
@@ -28,9 +32,9 @@ export const CharacterFormFields: FC<CharacterFormFieldsProps> = ({ disabled = f
         disabled={disabled}
         fullWidth
         label="Level"
+        min={1}
         onChange={handleFieldChange('level')}
         required
-        slotProps={{ htmlInput: { min: 1 } }}
         type="number"
         value={values.level}
       />
@@ -38,9 +42,9 @@ export const CharacterFormFields: FC<CharacterFormFieldsProps> = ({ disabled = f
         disabled={disabled}
         fullWidth
         label="Armor Class"
+        min={0}
         onChange={handleFieldChange('armorClass')}
         required
-        slotProps={{ htmlInput: { min: 0 } }}
         type="number"
         value={values.armorClass}
       />
@@ -48,9 +52,9 @@ export const CharacterFormFields: FC<CharacterFormFieldsProps> = ({ disabled = f
         disabled={disabled}
         fullWidth
         label="Max Hit Points"
+        min={1}
         onChange={handleFieldChange('maxHitPoints')}
         required
-        slotProps={{ htmlInput: { min: 1 } }}
         type="number"
         value={values.maxHitPoints}
       />

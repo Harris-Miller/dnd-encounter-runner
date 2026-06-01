@@ -1,29 +1,21 @@
-import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/Delete';
-import {
-  Alert,
-  Box,
-  Button,
-  Card,
-  CardActionArea,
-  CardContent,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  IconButton,
-  Skeleton,
-  Stack,
-  TextField,
-  Tooltip,
-  Typography,
-} from '@mui/material';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
+import { Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import type { FC } from 'react';
 
 import { mutateCreateCampaign, mutateDeleteCampaign, queryCampaignsList } from '../../api/campaigns';
+import { Alert } from '../../components/ui/Alert';
+import { Box } from '../../components/ui/Box';
+import { Button } from '../../components/ui/Button';
+import { Card, CardActionArea, CardContent } from '../../components/ui/Card';
+import { Dialog, DialogActions, DialogContent, DialogTitle } from '../../components/ui/Dialog';
+import { IconButton } from '../../components/ui/IconButton';
+import { Skeleton } from '../../components/ui/Skeleton';
+import { Stack } from '../../components/ui/Stack';
+import { TextField } from '../../components/ui/TextField';
+import { Tooltip } from '../../components/ui/Tooltip';
+import { Typography } from '../../components/ui/Typography';
 import { queryClient } from '../../queryClient';
 
 const formatTimestamp = (raw: string): string => {
@@ -91,10 +83,10 @@ const CampaignsPage: FC = () => {
 
   return (
     <Stack spacing={3}>
-      <Box sx={{ alignItems: 'center', display: 'flex', gap: 2 }}>
+      <Box style={{ alignItems: 'center', display: 'flex', gap: 16 }}>
         <Typography variant="h4">Campaigns</Typography>
-        <Box sx={{ flexGrow: 1 }} />
-        <Button onClick={handleCreateOpen} startIcon={<AddIcon />} variant="contained">
+        <Box style={{ flexGrow: 1 }} />
+        <Button onClick={handleCreateOpen} startIcon={<Plus />} variant="contained">
           New campaign
         </Button>
       </Box>
@@ -118,32 +110,31 @@ const CampaignsPage: FC = () => {
         <Stack spacing={2}>
           {campaigns.map(campaign => (
             <Card key={campaign.id} variant="outlined">
-              <Box sx={{ alignItems: 'center', display: 'flex' }}>
+              <Box style={{ alignItems: 'center', display: 'flex' }}>
                 <CardActionArea
                   onClick={() => {
                     navigate({ params: { campaignId: campaign.id }, to: '/campaigns/$campaignId' });
                   }}
-                  sx={{ flexGrow: 1 }}
+                  style={{ flexGrow: 1 }}
                 >
                   <CardContent>
-                    <Typography sx={{ mb: 0.5 }} variant="h6">
+                    <Typography style={{ marginBottom: 32 }} variant="h6">
                       {campaign.name}
                     </Typography>
-                    <Typography sx={{ color: 'text.secondary' }} variant="body2">
+                    <Typography style={{ color: 'var(--color-text-secondary)' }} variant="body2">
                       Updated {formatTimestamp(campaign.updatedAt)}
                     </Typography>
                   </CardContent>
                 </CardActionArea>
-                <Box sx={{ pr: 1 }}>
+                <Box style={{ paddingRight: 8 }}>
                   <Tooltip title="Delete campaign">
                     <IconButton
                       aria-label="Delete campaign"
-                      color="error"
                       onClick={() => {
                         handleDeleteRequest(campaign.id);
                       }}
                     >
-                      <DeleteIcon />
+                      <Trash2 />
                     </IconButton>
                   </Tooltip>
                 </Box>
@@ -153,12 +144,11 @@ const CampaignsPage: FC = () => {
         </Stack>
       )}
 
-      <Dialog fullWidth maxWidth="sm" onClose={handleCreateClose} open={createOpen}>
+      <Dialog maxWidth="sm" onClose={handleCreateClose} open={createOpen}>
         <DialogTitle>New campaign</DialogTitle>
         <DialogContent>
-          <Box sx={{ pt: 1 }}>
+          <Box style={{ paddingTop: 8 }}>
             <TextField
-              fullWidth
               label="Campaign name"
               onChange={event => {
                 setCreateDraft(event.target.value);
@@ -176,7 +166,7 @@ const CampaignsPage: FC = () => {
         </DialogActions>
       </Dialog>
 
-      <Dialog fullWidth maxWidth="xs" onClose={handleDeleteCancel} open={pendingDeleteId !== null}>
+      <Dialog maxWidth="sm" onClose={handleDeleteCancel} open={pendingDeleteId !== null}>
         <DialogTitle>Delete campaign</DialogTitle>
         <DialogContent>
           <Typography variant="body2">
@@ -186,7 +176,7 @@ const CampaignsPage: FC = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleDeleteCancel}>Cancel</Button>
-          <Button color="error" disabled={deleteMutation.isPending} onClick={handleDeleteConfirm} variant="contained">
+          <Button disabled={deleteMutation.isPending} onClick={handleDeleteConfirm} variant="contained">
             Delete
           </Button>
         </DialogActions>
