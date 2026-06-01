@@ -103,7 +103,7 @@ describeIfDb('RPC parity (server JSONB transforms vs client reducer)', () => {
   });
 
   afterEach(async () => {
-    const idsToDelete = createdEncounterIds.splice(0, createdEncounterIds.length);
+    const idsToDelete = [...createdEncounterIds];
     if (idsToDelete.length > 0) {
       await sql`DELETE FROM public.encounters WHERE id = ANY(${idsToDelete}::uuid[])`;
     }

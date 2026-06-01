@@ -16,7 +16,7 @@ import { generateReminders } from './reminderEngine';
 import type { ReminderFactories } from './reminderEngine';
 
 const sortInitiativeOrder = (combatants: Record<string, Combatant>): string[] =>
-  Object.keys(combatants).sort((leftId, rightId) => {
+  Object.keys(combatants).toSorted((leftId, rightId) => {
     const leftInitiative = combatants[leftId]?.initiative ?? Number.NEGATIVE_INFINITY;
     const rightInitiative = combatants[rightId]?.initiative ?? Number.NEGATIVE_INFINITY;
 

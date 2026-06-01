@@ -53,7 +53,7 @@ export interface ReminderPanelProps {
 export const ReminderPanel: FC<ReminderPanelProps> = ({ onDismissReminder, state }) => {
   const [filter, setFilter] = useState<FilterMode>('active');
 
-  const allReminders = [...state.reminders].sort((left, right) => right.ts.localeCompare(left.ts));
+  const allReminders = state.reminders.toSorted((left, right) => right.ts.localeCompare(left.ts));
   const visibleReminders = filter === 'active' ? allReminders.filter(reminder => !reminder.dismissed) : allReminders;
   const activeCount = allReminders.filter(reminder => !reminder.dismissed).length;
 

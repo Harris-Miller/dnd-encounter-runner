@@ -4,7 +4,7 @@ export const readJsonArray = <T>(path: string, label: string): T[] => {
   const raw = readFileSync(path, 'utf8');
   const parsed: unknown = JSON.parse(raw);
   if (!Array.isArray(parsed)) {
-    throw new Error(`Expected ${label} to be a JSON array at ${path}`);
+    throw new TypeError(`Expected ${label} to be a JSON array at ${path}`);
   }
   return parsed as T[];
 };

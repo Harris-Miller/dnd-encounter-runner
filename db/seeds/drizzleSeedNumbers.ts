@@ -3,11 +3,12 @@ import process from 'node:process';
 const parseDrizzleSeedOption = (): number => {
   const raw = process.env.DRIZZLE_SEED;
   if (raw === undefined || raw === '') {
+    // eslint-disable-next-line unicorn/number-literal-case, unicorn/numeric-separators-style
     return 0x6d41_5eed;
   }
   const parsed = Number.parseInt(raw, 10);
   if (!Number.isSafeInteger(parsed)) {
-    throw new Error(`DRIZZLE_SEED must be a base-10 safe integer. Received ${raw}.`);
+    throw new TypeError(`DRIZZLE_SEED must be a base-10 safe integer. Received ${raw}.`);
   }
   return parsed;
 };

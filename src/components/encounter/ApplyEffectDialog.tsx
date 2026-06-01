@@ -185,24 +185,30 @@ export const ApplyEffectDialog: FC<ApplyEffectDialogProps> = ({ buildId, combata
     setSelectedItem(null);
     setSelectedSpell(null);
 
-    if (nextSource === 'condition') {
-      const def = STANDARD_CONDITIONS[conditionId];
-      setName(def.name);
-      setDescription(def.description);
-      setTickOn(def.defaultTickOn);
-      setDescriptorForm(current => ({ ...current, conditionId, kind: 'condition' }));
-    } else if (nextSource === 'item') {
-      setName('');
-      setDescription('');
-      setDescriptorForm(current => ({ ...current, kind: 'damage_resistance' }));
-    } else if (nextSource === 'spell') {
-      setName('');
-      setDescription('');
-      setDescriptorForm(current => ({ ...current, kind: 'damage_resistance' }));
-    } else {
-      setName('');
-      setDescription('');
-      setDescriptorForm(current => ({ ...current, kind: 'custom' }));
+    switch (nextSource) {
+      case 'condition': {
+        const def = STANDARD_CONDITIONS[conditionId];
+        setName(def.name);
+        setDescription(def.description);
+        setTickOn(def.defaultTickOn);
+        setDescriptorForm(current => ({ ...current, conditionId, kind: 'condition' }));
+        break;
+      }
+      case 'custom':
+        setName('');
+        setDescription('');
+        setDescriptorForm(current => ({ ...current, kind: 'custom' }));
+        break;
+      case 'item':
+        setName('');
+        setDescription('');
+        setDescriptorForm(current => ({ ...current, kind: 'damage_resistance' }));
+        break;
+      case 'spell':
+        setName('');
+        setDescription('');
+        setDescriptorForm(current => ({ ...current, kind: 'damage_resistance' }));
+        break;
     }
   };
 

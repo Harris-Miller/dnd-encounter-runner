@@ -26,10 +26,10 @@ const parseArgs = (argv: string[]): { appendOnly: boolean; targets: string[] } =
   for (const arg of argv) {
     if (arg === '--append') {
       flags.add('append');
-    } else if (!arg.startsWith('-')) {
-      positional.push(arg);
-    } else {
+    } else if (arg.startsWith('-')) {
       throw new Error(`Unknown argument "${arg}". Supported flags: --append`);
+    } else {
+      positional.push(arg);
     }
   }
   return { appendOnly: flags.has('append'), targets: positional };
@@ -47,19 +47,27 @@ const run = async (): Promise<void> => {
 
   try {
     for (const target of effectiveTargets) {
-      if (target === 'spells') {
-        const count = await seedSpells({ client, replaceExisting });
-        console.log(`Seeded ${count} spells.`);
-      } else if (target === 'monsters') {
-        const count = await seedMonsters({ client, replaceExisting });
-        console.log(`Seeded ${count} monsters.`);
-      } else if (target === 'magic-items' || target === 'magicItems') {
-        const count = await seedMagicItems({ client, replaceExisting });
-        console.log(`Seeded ${count} magic items.`);
-      } else {
-        throw new Error(
-          `Unknown seed target "${target}". Use spells, monsters, magic-items, or run with no args for all.`,
-        );
+      switch (target) {
+        case 'magic-items':
+        case 'magicItems': {
+          const count = await seedMagicItems({ client, replaceExisting });
+          console.log(`Seeded ${count} magic items.`);
+          break;
+        }
+        case 'monsters': {
+          const count = await seedMonsters({ client, replaceExisting });
+          console.log(`Seeded ${count} monsters.`);
+          break;
+        }
+        case 'spells': {
+          const count = await seedSpells({ client, replaceExisting });
+          console.log(`Seeded ${count} spells.`);
+          break;
+        }
+        default:
+          throw new Error(
+            `Unknown seed target "${target}". Use spells, monsters, magic-items, or run with no args for all.`,
+          );
       }
     }
   } finally {

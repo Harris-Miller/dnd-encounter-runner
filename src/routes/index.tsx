@@ -50,7 +50,7 @@ export const Route = createFileRoute('/')({
 
     try {
       await queryClient.prefetchQuery(queryUser);
-    } catch (_e) {
+    } catch {
       // TODO: this should _never_ happen. need to display an error page
     }
 

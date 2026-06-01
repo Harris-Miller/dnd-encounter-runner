@@ -27,10 +27,10 @@ const stripTimestamps = (row: UnknownRow): UnknownRow => {
   return next;
 };
 
-const stableStringify = (row: UnknownRow): string => JSON.stringify(row, Object.keys(row).sort());
+const stableStringify = (row: UnknownRow): string => JSON.stringify(row, Object.keys(row).toSorted());
 
 const normalizeRowForCompare = (row: UnknownRow): UnknownRow => {
-  const asJson = JSON.parse(JSON.stringify(row)) as UnknownRow;
+  const asJson = structuredClone(row);
   return stripTimestamps(asJson);
 };
 
@@ -52,7 +52,7 @@ const assertRowsEqualIgnoringTimestamps = (label: string, before: UnknownRow[], 
 const sampleIds = async (sql: ReturnType<typeof postgres>, table: SeededTable, limit: number): Promise<string[]> => {
   const rows = await sql.unsafe(`select id from ${table} order by random() limit ${limit}`);
   if (!Array.isArray(rows)) {
-    throw new Error(`Expected array result sampling ${table}`);
+    throw new TypeError(`Expected array result sampling ${table}`);
   }
   return rows.map(r => {
     if (!isRecord(r) || typeof r.id !== 'string') {
@@ -132,7 +132,7 @@ const compareSnapshot = async (snapshotJson: string): Promise<void> => {
     for (const table of SEEDED_TABLES) {
       const expectedCount = parsed.countsByTable[table];
       if (typeof expectedCount !== 'number') {
-        throw new Error(`Snapshot counts for ${table} must be a number`);
+        throw new TypeError(`Snapshot counts for ${table} must be a number`);
       }
       const actualCount = await fetchTableCount(sql, table);
       if (actualCount !== expectedCount) {
@@ -165,7 +165,7 @@ if (argv.includes('--capture')) {
   console.log(json);
 } else if (argv.includes('--compare')) {
   const pathIndex = argv.indexOf('--from-file');
-  const filePath = pathIndex >= 0 ? argv[pathIndex + 1] : undefined;
+  const filePath = pathIndex === -1 ? undefined : argv[pathIndex + 1];
   if (filePath === undefined || filePath === '') {
     throw new Error('Usage: node db/seeds/verifyDeterministicReseed.ts --compare --from-file <path.json>');
   }

@@ -61,7 +61,7 @@ export const buildState = (combatants: Combatant[]): EncounterState => {
     combatants: combatantsMap,
     events: [],
     initiativeOrder: [...combatants]
-      .sort((left, right) => (right.initiative ?? 0) - (left.initiative ?? 0))
+      .toSorted((left, right) => (right.initiative ?? 0) - (left.initiative ?? 0))
       .map(combatant => combatant.id),
     reminders: [],
     round: 1,
