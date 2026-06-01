@@ -1,27 +1,20 @@
-import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/Delete';
-import HealingIcon from '@mui/icons-material/Healing';
-import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
-import RemoveIcon from '@mui/icons-material/Remove';
-import {
-  Box,
-  Button,
-  Chip,
-  Divider,
-  Drawer,
-  IconButton,
-  LinearProgress,
-  Stack,
-  TextField,
-  ToggleButton,
-  ToggleButtonGroup,
-  Tooltip,
-  Typography,
-} from '@mui/material';
+import { Cross, Heart, Minus, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import type { FC } from 'react';
 
 import type { Combatant } from '../../types/encounterState';
+import { Box } from '../ui/Box';
+import { Button } from '../ui/Button';
+import { Chip } from '../ui/Chip';
+import { Divider } from '../ui/Divider';
+import { Drawer } from '../ui/Drawer';
+import { IconButton } from '../ui/IconButton';
+import { LinearProgress } from '../ui/LinearProgress';
+import { Stack } from '../ui/Stack';
+import { TextField } from '../ui/TextField';
+import { ToggleButton, ToggleButtonGroup } from '../ui/ToggleButtonGroup';
+import { Tooltip } from '../ui/Tooltip';
+import { Typography } from '../ui/Typography';
 
 export interface CombatantDetailDrawerProps {
   combatant: Combatant | null;
@@ -61,35 +54,29 @@ export const CombatantDetailDrawer: FC<CombatantDetailDrawerProps> = ({
   };
 
   return (
-    <Drawer
-      anchor="right"
-      ModalProps={{ keepMounted: true }}
-      onClose={onClose}
-      open={isOpen}
-      slotProps={{ paper: { sx: { width: { sm: 480, xs: '100%' } } } }}
-    >
+    <Drawer onClose={onClose} open={isOpen}>
       {combatant != null && (
-        <Box sx={{ p: 3 }}>
+        <Box style={{ padding: 24 }}>
           <Stack spacing={3}>
             <Box>
-              <Box sx={{ alignItems: 'center', display: 'flex', gap: 1, mb: 1 }}>
+              <Box style={{ alignItems: 'center', display: 'flex', gap: 8, marginBottom: 8 }}>
                 <Chip
                   color={combatant.type === 'monster' ? 'error' : 'info'}
                   label={combatant.type === 'monster' ? 'Monster' : 'Player'}
                   size="small"
                 />
-                <Typography sx={{ flexGrow: 1 }} variant="h5">
+                <Typography style={{ flexGrow: 1 }} variant="h5">
                   {combatant.name}
                 </Typography>
                 <Tooltip title="Remove combatant">
                   <IconButton
-                    color="error"
                     onClick={() => {
                       onRemoveCombatant(combatant.id);
                       onClose();
                     }}
+                    type="button"
                   >
-                    <DeleteIcon />
+                    <Trash2 color="var(--color-error)" size={20} />
                   </IconButton>
                 </Tooltip>
               </Box>
@@ -100,21 +87,16 @@ export const CombatantDetailDrawer: FC<CombatantDetailDrawerProps> = ({
             </Box>
 
             <Box>
-              <Typography sx={{ mb: 1 }} variant="subtitle2">
+              <Typography style={{ marginBottom: 8 }} variant="subtitle2">
                 Hit points
               </Typography>
-              <Box sx={{ alignItems: 'center', display: 'flex', gap: 1, mb: 1 }}>
-                <LocalHospitalIcon color="error" fontSize="small" />
+              <Box style={{ alignItems: 'center', display: 'flex', gap: 8, marginBottom: 8 }}>
+                <Cross color="var(--color-error)" size={16} />
                 <Typography variant="body2">
                   {String(combatant.currentHp)} / {String(combatant.maxHp)}
                 </Typography>
-                <Box sx={{ flexGrow: 1 }}>
-                  <LinearProgress
-                    color={hpPercent < 25 ? 'error' : hpPercent < 50 ? 'warning' : 'success'}
-                    sx={{ borderRadius: 1, height: 8 }}
-                    value={hpPercent}
-                    variant="determinate"
-                  />
+                <Box style={{ flexGrow: 1 }}>
+                  <LinearProgress value={hpPercent} variant="determinate" />
                 </Box>
               </Box>
               <Stack direction="row" spacing={1}>
@@ -123,27 +105,26 @@ export const CombatantDetailDrawer: FC<CombatantDetailDrawerProps> = ({
                   onChange={event => {
                     setHpAdjust(event.target.value);
                   }}
-                  size="small"
-                  sx={{ width: 100 }}
+                  style={{ width: 100 }}
                   type="number"
                   value={hpAdjust}
                 />
                 <Button
-                  color="error"
                   onClick={() => {
                     onAdjustHp(combatant.id, -Math.abs(Number(hpAdjust) || 0));
                   }}
-                  startIcon={<RemoveIcon />}
+                  startIcon={<Minus size={18} />}
+                  type="button"
                   variant="contained"
                 >
                   Damage
                 </Button>
                 <Button
-                  color="success"
                   onClick={() => {
                     onAdjustHp(combatant.id, Math.abs(Number(hpAdjust) || 0));
                   }}
-                  startIcon={<HealingIcon />}
+                  startIcon={<Heart size={18} />}
+                  type="button"
                   variant="contained"
                 >
                   Heal
@@ -154,7 +135,7 @@ export const CombatantDetailDrawer: FC<CombatantDetailDrawerProps> = ({
             <Divider />
 
             <Box>
-              <Typography sx={{ mb: 1 }} variant="subtitle2">
+              <Typography style={{ marginBottom: 8 }} variant="subtitle2">
                 Initiative
               </Typography>
               <Stack direction="row" spacing={1}>
@@ -163,29 +144,27 @@ export const CombatantDetailDrawer: FC<CombatantDetailDrawerProps> = ({
                   onChange={event => {
                     setInitiativeDraft(event.target.value);
                   }}
-                  size="small"
-                  sx={{ width: 120 }}
+                  style={{ width: 120 }}
                   type="number"
                   value={initiativeDraft}
                 />
-                <Button onClick={handleSetInitiative} variant="outlined">
+                <Button onClick={handleSetInitiative} type="button" variant="outlined">
                   Set
                 </Button>
               </Stack>
             </Box>
 
             <Box>
-              <Typography sx={{ mb: 1 }} variant="subtitle2">
+              <Typography style={{ marginBottom: 8 }} variant="subtitle2">
                 Reaction
               </Typography>
               <ToggleButtonGroup
                 exclusive
-                onChange={(_event, value: 'available' | 'used' | null) => {
-                  if (value !== null) {
+                onChange={(_event, value) => {
+                  if (value === 'available' || value === 'used') {
                     onMarkReactionUsed(combatant.id, value === 'used');
                   }
                 }}
-                size="small"
                 value={combatant.actionEconomy.reactionUsed ? 'used' : 'available'}
               >
                 <ToggleButton value="available">Available</ToggleButton>
@@ -196,21 +175,21 @@ export const CombatantDetailDrawer: FC<CombatantDetailDrawerProps> = ({
             <Divider />
 
             <Box>
-              <Box sx={{ alignItems: 'center', display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+              <Box style={{ alignItems: 'center', display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
                 <Typography variant="subtitle2">Active effects</Typography>
                 <Button
                   onClick={() => {
                     onApplyEffect(combatant.id);
                   }}
-                  size="small"
-                  startIcon={<AddIcon />}
+                  startIcon={<Plus size={18} />}
+                  type="button"
                   variant="outlined"
                 >
                   Apply
                 </Button>
               </Box>
               {combatant.effects.length === 0 ? (
-                <Typography sx={{ color: 'text.secondary' }} variant="body2">
+                <Typography className="text-secondary" variant="body2">
                   No active effects.
                 </Typography>
               ) : (
@@ -218,18 +197,18 @@ export const CombatantDetailDrawer: FC<CombatantDetailDrawerProps> = ({
                   {combatant.effects.map(effect => (
                     <Box
                       key={effect.id}
-                      sx={{
+                      style={{
                         alignItems: 'center',
-                        border: theme => `1px solid ${theme.palette.divider}`,
-                        borderRadius: 1,
+                        border: '1px solid var(--color-divider)',
+                        borderRadius: 8,
                         display: 'flex',
-                        gap: 1,
-                        p: 1,
+                        gap: 8,
+                        padding: 8,
                       }}
                     >
-                      <Box sx={{ flexGrow: 1 }}>
+                      <Box style={{ flexGrow: 1 }}>
                         <Typography variant="body2">{effect.name}</Typography>
-                        <Typography sx={{ color: 'text.secondary' }} variant="caption">
+                        <Typography className="text-secondary" variant="caption">
                           {effect.description}
                           {effect.remainingRounds != null ? ` · ${String(effect.remainingRounds)} round(s) left` : ''}
                         </Typography>
@@ -238,9 +217,9 @@ export const CombatantDetailDrawer: FC<CombatantDetailDrawerProps> = ({
                         onClick={() => {
                           onRemoveEffect(combatant.id, effect.id);
                         }}
-                        size="small"
+                        type="button"
                       >
-                        <DeleteIcon fontSize="small" />
+                        <Trash2 size={16} />
                       </IconButton>
                     </Box>
                   ))}
@@ -251,10 +230,10 @@ export const CombatantDetailDrawer: FC<CombatantDetailDrawerProps> = ({
             <Divider />
 
             <Box>
-              <Typography sx={{ mb: 1 }} variant="subtitle2">
+              <Typography style={{ marginBottom: 8 }} variant="subtitle2">
                 Damage modifiers
               </Typography>
-              <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap', gap: 0.5 }} useFlexGap>
+              <Stack direction="row" flexWrap="wrap" spacing={1} style={{ gap: 4 }}>
                 {combatant.damageImmunities.map(immunity => (
                   <Chip color="success" key={`immune-${immunity}`} label={`Immune: ${immunity}`} size="small" />
                 ))}
@@ -272,7 +251,7 @@ export const CombatantDetailDrawer: FC<CombatantDetailDrawerProps> = ({
                 {combatant.damageImmunities.length === 0 &&
                   combatant.damageResistances.length === 0 &&
                   combatant.damageVulnerabilities.length === 0 && (
-                    <Typography sx={{ color: 'text.secondary' }} variant="body2">
+                    <Typography className="text-secondary" variant="body2">
                       No baseline modifiers.
                     </Typography>
                   )}

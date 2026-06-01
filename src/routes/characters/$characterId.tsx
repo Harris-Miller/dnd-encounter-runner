@@ -1,8 +1,6 @@
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import DeleteIcon from '@mui/icons-material/Delete';
-import { Alert, Box, Button, Skeleton, Stack, Typography } from '@mui/material';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { createFileRoute, getRouteApi, useNavigate } from '@tanstack/react-router';
+import { ArrowLeft, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import type { FC } from 'react';
 
@@ -17,6 +15,12 @@ import {
 import type { CharacterFormValues } from '../../components/characters/characterForm';
 import { CharacterFormFields } from '../../components/characters/CharacterFormFields';
 import { RouterLink } from '../../components/RouterLink';
+import { Alert } from '../../components/ui/Alert';
+import { Box } from '../../components/ui/Box';
+import { Button } from '../../components/ui/Button';
+import { Skeleton } from '../../components/ui/Skeleton';
+import { Stack } from '../../components/ui/Stack';
+import { Typography } from '../../components/ui/Typography';
 import { queryClient } from '../../queryClient';
 import { fetchQueryOrNotFound } from '../../utils/fetchQueryOrNotFound';
 
@@ -62,7 +66,7 @@ const CharacterEditForm: FC<CharacterEditFormProps> = ({ character, characterId 
 
       <CharacterFormFields disabled={updateMutation.isPending} onChange={setForm} values={form} />
 
-      <Box sx={{ display: 'flex', gap: 2 }}>
+      <Box style={{ display: 'flex', gap: 16 }}>
         <Button disabled={!formValid || !isDirty || updateMutation.isPending} onClick={handleSave} variant="contained">
           Save changes
         </Button>
@@ -94,7 +98,7 @@ const CharacterDetailPage: FC = () => {
   if (isLoading) {
     return (
       <Stack spacing={3}>
-        <Skeleton height={40} variant="text" width={200} />
+        <Skeleton height={40} style={{ maxWidth: 200 }} variant="rectangular" />
         <Skeleton height={320} variant="rectangular" />
       </Stack>
     );
@@ -104,8 +108,8 @@ const CharacterDetailPage: FC = () => {
     return (
       <Stack spacing={2}>
         <Alert severity="error">Character not found or failed to load.</Alert>
-        <Button component={RouterLink} to="/characters" variant="outlined">
-          Back to characters
+        <Button asChild variant="outlined">
+          <RouterLink to="/characters">Back to characters</RouterLink>
         </Button>
       </Stack>
     );
@@ -113,17 +117,18 @@ const CharacterDetailPage: FC = () => {
 
   return (
     <Stack spacing={3}>
-      <Box sx={{ alignItems: 'center', display: 'flex', gap: 2 }}>
-        <Button component={RouterLink} startIcon={<ArrowBackIcon />} to="/characters" variant="text">
-          Characters
+      <Box style={{ alignItems: 'center', display: 'flex', gap: 16 }}>
+        <Button asChild variant="text">
+          <RouterLink to="/characters">
+            <ArrowLeft size={18} /> Characters
+          </RouterLink>
         </Button>
-        <Box sx={{ flexGrow: 1 }} />
+        <Box style={{ flexGrow: 1 }} />
         <Button
-          color="error"
           onClick={() => {
             setDeleteOpen(true);
           }}
-          startIcon={<DeleteIcon />}
+          startIcon={<Trash2 />}
           variant="outlined"
         >
           Delete

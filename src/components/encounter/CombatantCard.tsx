@@ -1,10 +1,15 @@
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import ShieldIcon from '@mui/icons-material/Shield';
-import { Box, Card, CardActionArea, Chip, LinearProgress, Stack, Tooltip, Typography } from '@mui/material';
+import { Heart, Shield } from 'lucide-react';
 import type { FC } from 'react';
 
 import { STANDARD_CONDITIONS } from '../../data/conditions';
 import type { Combatant, EffectDescriptor } from '../../types/encounterState';
+import { Box } from '../ui/Box';
+import { Card, CardActionArea } from '../ui/Card';
+import { Chip } from '../ui/Chip';
+import { LinearProgress } from '../ui/LinearProgress';
+import { Stack } from '../ui/Stack';
+import { Tooltip } from '../ui/Tooltip';
+import { Typography } from '../ui/Typography';
 
 const isStandardCondition = (provides: EffectDescriptor[]): null | string => {
   for (const descriptor of provides) {
@@ -24,20 +29,20 @@ const summarizeEffect = (provides: EffectDescriptor[], fallback: string): string
 };
 
 const ActionEconomyDots: FC<{ combatant: Combatant }> = ({ combatant }) => {
-  const dots: { color: 'default' | 'primary'; label: string; used: boolean }[] = [
-    { color: 'primary', label: 'Action', used: combatant.actionEconomy.actionUsed },
-    { color: 'primary', label: 'Bonus', used: combatant.actionEconomy.bonusActionUsed },
-    { color: 'primary', label: 'Reaction', used: combatant.actionEconomy.reactionUsed },
+  const dots: { label: string; used: boolean }[] = [
+    { label: 'Action', used: combatant.actionEconomy.actionUsed },
+    { label: 'Bonus', used: combatant.actionEconomy.bonusActionUsed },
+    { label: 'Reaction', used: combatant.actionEconomy.reactionUsed },
   ];
 
   return (
-    <Stack direction="row" spacing={0.5}>
+    <Stack direction="row" spacing={1}>
       {dots.map(dot => (
         <Tooltip key={dot.label} title={`${dot.label}${dot.used ? ' (used)' : ''}`}>
           <Box
-            sx={{
-              backgroundColor: theme => (dot.used ? theme.palette.action.disabled : theme.palette.success.main),
-              border: theme => `1px solid ${theme.palette.divider}`,
+            style={{
+              backgroundColor: dot.used ? 'var(--color-text-secondary)' : 'var(--color-success)',
+              border: `1px solid var(--color-divider)`,
               borderRadius: '50%',
               height: 8,
               width: 8,
@@ -59,17 +64,19 @@ export interface CombatantCardProps {
 export const CombatantCard: FC<CombatantCardProps> = ({ combatant, isCurrentTurn, onSelect, selected = false }) => {
   const hpPercent = combatant.maxHp === 0 ? 0 : Math.min(100, (combatant.currentHp / combatant.maxHp) * 100);
 
+  const borderColor = selected
+    ? 'var(--color-primary)'
+    : isCurrentTurn
+      ? 'var(--color-warning)'
+      : 'var(--color-divider)';
+
   return (
     <Card
-      sx={theme => ({
-        borderColor: selected
-          ? theme.palette.primary.main
-          : isCurrentTurn
-            ? theme.palette.warning.main
-            : theme.palette.divider,
+      style={{
+        borderColor,
         borderStyle: 'solid',
         borderWidth: isCurrentTurn || selected ? 2 : 1,
-      })}
+      }}
       variant="outlined"
     >
       <CardActionArea
@@ -77,10 +84,10 @@ export const CombatantCard: FC<CombatantCardProps> = ({ combatant, isCurrentTurn
         onClick={() => {
           onSelect?.(combatant.id);
         }}
-        sx={{ p: 2 }}
+        style={{ padding: 16 }}
       >
         <Stack spacing={1}>
-          <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
+          <Box style={{ alignItems: 'center', display: 'flex', gap: 8 }}>
             <Tooltip title={combatant.type === 'monster' ? 'Monster' : 'Player'}>
               <Chip
                 color={combatant.type === 'monster' ? 'error' : 'info'}
@@ -88,30 +95,25 @@ export const CombatantCard: FC<CombatantCardProps> = ({ combatant, isCurrentTurn
                 size="small"
               />
             </Tooltip>
-            <Typography sx={{ flexGrow: 1 }} variant="subtitle1">
+            <Typography style={{ flexGrow: 1 }} variant="h6">
               {combatant.name}
             </Typography>
             <Tooltip title="Initiative">
-              <Chip color="default" label={combatant.initiative ?? '—'} size="small" variant="outlined" />
+              <Chip color="default" label={String(combatant.initiative ?? '—')} size="small" variant="outlined" />
             </Tooltip>
           </Box>
-          <Box sx={{ alignItems: 'center', display: 'flex', gap: 2 }}>
+          <Box style={{ alignItems: 'center', display: 'flex', gap: 16 }}>
             <Tooltip title="Armour Class">
-              <Box sx={{ alignItems: 'center', display: 'flex', gap: 0.5 }}>
-                <ShieldIcon fontSize="small" />
+              <Box style={{ alignItems: 'center', display: 'flex', gap: 32 }}>
+                <Shield size={16} />
                 <Typography variant="body2">{combatant.armorClass}</Typography>
               </Box>
             </Tooltip>
             <Tooltip title={`HP ${String(combatant.currentHp)} / ${String(combatant.maxHp)}`}>
-              <Box sx={{ alignItems: 'center', display: 'flex', flexGrow: 1, gap: 0.5 }}>
-                <FavoriteIcon color="error" fontSize="small" />
-                <Box sx={{ flexGrow: 1 }}>
-                  <LinearProgress
-                    color={hpPercent < 25 ? 'error' : hpPercent < 50 ? 'warning' : 'success'}
-                    sx={{ borderRadius: 1, height: 8 }}
-                    value={hpPercent}
-                    variant="determinate"
-                  />
+              <Box style={{ alignItems: 'center', display: 'flex', flexGrow: 1, gap: 32 }}>
+                <Heart color="var(--color-error)" size={16} />
+                <Box style={{ flexGrow: 1 }}>
+                  <LinearProgress value={hpPercent} variant="determinate" />
                 </Box>
                 <Typography variant="body2">
                   {String(combatant.currentHp)} / {String(combatant.maxHp)}
@@ -121,7 +123,7 @@ export const CombatantCard: FC<CombatantCardProps> = ({ combatant, isCurrentTurn
             <ActionEconomyDots combatant={combatant} />
           </Box>
           {combatant.effects.length > 0 && (
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+            <Box style={{ display: 'flex', flexWrap: 'wrap', gap: 32 }}>
               {combatant.effects.map(effect => (
                 <Tooltip key={effect.id} title={effect.description}>
                   <Chip

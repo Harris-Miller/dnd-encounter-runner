@@ -1,8 +1,10 @@
-import { Alert, Skeleton, Stack } from '@mui/material';
 import { useNavigate } from '@tanstack/react-router';
 import type { FC } from 'react';
 
 import type { EncounterListItem } from '../../../api/encounters';
+import { Alert } from '../../ui/Alert';
+import { Skeleton } from '../../ui/Skeleton';
+import { Stack } from '../../ui/Stack';
 
 import { EncounterCards } from './EncounterCards';
 

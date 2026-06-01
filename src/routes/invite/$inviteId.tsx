@@ -1,23 +1,19 @@
-import AddIcon from '@mui/icons-material/Add';
-import {
-  Alert,
-  Box,
-  Button,
-  Card,
-  CardActionArea,
-  CardContent,
-  Chip,
-  Skeleton,
-  Stack,
-  Typography,
-} from '@mui/material';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { createFileRoute, getRouteApi, notFound } from '@tanstack/react-router';
+import { Plus } from 'lucide-react';
 import { useState } from 'react';
 import type { FC } from 'react';
 
 import { mutateJoinCampaignViaInvite, queryInviteCampaign, queryMyCharactersWithCampaign } from '../../api/invites';
 import { RouterLink } from '../../components/RouterLink';
+import { Alert } from '../../components/ui/Alert';
+import { Box } from '../../components/ui/Box';
+import { Button } from '../../components/ui/Button';
+import { Card, CardActionArea, CardContent } from '../../components/ui/Card';
+import { Chip } from '../../components/ui/Chip';
+import { Skeleton } from '../../components/ui/Skeleton';
+import { Stack } from '../../components/ui/Stack';
+import { Typography } from '../../components/ui/Typography';
 import { queryClient } from '../../queryClient';
 import { fetchQueryOrNotFound } from '../../utils/fetchQueryOrNotFound';
 
@@ -85,7 +81,7 @@ const InvitePage: FC = () => {
     <Stack spacing={4}>
       <Box>
         <Typography variant="h4">Join {inviteCampaign.name}</Typography>
-        <Typography sx={{ color: 'text.secondary', mt: 1 }} variant="body2">
+        <Typography style={{ color: 'var(--color-text-secondary)', marginTop: 8 }} variant="body2">
           Select a character to add to this campaign.
         </Typography>
       </Box>
@@ -102,14 +98,18 @@ const InvitePage: FC = () => {
             const isInCampaign = character.campaignName != null;
 
             return (
-              <Card key={character.id} sx={{ opacity: isInCampaign ? 0.7 : 1 }} variant="outlined">
+              <Card key={character.id} style={{ opacity: isInCampaign ? 0.7 : 1 }} variant="outlined">
                 {isInCampaign ? (
                   <CardContent>
-                    <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap', gap: 1, mb: 0.5 }}>
+                    <Stack
+                      direction="row"
+                      spacing={1}
+                      style={{ alignItems: 'center', flexWrap: 'wrap', gap: 8, marginBottom: 32 }}
+                    >
                       <Typography variant="h6">{character.name}</Typography>
-                      <Chip label={`In campaign: ${character.campaignName}`} size="small" variant="outlined" />
+                      <Chip label={`In campaign: ${character.campaignName}`} variant="outlined" />
                     </Stack>
-                    <Typography sx={{ color: 'text.secondary' }} variant="body2">
+                    <Typography style={{ color: 'var(--color-text-secondary)' }} variant="body2">
                       Level {String(character.level)} · AC {String(character.armorClass)} ·{' '}
                       {String(character.maxHitPoints)} HP
                     </Typography>
@@ -122,10 +122,10 @@ const InvitePage: FC = () => {
                     }}
                   >
                     <CardContent>
-                      <Typography sx={{ mb: 0.5 }} variant="h6">
+                      <Typography style={{ marginBottom: 32 }} variant="h6">
                         {character.name}
                       </Typography>
-                      <Typography sx={{ color: 'text.secondary' }} variant="body2">
+                      <Typography style={{ color: 'var(--color-text-secondary)' }} variant="body2">
                         Level {String(character.level)} · AC {String(character.armorClass)} ·{' '}
                         {String(character.maxHitPoints)} HP
                       </Typography>
@@ -139,7 +139,7 @@ const InvitePage: FC = () => {
       )}
 
       <Box>
-        <Button disabled startIcon={<AddIcon />} variant="outlined">
+        <Button disabled startIcon={<Plus />} variant="outlined">
           Create a new Character
         </Button>
       </Box>

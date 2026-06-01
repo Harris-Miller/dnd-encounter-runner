@@ -1,18 +1,5 @@
-import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
-import {
-  Avatar,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Stack,
-  TextField,
-  ToggleButton,
-  ToggleButtonGroup,
-  Typography,
-} from '@mui/material';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { Camera } from 'lucide-react';
 import { useRef, useState } from 'react';
 import type { ChangeEvent, FC, MouseEvent } from 'react';
 
@@ -26,6 +13,14 @@ import {
 import type { Profile, ProfileAvatarSource } from '../api/profile';
 import { queryUser } from '../api/user';
 import { resolveProfileAvatarUrl } from '../api/utils/resolveProfileAvatarUrl';
+
+import { Avatar } from './ui/Avatar';
+import { Button } from './ui/Button';
+import { Dialog, DialogActions, DialogContent, DialogTitle } from './ui/Dialog';
+import { Stack } from './ui/Stack';
+import { TextField } from './ui/TextField';
+import { ToggleButton, ToggleButtonGroup } from './ui/ToggleButtonGroup';
+import { Typography } from './ui/Typography';
 
 type ProfileEditDialogProps = {
   onClose: () => void;
@@ -85,8 +80,8 @@ const ProfileEditForm: FC<ProfileEditFormProps> = ({ onClose, profileData }) => 
     return resolveProfileAvatarUrl({ ...profileData, avatar_source: draftAvatarSource }, user.data);
   })();
 
-  const handleAvatarSourceChange = (_event: MouseEvent<HTMLElement>, nextAvatarSource: null | ProfileAvatarSource) => {
-    if (nextAvatarSource == null) {
+  const handleAvatarSourceChange = (_event: MouseEvent<HTMLElement>, nextAvatarSource: null | string) => {
+    if (nextAvatarSource !== 'oauth' && nextAvatarSource !== 'uploaded') {
       return;
     }
 
@@ -153,23 +148,17 @@ const ProfileEditForm: FC<ProfileEditFormProps> = ({ onClose, profileData }) => 
     <>
       <DialogContent>
         {mutationError != null ? (
-          <Typography color="error" sx={{ mb: 2 }}>
+          <Typography color="error" style={{ marginBottom: 16 }}>
             {mutationError}
           </Typography>
         ) : null}
-        <Stack spacing={2} sx={{ alignItems: 'center', mb: 2 }}>
-          <Avatar alt={trimmedName} src={previewAvatarUrl} sx={{ height: 96, width: 96 }} />
+        <Stack alignItems="center" spacing={2} style={{ marginBottom: 16 }}>
+          <Avatar alt={trimmedName} src={previewAvatarUrl} />
           <input accept="image/*" hidden onChange={handleFileChange} ref={fileInputRef} type="file" />
-          <Button onClick={handlePhotoButtonClick} startIcon={<PhotoCameraIcon />} variant="outlined">
+          <Button onClick={handlePhotoButtonClick} startIcon={<Camera size={18} />} type="button" variant="outlined">
             Change photo
           </Button>
-          <ToggleButtonGroup
-            color="primary"
-            exclusive
-            onChange={handleAvatarSourceChange}
-            size="small"
-            value={draftAvatarSource}
-          >
+          <ToggleButtonGroup exclusive onChange={handleAvatarSourceChange} value={draftAvatarSource}>
             <ToggleButton value="oauth">OAuth</ToggleButton>
             <ToggleButton disabled={!hasUploadedAvatar} value="uploaded">
               Uploaded
@@ -180,19 +169,22 @@ const ProfileEditForm: FC<ProfileEditFormProps> = ({ onClose, profileData }) => 
           autoFocus
           fullWidth
           label="Name"
-          margin="dense"
           onChange={event => {
             setDraftName(event.target.value);
           }}
           value={draftName}
-          variant="standard"
         />
       </DialogContent>
       <DialogActions>
-        <Button disabled={isPending} onClick={handleCancel}>
+        <Button disabled={isPending} onClick={handleCancel} type="button">
           Cancel
         </Button>
-        <Button disabled={!isNameValid || isPending || user.isPending} onClick={handleUpdate} variant="contained">
+        <Button
+          disabled={!isNameValid || isPending || user.isPending}
+          onClick={handleUpdate}
+          type="button"
+          variant="contained"
+        >
           Update
         </Button>
       </DialogActions>
@@ -210,7 +202,7 @@ export const ProfileEditDialog: FC<ProfileEditDialogProps> = ({ onClose, open })
   const profileData = open ? profile.data : null;
 
   return (
-    <Dialog fullWidth maxWidth="sm" onClose={handleCancel} open={open}>
+    <Dialog maxWidth="sm" onClose={handleCancel} open={open}>
       <DialogTitle>Edit Profile</DialogTitle>
       {profile.isError ? (
         <DialogContent>

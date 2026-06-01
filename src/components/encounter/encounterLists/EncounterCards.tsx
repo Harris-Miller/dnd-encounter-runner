@@ -1,8 +1,14 @@
-import DeleteIcon from '@mui/icons-material/Delete';
-import { Box, Card, CardActionArea, CardContent, Chip, IconButton, Stack, Tooltip, Typography } from '@mui/material';
+import { Trash2 } from 'lucide-react';
 import type { FC } from 'react';
 
 import type { EncounterListItem } from '../../../api/encounters';
+import { Box } from '../../ui/Box';
+import { Card, CardActionArea, CardContent } from '../../ui/Card';
+import { Chip } from '../../ui/Chip';
+import { IconButton } from '../../ui/IconButton';
+import { Stack } from '../../ui/Stack';
+import { Tooltip } from '../../ui/Tooltip';
+import { Typography } from '../../ui/Typography';
 
 const formatTimestamp = (raw: string): string => {
   if (raw === '') return '';
@@ -21,15 +27,21 @@ export const EncounterCards: FC<EncounterCardsProps> = ({ encounters, onDeleteRe
   <Stack spacing={2}>
     {encounters.map(encounter => (
       <Card key={encounter.id} variant="outlined">
-        <Box sx={{ alignItems: 'center', display: 'flex' }}>
+        <Box style={{ alignItems: 'center', display: 'flex' }}>
           <CardActionArea
             onClick={() => {
               onSelectEncounter(encounter.id);
             }}
-            sx={{ flexGrow: 1 }}
+            style={{ flexGrow: 1 }}
           >
             <CardContent>
-              <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap', gap: 1, mb: 0.5 }}>
+              <Stack
+                alignItems="center"
+                direction="row"
+                flexWrap="wrap"
+                spacing={1}
+                style={{ gap: 8, marginBottom: 32 }}
+              >
                 <Typography variant="h6">{encounter.name}</Typography>
                 <Chip
                   color={encounter.active ? 'success' : 'default'}
@@ -37,23 +49,23 @@ export const EncounterCards: FC<EncounterCardsProps> = ({ encounters, onDeleteRe
                   size="small"
                 />
               </Stack>
-              <Typography sx={{ color: 'text.secondary' }} variant="body2">
+              <Typography className="text-secondary" variant="body2">
                 Round {String(encounter.round)} · {String(encounter.combatantCount)} combatant
                 {encounter.combatantCount === 1 ? '' : 's'} · Updated {formatTimestamp(encounter.updatedAt)}
               </Typography>
             </CardContent>
           </CardActionArea>
           {onDeleteRequest != null ? (
-            <Box sx={{ pr: 1 }}>
+            <Box style={{ paddingRight: 8 }}>
               <Tooltip title="Delete encounter">
                 <IconButton
                   aria-label="Delete encounter"
-                  color="error"
                   onClick={() => {
                     onDeleteRequest(encounter.id);
                   }}
+                  type="button"
                 >
-                  <DeleteIcon />
+                  <Trash2 color="var(--color-error)" size={20} />
                 </IconButton>
               </Tooltip>
             </Box>

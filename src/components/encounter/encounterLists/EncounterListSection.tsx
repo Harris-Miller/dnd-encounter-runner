@@ -1,24 +1,19 @@
-import AddIcon from '@mui/icons-material/Add';
-import {
-  Alert,
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Skeleton,
-  Stack,
-  TextField,
-  Typography,
-} from '@mui/material';
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
+import { Plus } from 'lucide-react';
 import { useState } from 'react';
 import type { FC } from 'react';
 
 import { mutateCreateEncounter, mutateDeleteEncounter } from '../../../api/encounters';
 import type { EncounterListItem } from '../../../api/encounters';
+import { Alert } from '../../ui/Alert';
+import { Box } from '../../ui/Box';
+import { Button } from '../../ui/Button';
+import { Dialog, DialogActions, DialogContent, DialogTitle } from '../../ui/Dialog';
+import { Skeleton } from '../../ui/Skeleton';
+import { Stack } from '../../ui/Stack';
+import { TextField } from '../../ui/TextField';
+import { Typography } from '../../ui/Typography';
 
 import { EncounterCards } from './EncounterCards';
 
@@ -98,18 +93,18 @@ export const EncounterListSection: FC<EncounterListSectionProps> = ({
   return (
     <Stack spacing={2}>
       {showHeading ? (
-        <Box sx={{ alignItems: 'center', display: 'flex', gap: 2 }}>
+        <Box style={{ alignItems: 'center', display: 'flex', gap: 16 }}>
           <Typography variant="h5">Encounters</Typography>
-          <Box sx={{ flexGrow: 1 }} />
+          <span className="flex-grow" />
           {isOwner ? (
-            <Button onClick={handleCreateOpen} startIcon={<AddIcon />} variant="contained">
+            <Button onClick={handleCreateOpen} startIcon={<Plus size={18} />} type="button" variant="contained">
               New encounter
             </Button>
           ) : null}
         </Box>
       ) : isOwner ? (
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <Button onClick={handleCreateOpen} startIcon={<AddIcon />} variant="contained">
+        <Box style={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <Button onClick={handleCreateOpen} startIcon={<Plus size={18} />} type="button" variant="contained">
             New encounter
           </Button>
         </Box>
@@ -146,10 +141,10 @@ export const EncounterListSection: FC<EncounterListSectionProps> = ({
         />
       )}
 
-      <Dialog fullWidth maxWidth="sm" onClose={handleCreateClose} open={createOpen}>
+      <Dialog maxWidth="sm" onClose={handleCreateClose} open={createOpen}>
         <DialogTitle>New encounter</DialogTitle>
         <DialogContent>
-          <Box sx={{ pt: 1 }}>
+          <Box style={{ paddingTop: 8 }}>
             <TextField
               fullWidth
               label="Encounter name"
@@ -162,14 +157,16 @@ export const EncounterListSection: FC<EncounterListSectionProps> = ({
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCreateClose}>Cancel</Button>
-          <Button disabled={createMutation.isPending} onClick={handleCreateConfirm} variant="contained">
+          <Button onClick={handleCreateClose} type="button">
+            Cancel
+          </Button>
+          <Button disabled={createMutation.isPending} onClick={handleCreateConfirm} type="button" variant="contained">
             Create
           </Button>
         </DialogActions>
       </Dialog>
 
-      <Dialog fullWidth maxWidth="xs" onClose={handleDeleteCancel} open={pendingDeleteId !== null}>
+      <Dialog maxWidth="sm" onClose={handleDeleteCancel} open={pendingDeleteId !== null}>
         <DialogTitle>Delete encounter</DialogTitle>
         <DialogContent>
           <Typography variant="body2">
@@ -177,8 +174,10 @@ export const EncounterListSection: FC<EncounterListSectionProps> = ({
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleDeleteCancel}>Cancel</Button>
-          <Button color="error" disabled={deleteMutation.isPending} onClick={handleDeleteConfirm} variant="contained">
+          <Button onClick={handleDeleteCancel} type="button">
+            Cancel
+          </Button>
+          <Button disabled={deleteMutation.isPending} onClick={handleDeleteConfirm} type="button" variant="contained">
             Delete
           </Button>
         </DialogActions>

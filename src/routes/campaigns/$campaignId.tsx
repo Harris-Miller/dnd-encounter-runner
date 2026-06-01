@@ -1,29 +1,6 @@
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import EditIcon from '@mui/icons-material/Edit';
-import LinkIcon from '@mui/icons-material/Link';
-import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
-import RefreshIcon from '@mui/icons-material/Refresh';
-import {
-  Alert,
-  Box,
-  Button,
-  Card,
-  CardActionArea,
-  CardContent,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  IconButton,
-  InputAdornment,
-  Skeleton,
-  Stack,
-  TextField,
-  Tooltip,
-  Typography,
-} from '@mui/material';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { createFileRoute, getRouteApi, useNavigate } from '@tanstack/react-router';
+import { Copy, Link as LinkIcon, Pencil, RefreshCw, UserMinus } from 'lucide-react';
 import { useState } from 'react';
 import type { FC } from 'react';
 
@@ -38,6 +15,18 @@ import { queryEncountersList } from '../../api/encounters';
 import { queryProfile } from '../../api/profile';
 import { EncounterListSection } from '../../components/encounter/encounterLists/EncounterListSection';
 import { RouterLink } from '../../components/RouterLink';
+import { Alert } from '../../components/ui/Alert';
+import { Box } from '../../components/ui/Box';
+import { Button } from '../../components/ui/Button';
+import { Card, CardActionArea, CardContent } from '../../components/ui/Card';
+import { Dialog, DialogActions, DialogContent, DialogTitle } from '../../components/ui/Dialog';
+import { IconButton } from '../../components/ui/IconButton';
+import { InputAdornment } from '../../components/ui/InputAdornment';
+import { Skeleton } from '../../components/ui/Skeleton';
+import { Stack } from '../../components/ui/Stack';
+import { TextField } from '../../components/ui/TextField';
+import { Tooltip } from '../../components/ui/Tooltip';
+import { Typography } from '../../components/ui/Typography';
 import { queryClient } from '../../queryClient';
 import { fetchQueryOrNotFound } from '../../utils/fetchQueryOrNotFound';
 
@@ -165,14 +154,14 @@ const CampaignDetailPage: FC = () => {
   return (
     <Stack spacing={4}>
       <Box>
-        <Typography sx={{ mb: 1 }} variant="body2">
+        <Typography style={{ marginBottom: 8 }} variant="body2">
           <RouterLink to="/campaigns">Back to campaigns</RouterLink>
         </Typography>
-        <Box sx={{ alignItems: 'center', display: 'flex', flexWrap: 'wrap', gap: 2 }}>
+        <Box style={{ alignItems: 'center', display: 'flex', flexWrap: 'wrap', gap: 16 }}>
           <Typography variant="h4">{campaign.name}</Typography>
           {isOwner ? (
-            <IconButton aria-label="Rename campaign" onClick={handleRenameOpen} size="small">
-              <EditIcon />
+            <IconButton aria-label="Rename campaign" onClick={handleRenameOpen}>
+              <Pencil />
             </IconButton>
           ) : null}
         </Box>
@@ -183,13 +172,13 @@ const CampaignDetailPage: FC = () => {
           <Typography variant="h5">Invite link</Typography>
           {campaign.inviteId == null ? (
             <Box>
-              <Typography sx={{ color: 'text.secondary', mb: 2 }} variant="body2">
+              <Typography style={{ color: 'var(--color-text-secondary)', marginBottom: 16 }} variant="body2">
                 Generate a link to invite others to join this campaign with one of their characters.
               </Typography>
               <Button
                 disabled={inviteMutation.isPending}
                 onClick={handleEnableInvite}
-                startIcon={<LinkIcon />}
+                startIcon={<LinkIcon size={18} />}
                 variant="contained"
               >
                 Enable invite link
@@ -198,43 +187,35 @@ const CampaignDetailPage: FC = () => {
           ) : (
             <Stack spacing={2}>
               <TextField
-                fullWidth
-                label="Invite link"
-                slotProps={{
-                  input: {
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <Tooltip title={copySuccess ? 'Copied!' : 'Copy link'}>
-                          <IconButton aria-label="Copy invite link" edge="end" onClick={handleCopyInviteLink}>
-                            <ContentCopyIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </InputAdornment>
-                    ),
-                    readOnly: true,
-                  },
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <Tooltip title={copySuccess ? 'Copied!' : 'Copy link'}>
+                        <IconButton aria-label="Copy invite link" onClick={handleCopyInviteLink} type="button">
+                          <Copy size={18} />
+                        </IconButton>
+                      </Tooltip>
+                    </InputAdornment>
+                  ),
                 }}
+                label="Invite link"
+                readOnly
                 value={buildInviteUrl(campaign.inviteId)}
               />
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+              <Box style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                 <Button
                   disabled={inviteMutation.isPending}
                   onClick={handleRegenerateInvite}
-                  startIcon={<RefreshIcon />}
+                  startIcon={<RefreshCw />}
                   variant="outlined"
                 >
                   Regenerate
                 </Button>
-                <Button
-                  color="warning"
-                  disabled={inviteMutation.isPending}
-                  onClick={handleDisableInvite}
-                  variant="outlined"
-                >
+                <Button disabled={inviteMutation.isPending} onClick={handleDisableInvite} variant="outlined">
                   Disable
                 </Button>
               </Box>
-              <Typography sx={{ color: 'text.secondary' }} variant="body2">
+              <Typography style={{ color: 'var(--color-text-secondary)' }} variant="body2">
                 Regenerating creates a new link and invalidates the previous one.
               </Typography>
             </Stack>
@@ -261,34 +242,33 @@ const CampaignDetailPage: FC = () => {
           <Stack spacing={2}>
             {characters.map(character => (
               <Card key={character.id} variant="outlined">
-                <Box sx={{ alignItems: 'center', display: 'flex' }}>
+                <Box style={{ alignItems: 'center', display: 'flex' }}>
                   <CardActionArea
                     onClick={() => {
                       navigate({ params: { characterId: character.id }, to: '/characters/$characterId' });
                     }}
-                    sx={{ flexGrow: 1 }}
+                    style={{ flexGrow: 1 }}
                   >
                     <CardContent>
-                      <Typography sx={{ mb: 0.5 }} variant="h6">
+                      <Typography style={{ marginBottom: 32 }} variant="h6">
                         {character.name}
                       </Typography>
-                      <Typography sx={{ color: 'text.secondary' }} variant="body2">
+                      <Typography style={{ color: 'var(--color-text-secondary)' }} variant="body2">
                         Level {String(character.level)} · AC {String(character.armorClass)} ·{' '}
                         {String(character.maxHitPoints)} HP
                       </Typography>
                     </CardContent>
                   </CardActionArea>
                   {isOwner ? (
-                    <Box sx={{ pr: 1 }}>
+                    <Box style={{ paddingRight: 8 }}>
                       <Tooltip title="Remove from campaign">
                         <IconButton
                           aria-label="Remove from campaign"
-                          color="warning"
                           onClick={() => {
                             handleRemoveCharacterRequest(character.id);
                           }}
                         >
-                          <PersonRemoveIcon />
+                          <UserMinus />
                         </IconButton>
                       </Tooltip>
                     </Box>
@@ -308,12 +288,11 @@ const CampaignDetailPage: FC = () => {
         isOwner={isOwner}
       />
 
-      <Dialog fullWidth maxWidth="sm" onClose={handleRenameClose} open={renameOpen}>
+      <Dialog maxWidth="sm" onClose={handleRenameClose} open={renameOpen}>
         <DialogTitle>Rename campaign</DialogTitle>
         <DialogContent>
-          <Box sx={{ pt: 1 }}>
+          <Box style={{ paddingTop: 8 }}>
             <TextField
-              fullWidth
               label="Campaign name"
               onChange={event => {
                 setRenameDraft(event.target.value);
@@ -330,7 +309,7 @@ const CampaignDetailPage: FC = () => {
         </DialogActions>
       </Dialog>
 
-      <Dialog fullWidth maxWidth="xs" onClose={handleRemoveCharacterCancel} open={pendingRemoveCharacterId !== null}>
+      <Dialog maxWidth="sm" onClose={handleRemoveCharacterCancel} open={pendingRemoveCharacterId !== null}>
         <DialogTitle>Remove from campaign</DialogTitle>
         <DialogContent>
           <Typography variant="body2">
@@ -341,7 +320,6 @@ const CampaignDetailPage: FC = () => {
         <DialogActions>
           <Button onClick={handleRemoveCharacterCancel}>Cancel</Button>
           <Button
-            color="warning"
             disabled={removeCharacterMutation.isPending}
             onClick={handleRemoveCharacterConfirm}
             variant="contained"

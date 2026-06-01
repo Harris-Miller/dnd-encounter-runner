@@ -1,8 +1,12 @@
-import SkipNextIcon from '@mui/icons-material/SkipNext';
-import { Box, Button, Card, CardContent, Stack, Typography } from '@mui/material';
+import { SkipForward } from 'lucide-react';
 import type { FC } from 'react';
 
 import type { EncounterState } from '../../types/encounterState';
+import { Box } from '../ui/Box';
+import { Button } from '../ui/Button';
+import { Card, CardContent } from '../ui/Card';
+import { Stack } from '../ui/Stack';
+import { Typography } from '../ui/Typography';
 
 import { CombatantCard } from './CombatantCard';
 
@@ -26,24 +30,24 @@ export const InitiativeTracker: FC<InitiativeTrackerProps> = ({
   return (
     <Card variant="outlined">
       <CardContent>
-        <Box sx={{ alignItems: 'center', display: 'flex', gap: 2, mb: 2 }}>
+        <Box style={{ alignItems: 'center', display: 'flex', gap: 16, marginBottom: 16 }}>
           <Typography variant="h6">Initiative</Typography>
-          <Box sx={{ flexGrow: 1 }} />
-          <Typography sx={{ color: 'text.secondary' }} variant="body2">
+          <span className="flex-grow" />
+          <Typography className="text-secondary" variant="body2">
             Round {String(state.round)}
           </Typography>
           <Button
             disabled={isAdvancing === true || ordered.length === 0}
             onClick={onAdvanceTurn}
-            size="small"
-            startIcon={<SkipNextIcon />}
+            startIcon={<SkipForward size={18} />}
+            type="button"
             variant="contained"
           >
             Next turn
           </Button>
         </Box>
         {ordered.length === 0 ? (
-          <Typography sx={{ color: 'text.secondary' }} variant="body2">
+          <Typography className="text-secondary" variant="body2">
             No combatants yet. Add players and monsters to start tracking initiative.
           </Typography>
         ) : (

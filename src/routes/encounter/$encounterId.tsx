@@ -1,22 +1,6 @@
-import AddIcon from '@mui/icons-material/Add';
-import EditIcon from '@mui/icons-material/Edit';
-import {
-  Alert,
-  Box,
-  Button,
-  Chip,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  IconButton,
-  Skeleton,
-  Stack,
-  TextField,
-  Typography,
-} from '@mui/material';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { createFileRoute, getRouteApi } from '@tanstack/react-router';
+import { Pencil, Plus } from 'lucide-react';
 import { useState } from 'react';
 import type { FC } from 'react';
 
@@ -33,6 +17,16 @@ import { InitiativeTracker } from '../../components/encounter/InitiativeTracker'
 import { RecordEventToolbar } from '../../components/encounter/RecordEventToolbar';
 import { ReminderPanel } from '../../components/encounter/ReminderPanel';
 import { RouterLink } from '../../components/RouterLink';
+import { Alert } from '../../components/ui/Alert';
+import { Box } from '../../components/ui/Box';
+import { Button } from '../../components/ui/Button';
+import { Chip } from '../../components/ui/Chip';
+import { Dialog, DialogActions, DialogContent, DialogTitle } from '../../components/ui/Dialog';
+import { IconButton } from '../../components/ui/IconButton';
+import { Skeleton } from '../../components/ui/Skeleton';
+import { Stack } from '../../components/ui/Stack';
+import { TextField } from '../../components/ui/TextField';
+import { Typography } from '../../components/ui/Typography';
 import { queryClient } from '../../queryClient';
 import { fetchQueryOrNotFound } from '../../utils/fetchQueryOrNotFound';
 
@@ -126,22 +120,21 @@ const EncounterPage: FC = () => {
   return (
     <Stack spacing={3}>
       <Box>
-        <Typography sx={{ mb: 1 }} variant="body2">
+        <Typography style={{ marginBottom: 8 }} variant="body2">
           <RouterLink to="/encounter">Back to encounters</RouterLink>
         </Typography>
-        <Box sx={{ alignItems: 'center', display: 'flex', flexWrap: 'wrap', gap: 2 }}>
+        <Box style={{ alignItems: 'center', display: 'flex', flexWrap: 'wrap', gap: 16 }}>
           <Typography variant="h4">{data.name}</Typography>
-          <IconButton onClick={handleRenameOpen} size="small">
-            <EditIcon />
+          <IconButton onClick={handleRenameOpen}>
+            <Pencil />
           </IconButton>
           <Chip
             color={data.active ? 'success' : 'default'}
             label={data.active ? 'Active' : 'Inactive'}
             onClick={handleToggleActive}
-            size="small"
           />
-          <Box sx={{ flexGrow: 1 }} />
-          <Typography sx={{ color: 'text.secondary' }} variant="body2">
+          <Box style={{ flexGrow: 1 }} />
+          <Typography style={{ color: 'var(--color-text-secondary)' }} variant="body2">
             Round {String(data.state.round)} · Turn {String(data.state.turnIndex + 1)} of{' '}
             {String(data.state.initiativeOrder.length)}
           </Typography>
@@ -153,7 +146,7 @@ const EncounterPage: FC = () => {
           onClick={() => {
             setAddCombatantOpen(true);
           }}
-          startIcon={<AddIcon />}
+          startIcon={<Plus />}
           variant="outlined"
         >
           Add combatant
@@ -234,12 +227,11 @@ const EncounterPage: FC = () => {
         }}
       />
 
-      <Dialog fullWidth maxWidth="sm" onClose={handleRenameClose} open={renameOpen}>
+      <Dialog maxWidth="sm" onClose={handleRenameClose} open={renameOpen}>
         <DialogTitle>Rename Encounter</DialogTitle>
         <DialogContent>
-          <Box sx={{ pt: 1 }}>
+          <Box style={{ paddingTop: 8 }}>
             <TextField
-              fullWidth
               label="Encounter name"
               onChange={event => {
                 setRenameDraft(event.target.value);

@@ -1,24 +1,6 @@
-import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/Delete';
-import {
-  Alert,
-  Box,
-  Button,
-  Card,
-  CardActionArea,
-  CardContent,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  IconButton,
-  Skeleton,
-  Stack,
-  Tooltip,
-  Typography,
-} from '@mui/material';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
+import { Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import type { FC } from 'react';
 
@@ -31,6 +13,16 @@ import {
 } from '../../components/characters/characterForm';
 import type { CharacterFormValues } from '../../components/characters/characterForm';
 import { CharacterFormFields } from '../../components/characters/CharacterFormFields';
+import { Alert } from '../../components/ui/Alert';
+import { Box } from '../../components/ui/Box';
+import { Button } from '../../components/ui/Button';
+import { Card, CardActionArea, CardContent } from '../../components/ui/Card';
+import { Dialog, DialogActions, DialogContent, DialogTitle } from '../../components/ui/Dialog';
+import { IconButton } from '../../components/ui/IconButton';
+import { Skeleton } from '../../components/ui/Skeleton';
+import { Stack } from '../../components/ui/Stack';
+import { Tooltip } from '../../components/ui/Tooltip';
+import { Typography } from '../../components/ui/Typography';
 import { queryClient } from '../../queryClient';
 
 const formatTimestamp = (raw: string): string => {
@@ -96,10 +88,10 @@ const CharactersPage: FC = () => {
 
   return (
     <Stack spacing={3}>
-      <Box sx={{ alignItems: 'center', display: 'flex', gap: 2 }}>
+      <Box style={{ alignItems: 'center', display: 'flex', gap: 16 }}>
         <Typography variant="h4">Characters</Typography>
-        <Box sx={{ flexGrow: 1 }} />
-        <Button onClick={handleCreateOpen} startIcon={<AddIcon />} variant="contained">
+        <span className="flex-grow" />
+        <Button onClick={handleCreateOpen} startIcon={<Plus size={18} />} type="button" variant="contained">
           New character
         </Button>
       </Box>
@@ -123,36 +115,40 @@ const CharactersPage: FC = () => {
         <Stack spacing={2}>
           {characters.map(character => (
             <Card key={character.id} variant="outlined">
-              <Box sx={{ alignItems: 'center', display: 'flex' }}>
+              <Box style={{ alignItems: 'center', display: 'flex' }}>
                 <CardActionArea
                   onClick={() => {
                     navigate({ params: { characterId: character.id }, to: '/characters/$characterId' });
                   }}
-                  sx={{ flexGrow: 1 }}
+                  style={{ flexGrow: 1 }}
                 >
                   <CardContent>
                     <Typography variant="h6">{character.name}</Typography>
-                    <Typography sx={{ color: 'text.secondary' }} variant="body2">
+                    <Typography className="text-secondary" variant="body2">
                       Level {String(character.level)} · AC {String(character.armorClass)} ·{' '}
                       {String(character.maxHitPoints)} HP · Updated {formatTimestamp(character.updatedAt)}
                     </Typography>
                     {character.notes != null && character.notes !== '' && (
-                      <Typography noWrap sx={{ color: 'text.secondary', mt: 0.5 }} variant="body2">
+                      <Typography
+                        className="text-secondary"
+                        style={{ marginTop: 32, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+                        variant="body2"
+                      >
                         {character.notes}
                       </Typography>
                     )}
                   </CardContent>
                 </CardActionArea>
-                <Box sx={{ pr: 1 }}>
+                <Box style={{ paddingRight: 8 }}>
                   <Tooltip title="Delete character">
                     <IconButton
                       aria-label="Delete character"
-                      color="error"
                       onClick={() => {
                         handleDeleteRequest(character.id);
                       }}
+                      type="button"
                     >
-                      <DeleteIcon />
+                      <Trash2 color="var(--color-error)" size={20} />
                     </IconButton>
                   </Tooltip>
                 </Box>
@@ -162,18 +158,21 @@ const CharactersPage: FC = () => {
         </Stack>
       )}
 
-      <Dialog fullWidth maxWidth="sm" onClose={handleCreateClose} open={createOpen}>
+      <Dialog maxWidth="sm" onClose={handleCreateClose} open={createOpen}>
         <DialogTitle>New character</DialogTitle>
         <DialogContent>
-          <Box sx={{ pt: 1 }}>
+          <Box style={{ paddingTop: 8 }}>
             <CharacterFormFields disabled={createMutation.isPending} onChange={setCreateForm} values={createForm} />
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCreateClose}>Cancel</Button>
+          <Button onClick={handleCreateClose} type="button">
+            Cancel
+          </Button>
           <Button
             disabled={!createFormValid || createMutation.isPending}
             onClick={handleCreateConfirm}
+            type="button"
             variant="contained"
           >
             Create

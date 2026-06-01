@@ -1,17 +1,3 @@
-import {
-  Autocomplete,
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  MenuItem,
-  Stack,
-  Tab,
-  Tabs,
-  TextField,
-} from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 import type { FC, SyntheticEvent } from 'react';
@@ -21,6 +7,13 @@ import { queryMonster, queryMonstersSearch } from '../../api/monsters';
 import type { MonsterSummary } from '../../api/monsters';
 import type { Combatant, CombatantType } from '../../types/encounterState';
 import { DEFAULT_ACTION_ECONOMY } from '../../types/encounterState';
+import { Autocomplete } from '../ui/Autocomplete';
+import { Box } from '../ui/Box';
+import { Button } from '../ui/Button';
+import { Dialog, DialogActions, DialogContent, DialogTitle } from '../ui/Dialog';
+import { Stack } from '../ui/Stack';
+import { Tab, Tabs } from '../ui/Tabs';
+import { MenuItem, TextField } from '../ui/TextField';
 
 type Mode = 'character-roster' | 'custom' | 'monster-index';
 
@@ -69,12 +62,14 @@ export const AddCombatantDialog: FC<AddCombatantDialogProps> = ({
   const characters = charactersQuery.data ?? [];
   const monsters: MonsterSummary[] = monstersQuery.data ?? [];
 
-  const handleModeChange = (_event: SyntheticEvent, nextMode: Mode) => {
-    setMode(nextMode);
+  const handleModeChange = (_event: SyntheticEvent, nextMode: string) => {
+    if (nextMode !== 'character-roster' && nextMode !== 'custom' && nextMode !== 'monster-index') return;
+    const modeValue = nextMode;
+    setMode(modeValue);
     setSelectedCharacterId(null);
     setSelectedMonsterId(null);
     setRefId(null);
-    if (nextMode === 'monster-index') {
+    if (modeValue === 'monster-index') {
       setCombatantType('monster');
     } else {
       setCombatantType('character');
@@ -174,10 +169,10 @@ export const AddCombatantDialog: FC<AddCombatantDialogProps> = ({
   };
 
   return (
-    <Dialog fullWidth maxWidth="sm" onClose={handleClose} open={open}>
+    <Dialog maxWidth="sm" onClose={handleClose} open={open}>
       <DialogTitle>Add combatant</DialogTitle>
       <DialogContent>
-        <Stack spacing={2} sx={{ pt: 1 }}>
+        <Stack spacing={2} style={{ paddingTop: 8 }}>
           <Tabs onChange={handleModeChange} value={mode}>
             <Tab label="From roster" value="character-roster" />
             <Tab label="From monster index" value="monster-index" />
@@ -218,7 +213,17 @@ export const AddCombatantDialog: FC<AddCombatantDialogProps> = ({
                 setMonsterSearch(value);
               }}
               options={monsters}
-              renderInput={params => <TextField {...params} label="Monster" />}
+              renderInput={({ id, onChange, onFocus, value }) => (
+                <TextField
+                  id={id}
+                  label="Monster"
+                  onChange={e => {
+                    onChange(e.target.value);
+                  }}
+                  onFocus={onFocus}
+                  value={value}
+                />
+              )}
               value={monsters.find(option => option.id === selectedMonsterId) ?? null}
             />
           )}
@@ -231,7 +236,7 @@ export const AddCombatantDialog: FC<AddCombatantDialogProps> = ({
             value={name}
           />
 
-          <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: '1fr 1fr 1fr' }}>
+          <Box className="grid-3">
             <TextField
               label="AC"
               onChange={event => {
@@ -275,12 +280,15 @@ export const AddCombatantDialog: FC<AddCombatantDialogProps> = ({
         </Stack>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose}>Cancel</Button>
+        <Button onClick={handleClose} type="button">
+          Cancel
+        </Button>
         <Button
           disabled={
             !canConfirm || (mode === 'monster-index' && monsterDetailQuery.isFetching) || parseIntOrZero(maxHp) <= 0
           }
           onClick={handleConfirm}
+          type="button"
           variant="contained"
         >
           Add
