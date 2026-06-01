@@ -2,9 +2,6 @@
   "mcpServers": {
     "supabase-local": {
       "url": "http://localhost:54321/mcp"
-    },
-    "penpot": {
-      "url": "http://penpot.home/mcp/stream?userToken=${env:PENPOT_MCP_SERVER_USER_TOKEN}"
     }
   }
 }
