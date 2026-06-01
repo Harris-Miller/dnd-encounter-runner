@@ -6,9 +6,9 @@ import { useState } from 'react';
 import type { FC } from 'react';
 
 import { mutateSignInWithOAuth, mutateSignInWithPassword } from '../api/auth';
-import discordIcon from '../assets/discord/discord.svg';
-import facebookIcon from '../assets/facebook/facebook.svg';
-import googleIcon from '../assets/google/google.svg';
+import discordIcon from '../assets/discord.svg';
+import facebookIcon from '../assets/facebook.svg';
+import googleIcon from '../assets/google.svg';
 import { FullScreenCenter } from '../components/FullScreenCenter';
 import { RouterLink } from '../components/RouterLink';
 import { basepath } from '../router';
