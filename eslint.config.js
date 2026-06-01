@@ -46,8 +46,17 @@ const eslintConfig = defineConfig([
     },
   },
   {
-    files: ['src/components/ui/**'],
+    files: ['src/components/compat/**', 'src/components/ui/**'],
     rules: {
+      '@typescript-eslint/no-unnecessary-condition': 'off',
+      '@typescript-eslint/no-use-before-define': 'off',
+      '@typescript-eslint/prefer-nullish-coalescing': 'off',
+      '@typescript-eslint/strict-boolean-expressions': 'off',
+      eqeqeq: 'off',
+      'func-style': 'off',
+      'no-undef': 'off',
+      'react/jsx-no-constructed-context-values': 'off',
+      'react/no-array-index-key': 'off',
       'react/no-unused-prop-types': 'off',
       'react/require-default-props': 'off',
     },
