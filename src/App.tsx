@@ -1,15 +1,16 @@
-import CssBaseline from '@mui/material/CssBaseline';
-import { ThemeProvider } from '@mui/material/styles';
 import type { FC } from 'react';
 
+import { ColorSchemeProvider } from './components/ui/ColorSchemeProvider';
+import { TooltipProvider } from './components/ui/Tooltip';
 import { Router } from './router';
-import { theme } from './theme';
+import './styles/global.css';
 
 export const App: FC = () => {
   return (
-    <ThemeProvider noSsr theme={theme}>
-      <CssBaseline />
-      <Router />
-    </ThemeProvider>
+    <ColorSchemeProvider>
+      <TooltipProvider>
+        <Router />
+      </TooltipProvider>
+    </ColorSchemeProvider>
   );
 };
