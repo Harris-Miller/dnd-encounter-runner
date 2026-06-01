@@ -1,22 +1,33 @@
-import { Container, Paper, Typography } from '@mui/material';
+import { Container, Paper, styled, Typography } from '@mui/material';
 import { createFileRoute, redirect } from '@tanstack/react-router';
 import type { FC } from 'react';
 
-// import dndLogo from '../assets/dnd-logo.svg';
 import { queryUser } from '../api/user';
+import dndLogo from '../assets/dnd-logo.svg';
 import { FullScreenCenter } from '../components/FullScreenCenter';
 import { RouterLink } from '../components/RouterLink';
 import { queryClient } from '../queryClient';
 import { supabase } from '../services/supabase';
 
+const Img = styled('img')();
+
 const IndexComponent: FC = () => {
   return (
     <FullScreenCenter>
-      <Container maxWidth="sm">
+      <Container maxWidth="md">
         <Paper elevation={6} sx={{ alignItems: 'center', display: 'flex', flexDirection: 'column', padding: '24px' }}>
-          <Typography sx={{ alignItems: 'center', display: 'flex', marginBottom: '24px' }} variant="h3">
-            {/* <Img alt="D&D Logo" src={dndLogo} sx={{ color: 'red', height: '1.5em', marginX: '12px', width: '1.5em' }} />{' '} */}
-            DnD Encounter Runner
+          <Typography sx={{ alignItems: 'center', display: 'flex', gap: 1.5, marginBottom: '24px' }} variant="h3">
+            <Img
+              alt="D&D Logo"
+              src={dndLogo}
+              sx={{
+                display: 'block',
+                flexShrink: 0,
+                height: '1.75em',
+                width: 'auto',
+              }}
+            />
+            Encounter Runner
           </Typography>
           <RouterLink sx={{ marginBottom: '12px' }} to="/sign-in">
             Login
