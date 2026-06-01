@@ -1,17 +1,23 @@
-import * as Tooltip from '@radix-ui/react-tooltip';
+import { Theme } from '@radix-ui/themes';
 import type { FC } from 'react';
 
-import { ColorSchemeProvider } from './providers/ColorSchemeProvider';
+import { ColorSchemeProvider, useColorScheme } from './providers/ColorSchemeProvider';
 import { Router } from './router';
+import '@radix-ui/themes/styles.css';
 import './styles/global.css';
-import './styles/radix.css';
 
-export const App: FC = () => {
+const ThemedApp: FC = () => {
+  const { appearance } = useColorScheme();
+
   return (
-    <ColorSchemeProvider>
-      <Tooltip.Provider>
-        <Router />
-      </Tooltip.Provider>
-    </ColorSchemeProvider>
+    <Theme accentColor="ruby" appearance={appearance}>
+      <Router />
+    </Theme>
   );
 };
+
+export const App: FC = () => (
+  <ColorSchemeProvider>
+    <ThemedApp />
+  </ColorSchemeProvider>
+);

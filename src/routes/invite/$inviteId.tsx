@@ -1,3 +1,4 @@
+import { Badge, Box, Button, Callout, Card, Flex, Heading, Skeleton, Text } from '@radix-ui/themes';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { createFileRoute, getRouteApi, notFound } from '@tanstack/react-router';
 import { Plus } from 'lucide-react';
@@ -24,18 +25,18 @@ const InvitePage: FC = () => {
 
   if (inviteCampaignQuery.isLoading || charactersQuery.isLoading) {
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-        <div className="skeleton" style={{ height: 48 }} />
-        <div className="skeleton" style={{ height: 240 }} />
-      </div>
+      <Flex direction="column" gap="4">
+        <Skeleton height="48px" />
+        <Skeleton height="240px" />
+      </Flex>
     );
   }
 
   if (inviteCampaignQuery.isError) {
     return (
-      <div className="alert alert-error" role="alert">
-        Failed to load invite.
-      </div>
+      <Callout.Root color="red" role="alert">
+        <Callout.Text>Failed to load invite.</Callout.Text>
+      </Callout.Root>
     );
   }
 
@@ -43,24 +44,26 @@ const InvitePage: FC = () => {
 
   if (inviteCampaign == null) {
     return (
-      <div className="alert alert-error" role="alert">
-        This invite link is invalid or has expired.
-      </div>
+      <Callout.Root color="red" role="alert">
+        <Callout.Text>This invite link is invalid or has expired.</Callout.Text>
+      </Callout.Root>
     );
   }
 
   if (joinedCampaignId != null) {
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-        <div className="alert alert-success" role="status">
-          You joined <strong>{inviteCampaign.name}</strong>!
-        </div>
-        <div>
+      <Flex direction="column" gap="5">
+        <Callout.Root color="green" role="status">
+          <Callout.Text>
+            You joined <strong>{inviteCampaign.name}</strong>!
+          </Callout.Text>
+        </Callout.Root>
+        <Box>
           <RouterLink params={{ campaignId: joinedCampaignId }} to="/campaigns/$campaignId">
             View campaign
           </RouterLink>
-        </div>
-      </div>
+        </Box>
+      </Flex>
     );
   }
 
@@ -78,91 +81,92 @@ const InvitePage: FC = () => {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-      <div>
-        <h1 style={{ fontSize: '1.5rem', margin: '0 0 0.5rem' }}>Join {inviteCampaign.name}</h1>
-        <p className="text-secondary" style={{ margin: 0 }}>
+    <Flex direction="column" gap="6">
+      <Box>
+        <Heading mb="2" size="6">
+          Join {inviteCampaign.name}
+        </Heading>
+        <Text color="gray" size="3">
           Select a character to add to this campaign.
-        </p>
-      </div>
+        </Text>
+      </Box>
 
       {joinMutation.isError ? (
-        <div className="alert alert-error" role="alert">
-          {joinMutation.error.message}
-        </div>
+        <Callout.Root color="red" role="alert">
+          <Callout.Text>{joinMutation.error.message}</Callout.Text>
+        </Callout.Root>
       ) : null}
 
       {charactersQuery.isError ? (
-        <div className="alert alert-error" role="alert">
-          Failed to load characters.
-        </div>
+        <Callout.Root color="red" role="alert">
+          <Callout.Text>Failed to load characters.</Callout.Text>
+        </Callout.Root>
       ) : null}
 
       {characters.length === 0 ? (
-        <div className="alert alert-info" role="status">
-          You don&apos;t have any characters yet.
-        </div>
+        <Callout.Root color="blue" role="status">
+          <Callout.Text>You don&apos;t have any characters yet.</Callout.Text>
+        </Callout.Root>
       ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <Flex direction="column" gap="4">
           {characters.map(character => {
             const isInCampaign = character.campaignName != null;
 
             return (
-              <article className="card-outlined" key={character.id} style={{ opacity: isInCampaign ? 0.7 : 1 }}>
+              <Card key={character.id} style={{ opacity: isInCampaign ? 0.7 : 1 }} variant="surface">
                 {isInCampaign ? (
-                  <div className="card-content">
-                    <div
-                      style={{
-                        alignItems: 'center',
-                        display: 'flex',
-                        flexWrap: 'wrap',
-                        gap: 8,
-                        marginBottom: 8,
-                      }}
-                    >
-                      <h2 style={{ fontSize: '1.125rem', margin: 0 }}>{character.name}</h2>
-                      <span className="chip chip-outlined">{`In campaign: ${character.campaignName}`}</span>
-                    </div>
-                    <p className="text-secondary" style={{ margin: 0 }}>
+                  <Box p="4">
+                    <Flex align="center" gap="2" mb="2" wrap="wrap">
+                      <Heading size="4">{character.name}</Heading>
+                      <Badge color="gray" variant="outline">
+                        {`In campaign: ${character.campaignName}`}
+                      </Badge>
+                    </Flex>
+                    <Text color="gray" size="2">
                       Level {String(character.level)} · AC {String(character.armorClass)} ·{' '}
                       {String(character.maxHitPoints)} HP
-                    </p>
-                  </div>
+                    </Text>
+                  </Box>
                 ) : (
                   <button
-                    className="card-action"
                     disabled={joinMutation.isPending}
                     onClick={() => {
                       handleJoinWithCharacter(character.id);
                     }}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      color: 'inherit',
+                      cursor: joinMutation.isPending ? 'not-allowed' : 'pointer',
+                      font: 'inherit',
+                      padding: 'var(--space-4)',
+                      textAlign: 'left',
+                      width: '100%',
+                    }}
                     type="button"
                   >
-                    <div className="card-content">
-                      <h2 style={{ fontSize: '1.125rem', margin: '0 0 0.5rem' }}>{character.name}</h2>
-                      <p className="text-secondary" style={{ margin: 0 }}>
-                        Level {String(character.level)} · AC {String(character.armorClass)} ·{' '}
-                        {String(character.maxHitPoints)} HP
-                      </p>
-                    </div>
+                    <Heading mb="1" size="4">
+                      {character.name}
+                    </Heading>
+                    <Text color="gray" size="2">
+                      Level {String(character.level)} · AC {String(character.armorClass)} ·{' '}
+                      {String(character.maxHitPoints)} HP
+                    </Text>
                   </button>
                 )}
-              </article>
+              </Card>
             );
           })}
-        </div>
+        </Flex>
       )}
 
-      <div>
-        <button
-          disabled
-          style={{ alignItems: 'center', display: 'inline-flex', gap: '0.5rem', opacity: 0.6 }}
-          type="button"
-        >
+      <Box>
+        <Button disabled type="button" variant="soft">
           <Plus size={18} />
           Create a new Character
-        </button>
-      </div>
-    </div>
+        </Button>
+      </Box>
+    </Flex>
   );
 };
 

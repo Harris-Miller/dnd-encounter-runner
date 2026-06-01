@@ -1,6 +1,17 @@
-import * as Dialog from '@radix-ui/react-dialog';
-import * as Label from '@radix-ui/react-label';
-import * as Tooltip from '@radix-ui/react-tooltip';
+import {
+  Box,
+  Button,
+  Callout,
+  Card,
+  Dialog,
+  Flex,
+  Heading,
+  IconButton,
+  Skeleton,
+  Text,
+  TextField,
+  Tooltip,
+} from '@radix-ui/themes';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { Plus, Trash2 } from 'lucide-react';
@@ -74,84 +85,84 @@ const CampaignsPage: FC = () => {
     pendingDeleteId == null ? null : (campaigns.find(campaign => campaign.id === pendingDeleteId) ?? null);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-      <div style={{ alignItems: 'center', display: 'flex', gap: 16 }}>
-        <h1 style={{ fontSize: '1.5rem', margin: 0 }}>Campaigns</h1>
-        <span className="flex-grow" />
-        <button
-          onClick={handleCreateOpen}
-          style={{ alignItems: 'center', display: 'inline-flex', gap: '0.5rem' }}
-          type="button"
-        >
+    <Flex direction="column" gap="5">
+      <Flex align="center" gap="4">
+        <Heading size="6">Campaigns</Heading>
+        <Box flexGrow="1" />
+        <Button onClick={handleCreateOpen} type="button">
           <Plus size={18} />
           New campaign
-        </button>
-      </div>
+        </Button>
+      </Flex>
 
       {isLoading ? (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <div className="skeleton" style={{ height: 96 }} />
-          <div className="skeleton" style={{ height: 96 }} />
-        </div>
+        <Flex direction="column" gap="4">
+          <Skeleton height="96px" />
+          <Skeleton height="96px" />
+        </Flex>
       ) : null}
 
       {isError ? (
-        <div className="alert alert-error" role="alert">
-          Failed to load campaigns.
-        </div>
+        <Callout.Root color="red" role="alert">
+          <Callout.Text>Failed to load campaigns.</Callout.Text>
+        </Callout.Root>
       ) : null}
 
       {!isLoading && !isError && campaigns.length === 0 ? (
-        <div className="alert alert-info" role="status">
-          No campaigns yet. Click <strong>New campaign</strong> to get started.
-        </div>
+        <Callout.Root color="blue" role="status">
+          <Callout.Text>
+            No campaigns yet. Click <strong>New campaign</strong> to get started.
+          </Callout.Text>
+        </Callout.Root>
       ) : null}
 
       {!isLoading && !isError && campaigns.length > 0 ? (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <Flex direction="column" gap="4">
           {campaigns.map(campaign => (
-            <article className="card-outlined" key={campaign.id}>
-              <div style={{ alignItems: 'center', display: 'flex' }}>
+            <Card key={campaign.id} variant="surface">
+              <Flex align="center">
                 <button
-                  className="card-action"
                   onClick={() => {
                     navigate({ params: { campaignId: campaign.id }, to: '/campaigns/$campaignId' });
                   }}
-                  style={{ flexGrow: 1 }}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    color: 'inherit',
+                    cursor: 'pointer',
+                    flexGrow: 1,
+                    font: 'inherit',
+                    padding: 'var(--space-4)',
+                    textAlign: 'left',
+                  }}
                   type="button"
                 >
-                  <div className="card-content">
-                    <h2 style={{ fontSize: '1.125rem', margin: '0 0 0.5rem' }}>{campaign.name}</h2>
-                    <p className="text-secondary" style={{ margin: 0 }}>
-                      Updated {formatTimestamp(campaign.updatedAt)}
-                    </p>
-                  </div>
+                  <Heading mb="1" size="4">
+                    {campaign.name}
+                  </Heading>
+                  <Text color="gray" size="2">
+                    Updated {formatTimestamp(campaign.updatedAt)}
+                  </Text>
                 </button>
-                <div style={{ paddingRight: 8 }}>
-                  <Tooltip.Root>
-                    <Tooltip.Trigger asChild>
-                      <button
-                        aria-label="Delete campaign"
-                        onClick={() => {
-                          handleDeleteRequest(campaign.id);
-                        }}
-                        style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '0.5rem' }}
-                        type="button"
-                      >
-                        <Trash2 size={20} />
-                      </button>
-                    </Tooltip.Trigger>
-                    <Tooltip.Portal>
-                      <Tooltip.Content className="radix-tooltip-content" sideOffset={4}>
-                        Delete campaign
-                      </Tooltip.Content>
-                    </Tooltip.Portal>
-                  </Tooltip.Root>
-                </div>
-              </div>
-            </article>
+                <Box pr="2">
+                  <Tooltip content="Delete campaign">
+                    <IconButton
+                      aria-label="Delete campaign"
+                      color="red"
+                      onClick={() => {
+                        handleDeleteRequest(campaign.id);
+                      }}
+                      type="button"
+                      variant="ghost"
+                    >
+                      <Trash2 size={20} />
+                    </IconButton>
+                  </Tooltip>
+                </Box>
+              </Flex>
+            </Card>
           ))}
-        </div>
+        </Flex>
       ) : null}
 
       <Dialog.Root
@@ -162,34 +173,32 @@ const CampaignsPage: FC = () => {
         }}
         open={createOpen}
       >
-        <Dialog.Portal>
-          <Dialog.Overlay className="radix-overlay" />
-          <Dialog.Content className="radix-dialog-content">
-            <Dialog.Title>New campaign</Dialog.Title>
-            <div className="field" style={{ paddingTop: 8 }}>
-              <Label.Root className="field-label" htmlFor="campaign-create-name">
-                Campaign name
-              </Label.Root>
-              <input
-                className="field-input"
-                id="campaign-create-name"
-                onChange={event => {
-                  setCreateDraft(event.target.value);
-                }}
-                placeholder="Untitled Campaign"
-                value={createDraft ?? ''}
-              />
-            </div>
-            <div className="dialog-actions">
-              <button onClick={handleCreateClose} type="button">
+        <Dialog.Content maxWidth="480px">
+          <Dialog.Title>New campaign</Dialog.Title>
+          <Flex direction="column" gap="1" mt="4">
+            <Text as="label" htmlFor="campaign-create-name" size="2" weight="medium">
+              Campaign name
+            </Text>
+            <TextField.Root
+              id="campaign-create-name"
+              onChange={event => {
+                setCreateDraft(event.target.value);
+              }}
+              placeholder="Untitled Campaign"
+              value={createDraft ?? ''}
+            />
+          </Flex>
+          <Flex gap="3" justify="end" mt="4">
+            <Dialog.Close>
+              <Button color="gray" onClick={handleCreateClose} type="button" variant="soft">
                 Cancel
-              </button>
-              <button disabled={createMutation.isPending} onClick={handleCreateConfirm} type="button">
-                Create
-              </button>
-            </div>
-          </Dialog.Content>
-        </Dialog.Portal>
+              </Button>
+            </Dialog.Close>
+            <Button disabled={createMutation.isPending} onClick={handleCreateConfirm} type="button">
+              Create
+            </Button>
+          </Flex>
+        </Dialog.Content>
       </Dialog.Root>
 
       <Dialog.Root
@@ -200,26 +209,25 @@ const CampaignsPage: FC = () => {
         }}
         open={pendingDeleteId !== null}
       >
-        <Dialog.Portal>
-          <Dialog.Overlay className="radix-overlay" />
-          <Dialog.Content className="radix-dialog-content">
-            <Dialog.Title>Delete campaign</Dialog.Title>
-            <p style={{ margin: '1rem 0' }}>
-              Delete <strong>{pendingDeleteCampaign?.name ?? 'this campaign'}</strong>? All encounters in this campaign
-              will also be deleted. Characters will be unlinked but not deleted.
-            </p>
-            <div className="dialog-actions">
-              <button onClick={handleDeleteCancel} type="button">
+        <Dialog.Content maxWidth="480px">
+          <Dialog.Title>Delete campaign</Dialog.Title>
+          <Text as="p" mt="4">
+            Delete <strong>{pendingDeleteCampaign?.name ?? 'this campaign'}</strong>? All encounters in this campaign
+            will also be deleted. Characters will be unlinked but not deleted.
+          </Text>
+          <Flex gap="3" justify="end" mt="4">
+            <Dialog.Close>
+              <Button color="gray" onClick={handleDeleteCancel} type="button" variant="soft">
                 Cancel
-              </button>
-              <button disabled={deleteMutation.isPending} onClick={handleDeleteConfirm} type="button">
-                Delete
-              </button>
-            </div>
-          </Dialog.Content>
-        </Dialog.Portal>
+              </Button>
+            </Dialog.Close>
+            <Button color="red" disabled={deleteMutation.isPending} onClick={handleDeleteConfirm} type="button">
+              Delete
+            </Button>
+          </Flex>
+        </Dialog.Content>
       </Dialog.Root>
-    </div>
+    </Flex>
   );
 };
 

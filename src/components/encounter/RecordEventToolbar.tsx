@@ -1,5 +1,4 @@
-import * as Dialog from '@radix-ui/react-dialog';
-import * as Label from '@radix-ui/react-label';
+import { Box, Button, Card, Dialog, Flex, Heading, Select, Text, TextField } from '@radix-ui/themes';
 import { useMemo, useState } from 'react';
 import type { FC } from 'react';
 
@@ -137,55 +136,58 @@ export const RecordEventToolbar: FC<RecordEventToolbarProps> = ({ onAdvanceRound
     closeDialog();
   };
 
-  const combatantOptions = combatants.map(combatant => (
-    <option key={combatant.id} value={combatant.id}>
+  const combatantSelectItems = combatants.map(combatant => (
+    <Select.Item key={combatant.id} value={combatant.id}>
       {combatant.name}
-    </option>
+    </Select.Item>
   ));
 
   return (
-    <article className="card-outlined">
-      <div className="card-content">
-        <h2 style={{ fontSize: '1.125rem', margin: '0 0 1rem' }}>Record Event</h2>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+    <Card size="3" variant="surface">
+      <Flex direction="column" gap="4" p="4">
+        <Heading size="4">Record Event</Heading>
+        <Flex gap="2" wrap="wrap">
           {ATTACK_EVENT_TYPES.map(eventType => {
             const kind = eventType.replace('ON_', '') as AttackForm['kind'];
             const label = kind.charAt(0) + kind.slice(1).toLowerCase();
             return (
-              <button
+              <Button
                 key={eventType}
                 onClick={() => {
                   setAttackForm(prev => ({ ...prev, kind }));
                   setOpenDialog('attack');
                 }}
                 type="button"
+                variant="soft"
               >
                 {label}
-              </button>
+              </Button>
             );
           })}
-          <button
+          <Button
             onClick={() => {
               setOpenDialog('damage');
             }}
             type="button"
+            variant="soft"
           >
             Damage
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={() => {
               setOpenDialog('spell');
             }}
             type="button"
+            variant="soft"
           >
             Spell cast
-          </button>
-          <span className="flex-grow" />
-          <button onClick={onAdvanceRound} type="button">
+          </Button>
+          <Box flexGrow="1" />
+          <Button onClick={onAdvanceRound} type="button">
             Advance round
-          </button>
-        </div>
-      </div>
+          </Button>
+        </Flex>
+      </Flex>
 
       <Dialog.Root
         onOpenChange={nextOpen => {
@@ -195,52 +197,49 @@ export const RecordEventToolbar: FC<RecordEventToolbarProps> = ({ onAdvanceRound
         }}
         open={openDialog === 'attack'}
       >
-        <Dialog.Portal>
-          <Dialog.Overlay className="radix-overlay" />
-          <Dialog.Content className="radix-dialog-content">
-            <Dialog.Title>Record {attackForm.kind.charAt(0) + attackForm.kind.slice(1).toLowerCase()}</Dialog.Title>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', paddingTop: 8 }}>
-              <div className="field">
-                <Label.Root className="field-label" htmlFor="attack-attacker">
-                  Attacker
-                </Label.Root>
-                <select
-                  className="field-input"
-                  id="attack-attacker"
-                  onChange={event => {
-                    setAttackForm(prev => ({ ...prev, attackerId: event.target.value }));
-                  }}
-                  value={attackForm.attackerId}
-                >
-                  {combatantOptions}
-                </select>
-              </div>
-              <div className="field">
-                <Label.Root className="field-label" htmlFor="attack-target">
-                  Target
-                </Label.Root>
-                <select
-                  className="field-input"
-                  id="attack-target"
-                  onChange={event => {
-                    setAttackForm(prev => ({ ...prev, targetId: event.target.value }));
-                  }}
-                  value={attackForm.targetId}
-                >
-                  {combatantOptions}
-                </select>
-              </div>
-            </div>
-            <div className="dialog-actions">
-              <button onClick={closeDialog} type="button">
+        <Dialog.Content maxWidth="480px">
+          <Dialog.Title>Record {attackForm.kind.charAt(0) + attackForm.kind.slice(1).toLowerCase()}</Dialog.Title>
+          <Flex direction="column" gap="4" pt="2">
+            <Flex direction="column" gap="1">
+              <Text size="2" weight="medium">
+                Attacker
+              </Text>
+              <Select.Root
+                onValueChange={value => {
+                  setAttackForm(prev => ({ ...prev, attackerId: value }));
+                }}
+                value={attackForm.attackerId || undefined}
+              >
+                <Select.Trigger placeholder="Select attacker" />
+                <Select.Content>{combatantSelectItems}</Select.Content>
+              </Select.Root>
+            </Flex>
+            <Flex direction="column" gap="1">
+              <Text size="2" weight="medium">
+                Target
+              </Text>
+              <Select.Root
+                onValueChange={value => {
+                  setAttackForm(prev => ({ ...prev, targetId: value }));
+                }}
+                value={attackForm.targetId || undefined}
+              >
+                <Select.Trigger placeholder="Select target" />
+                <Select.Content>{combatantSelectItems}</Select.Content>
+              </Select.Root>
+            </Flex>
+          </Flex>
+          <Flex gap="3" justify="end" mt="4">
+            <Dialog.Close>
+              <Button color="gray" onClick={closeDialog} type="button" variant="soft">
                 Cancel
-              </button>
-              <button onClick={handleAttackSubmit} type="button">
-                Record
-              </button>
-            </div>
-          </Dialog.Content>
-        </Dialog.Portal>
+              </Button>
+            </Dialog.Close>
+            <Button onClick={handleAttackSubmit} type="button">
+              Record
+            </Button>
+          </Flex>
+        </Dialog.Content>
       </Dialog.Root>
 
       <Dialog.Root
@@ -251,87 +250,86 @@ export const RecordEventToolbar: FC<RecordEventToolbarProps> = ({ onAdvanceRound
         }}
         open={openDialog === 'damage'}
       >
-        <Dialog.Portal>
-          <Dialog.Overlay className="radix-overlay" />
-          <Dialog.Content className="radix-dialog-content">
-            <Dialog.Title>Record Damage</Dialog.Title>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', paddingTop: 8 }}>
-              <div className="field">
-                <Label.Root className="field-label" htmlFor="damage-target">
-                  Target
-                </Label.Root>
-                <select
-                  className="field-input"
-                  id="damage-target"
-                  onChange={event => {
-                    setDamageForm(prev => ({ ...prev, targetId: event.target.value }));
-                  }}
-                  value={damageForm.targetId}
-                >
-                  {combatantOptions}
-                </select>
-              </div>
-              <div className="field">
-                <Label.Root className="field-label" htmlFor="damage-source">
-                  Source (optional)
-                </Label.Root>
-                <select
-                  className="field-input"
-                  id="damage-source"
-                  onChange={event => {
-                    setDamageForm(prev => ({ ...prev, sourceId: event.target.value }));
-                  }}
-                  value={damageForm.sourceId}
-                >
-                  <option value="">None</option>
-                  {combatantOptions}
-                </select>
-              </div>
-              <div className="field">
-                <Label.Root className="field-label" htmlFor="damage-amount">
-                  Amount
-                </Label.Root>
-                <input
-                  className="field-input"
-                  id="damage-amount"
-                  min={0}
-                  onChange={event => {
-                    setDamageForm(prev => ({ ...prev, amount: Number(event.target.value) || 0 }));
-                  }}
-                  type="number"
-                  value={damageForm.amount}
-                />
-              </div>
-              <div className="field">
-                <Label.Root className="field-label" htmlFor="damage-type">
-                  Damage type
-                </Label.Root>
-                <select
-                  className="field-input"
-                  id="damage-type"
-                  onChange={event => {
-                    setDamageForm(prev => ({ ...prev, damageType: event.target.value }));
-                  }}
-                  value={damageForm.damageType}
-                >
+        <Dialog.Content maxWidth="480px">
+          <Dialog.Title>Record Damage</Dialog.Title>
+          <Flex direction="column" gap="4" pt="2">
+            <Flex direction="column" gap="1">
+              <Text size="2" weight="medium">
+                Target
+              </Text>
+              <Select.Root
+                onValueChange={value => {
+                  setDamageForm(prev => ({ ...prev, targetId: value }));
+                }}
+                value={damageForm.targetId || undefined}
+              >
+                <Select.Trigger placeholder="Select target" />
+                <Select.Content>{combatantSelectItems}</Select.Content>
+              </Select.Root>
+            </Flex>
+            <Flex direction="column" gap="1">
+              <Text size="2" weight="medium">
+                Source (optional)
+              </Text>
+              <Select.Root
+                onValueChange={value => {
+                  setDamageForm(prev => ({ ...prev, sourceId: value === '__none__' ? '' : value }));
+                }}
+                value={damageForm.sourceId === '' ? '__none__' : damageForm.sourceId}
+              >
+                <Select.Trigger placeholder="None" />
+                <Select.Content>
+                  <Select.Item value="__none__">None</Select.Item>
+                  {combatantSelectItems}
+                </Select.Content>
+              </Select.Root>
+            </Flex>
+            <Flex direction="column" gap="1">
+              <Text as="label" htmlFor="damage-amount" size="2" weight="medium">
+                Amount
+              </Text>
+              <TextField.Root
+                id="damage-amount"
+                min={0}
+                onChange={event => {
+                  setDamageForm(prev => ({ ...prev, amount: Number(event.target.value) || 0 }));
+                }}
+                type="number"
+                value={damageForm.amount}
+              />
+            </Flex>
+            <Flex direction="column" gap="1">
+              <Text size="2" weight="medium">
+                Damage type
+              </Text>
+              <Select.Root
+                onValueChange={value => {
+                  setDamageForm(prev => ({ ...prev, damageType: value }));
+                }}
+                value={damageForm.damageType}
+              >
+                <Select.Trigger />
+                <Select.Content>
                   {DAMAGE_TYPES.map(damageType => (
-                    <option key={damageType} value={damageType}>
+                    <Select.Item key={damageType} value={damageType}>
                       {damageType}
-                    </option>
+                    </Select.Item>
                   ))}
-                </select>
-              </div>
-            </div>
-            <div className="dialog-actions">
-              <button onClick={closeDialog} type="button">
+                </Select.Content>
+              </Select.Root>
+            </Flex>
+          </Flex>
+          <Flex gap="3" justify="end" mt="4">
+            <Dialog.Close>
+              <Button color="gray" onClick={closeDialog} type="button" variant="soft">
                 Cancel
-              </button>
-              <button onClick={handleDamageSubmit} type="button">
-                Record
-              </button>
-            </div>
-          </Dialog.Content>
-        </Dialog.Portal>
+              </Button>
+            </Dialog.Close>
+            <Button onClick={handleDamageSubmit} type="button">
+              Record
+            </Button>
+          </Flex>
+        </Dialog.Content>
       </Dialog.Root>
 
       <Dialog.Root
@@ -342,84 +340,88 @@ export const RecordEventToolbar: FC<RecordEventToolbarProps> = ({ onAdvanceRound
         }}
         open={openDialog === 'spell'}
       >
-        <Dialog.Portal>
-          <Dialog.Overlay className="radix-overlay" />
-          <Dialog.Content className="radix-dialog-content">
-            <Dialog.Title>Record Spell Cast</Dialog.Title>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', paddingTop: 8 }}>
-              <div className="field">
-                <Label.Root className="field-label" htmlFor="spell-caster">
-                  Caster
-                </Label.Root>
+        <Dialog.Content maxWidth="480px">
+          <Dialog.Title>Record Spell Cast</Dialog.Title>
+          <Flex direction="column" gap="4" pt="2">
+            <Flex direction="column" gap="1">
+              <Text size="2" weight="medium">
+                Caster
+              </Text>
+              <Select.Root
+                onValueChange={value => {
+                  setSpellForm(prev => ({ ...prev, casterId: value }));
+                }}
+                value={spellForm.casterId || undefined}
+              >
+                <Select.Trigger placeholder="Select caster" />
+                <Select.Content>{combatantSelectItems}</Select.Content>
+              </Select.Root>
+            </Flex>
+            <Flex direction="column" gap="1">
+              <Text as="label" htmlFor="spell-name" size="2" weight="medium">
+                Spell name
+              </Text>
+              <TextField.Root
+                id="spell-name"
+                onChange={event => {
+                  setSpellForm(prev => ({ ...prev, spellName: event.target.value }));
+                }}
+                value={spellForm.spellName}
+              />
+            </Flex>
+            <Flex direction="column" gap="1">
+              <Text as="label" htmlFor="spell-targets" size="2" weight="medium">
+                Targets
+              </Text>
+              <Box asChild>
                 <select
-                  className="field-input"
-                  id="spell-caster"
-                  onChange={event => {
-                    setSpellForm(prev => ({ ...prev, casterId: event.target.value }));
-                  }}
-                  value={spellForm.casterId}
-                >
-                  {combatantOptions}
-                </select>
-              </div>
-              <div className="field">
-                <Label.Root className="field-label" htmlFor="spell-name">
-                  Spell name
-                </Label.Root>
-                <input
-                  className="field-input"
-                  id="spell-name"
-                  onChange={event => {
-                    setSpellForm(prev => ({ ...prev, spellName: event.target.value }));
-                  }}
-                  value={spellForm.spellName}
-                />
-              </div>
-              <div className="field">
-                <Label.Root className="field-label" htmlFor="spell-targets">
-                  Targets
-                </Label.Root>
-                <select
-                  className="field-input"
                   id="spell-targets"
                   multiple
                   onChange={event => {
                     const selected = [...event.target.selectedOptions].map(option => option.value);
                     setSpellForm(prev => ({ ...prev, targetIds: selected }));
                   }}
+                  style={{ width: '100%' }}
                   value={spellForm.targetIds}
                 >
-                  {combatantOptions}
+                  {combatants.map(combatant => (
+                    <option key={combatant.id} value={combatant.id}>
+                      {combatant.name}
+                    </option>
+                  ))}
                 </select>
-              </div>
-              <div className="field">
-                <Label.Root className="field-label" htmlFor="spell-concentration">
-                  Concentration
-                </Label.Root>
-                <select
-                  className="field-input"
-                  id="spell-concentration"
-                  onChange={event => {
-                    setSpellForm(prev => ({ ...prev, isConcentration: event.target.value === 'true' }));
-                  }}
-                  value={String(spellForm.isConcentration)}
-                >
-                  <option value="false">No</option>
-                  <option value="true">Yes (caster will be marked concentrating)</option>
-                </select>
-              </div>
-            </div>
-            <div className="dialog-actions">
-              <button onClick={closeDialog} type="button">
+              </Box>
+            </Flex>
+            <Flex direction="column" gap="1">
+              <Text size="2" weight="medium">
+                Concentration
+              </Text>
+              <Select.Root
+                onValueChange={value => {
+                  setSpellForm(prev => ({ ...prev, isConcentration: value === 'true' }));
+                }}
+                value={String(spellForm.isConcentration)}
+              >
+                <Select.Trigger />
+                <Select.Content>
+                  <Select.Item value="false">No</Select.Item>
+                  <Select.Item value="true">Yes (caster will be marked concentrating)</Select.Item>
+                </Select.Content>
+              </Select.Root>
+            </Flex>
+          </Flex>
+          <Flex gap="3" justify="end" mt="4">
+            <Dialog.Close>
+              <Button color="gray" onClick={closeDialog} type="button" variant="soft">
                 Cancel
-              </button>
-              <button onClick={handleSpellSubmit} type="button">
-                Record
-              </button>
-            </div>
-          </Dialog.Content>
-        </Dialog.Portal>
+              </Button>
+            </Dialog.Close>
+            <Button onClick={handleSpellSubmit} type="button">
+              Record
+            </Button>
+          </Flex>
+        </Dialog.Content>
       </Dialog.Root>
-    </article>
+    </Card>
   );
 };

@@ -1,6 +1,4 @@
-import * as Dialog from '@radix-ui/react-dialog';
-import * as Label from '@radix-ui/react-label';
-import * as Tabs from '@radix-ui/react-tabs';
+import { Button, Dialog, Flex, Grid, Select, Tabs, Text, TextField } from '@radix-ui/themes';
 import { useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 import type { FC, SyntheticEvent } from 'react';
@@ -174,178 +172,160 @@ export const AddCombatantDialog: FC<AddCombatantDialogProps> = ({
       }}
       open={open}
     >
-      <Dialog.Portal>
-        <Dialog.Overlay className="radix-overlay" />
-        <Dialog.Content className="radix-dialog-content">
-          <Dialog.Title>Add combatant</Dialog.Title>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', paddingTop: 8 }}>
-            <Tabs.Root onValueChange={handleModeChange} value={mode}>
-              <Tabs.List className="radix-tabs-list">
-                <Tabs.Trigger className="radix-tabs-trigger" value="character-roster">
-                  From roster
-                </Tabs.Trigger>
-                <Tabs.Trigger className="radix-tabs-trigger" value="monster-index">
-                  From monster index
-                </Tabs.Trigger>
-                <Tabs.Trigger className="radix-tabs-trigger" value="custom">
-                  Custom
-                </Tabs.Trigger>
-              </Tabs.List>
-            </Tabs.Root>
+      <Dialog.Content maxWidth="560px">
+        <Dialog.Title>Add combatant</Dialog.Title>
+        <Flex direction="column" gap="4" pt="2">
+          <Tabs.Root onValueChange={handleModeChange} value={mode}>
+            <Tabs.List>
+              <Tabs.Trigger value="character-roster">From roster</Tabs.Trigger>
+              <Tabs.Trigger value="monster-index">From monster index</Tabs.Trigger>
+              <Tabs.Trigger value="custom">Custom</Tabs.Trigger>
+            </Tabs.List>
+          </Tabs.Root>
 
-            {mode === 'character-roster' ? (
-              <div className="field">
-                <Label.Root className="field-label" htmlFor="add-combatant-character">
-                  Character
-                </Label.Root>
-                <select
-                  className="field-input"
-                  id="add-combatant-character"
-                  onChange={event => {
-                    handleCharacterSelect(event.target.value);
-                  }}
-                  value={selectedCharacterId ?? ''}
-                >
-                  {characters.length === 0 ? (
-                    <option disabled value="">
-                      No saved characters
-                    </option>
-                  ) : (
-                    characters.map(character => (
-                      <option key={character.id} value={character.id}>
-                        {character.name} · AC {String(character.armorClass)} · {String(character.maxHitPoints)} HP
-                      </option>
-                    ))
-                  )}
-                </select>
-              </div>
-            ) : null}
-
-            {mode === 'monster-index' ? (
-              <Autocomplete
-                filterOptions={candidates => candidates}
-                getOptionLabel={option => option.name}
-                loading={monstersQuery.isFetching}
-                onChange={handleMonsterSelect}
-                onInputChange={(_event, value) => {
-                  setMonsterSearch(value);
-                }}
-                options={monsters}
-                renderInput={({ id, onChange, onFocus, value }) => (
-                  <div className="field">
-                    <Label.Root className="field-label" htmlFor={id}>
-                      Monster
-                    </Label.Root>
-                    <input
-                      className="field-input"
-                      id={id}
-                      onChange={event => {
-                        onChange(event.target.value);
-                      }}
-                      onFocus={onFocus}
-                      value={value}
-                    />
-                  </div>
-                )}
-                value={monsters.find(option => option.id === selectedMonsterId) ?? null}
-              />
-            ) : null}
-
-            <div className="field">
-              <Label.Root className="field-label" htmlFor="add-combatant-name">
-                Name
-              </Label.Root>
-              <input
-                className="field-input"
-                id="add-combatant-name"
-                onChange={event => {
-                  setName(event.target.value);
-                }}
-                value={name}
-              />
-            </div>
-
-            <div className="grid-3">
-              <div className="field">
-                <Label.Root className="field-label" htmlFor="add-combatant-ac">
-                  AC
-                </Label.Root>
-                <input
-                  className="field-input"
-                  id="add-combatant-ac"
-                  onChange={event => {
-                    setArmorClass(event.target.value);
-                  }}
-                  type="number"
-                  value={armorClass}
-                />
-              </div>
-              <div className="field">
-                <Label.Root className="field-label" htmlFor="add-combatant-max-hp">
-                  Max HP
-                </Label.Root>
-                <input
-                  className="field-input"
-                  id="add-combatant-max-hp"
-                  onChange={event => {
-                    setMaxHp(event.target.value);
-                  }}
-                  type="number"
-                  value={maxHp}
-                />
-              </div>
-              <div className="field">
-                <Label.Root className="field-label" htmlFor="add-combatant-initiative">
-                  Initiative
-                </Label.Root>
-                <input
-                  className="field-input"
-                  id="add-combatant-initiative"
-                  onChange={event => {
-                    setInitiative(event.target.value);
-                  }}
-                  type="number"
-                  value={initiative}
-                />
-              </div>
-            </div>
-
-            <div className="field">
-              <Label.Root className="field-label" htmlFor="add-combatant-type">
-                Type
-              </Label.Root>
-              <select
-                className="field-input"
-                id="add-combatant-type"
-                onChange={event => {
-                  const next = event.target.value;
-                  if (next === 'character' || next === 'monster') {
-                    setCombatantType(next);
-                  }
-                }}
-                value={combatantType}
+          {mode === 'character-roster' ? (
+            <Flex direction="column" gap="1">
+              <Text as="label" size="2" weight="medium">
+                Character
+              </Text>
+              <Select.Root
+                disabled={characters.length === 0}
+                onValueChange={handleCharacterSelect}
+                value={selectedCharacterId ?? undefined}
               >
-                <option value="character">Character (Player)</option>
-                <option value="monster">Monster</option>
-              </select>
-            </div>
-          </div>
-          <div className="dialog-actions">
-            <button onClick={handleClose} type="button">
-              Cancel
-            </button>
-            <button
-              disabled={
-                !canConfirm || (mode === 'monster-index' && monsterDetailQuery.isFetching) || parseIntOrZero(maxHp) <= 0
-              }
-              onClick={handleConfirm}
-              type="button"
+                <Select.Trigger placeholder={characters.length === 0 ? 'No saved characters' : 'Select character'} />
+                <Select.Content>
+                  {characters.map(character => (
+                    <Select.Item key={character.id} value={character.id}>
+                      {character.name} · AC {String(character.armorClass)} · {String(character.maxHitPoints)} HP
+                    </Select.Item>
+                  ))}
+                </Select.Content>
+              </Select.Root>
+            </Flex>
+          ) : null}
+
+          {mode === 'monster-index' ? (
+            <Autocomplete
+              filterOptions={candidates => candidates}
+              getOptionLabel={option => option.name}
+              loading={monstersQuery.isFetching}
+              onChange={handleMonsterSelect}
+              onInputChange={(_event, value) => {
+                setMonsterSearch(value);
+              }}
+              options={monsters}
+              renderInput={({ id, onChange, onFocus, value }) => (
+                <Flex direction="column" gap="1">
+                  <Text as="label" htmlFor={id} size="2" weight="medium">
+                    Monster
+                  </Text>
+                  <TextField.Root
+                    id={id}
+                    onChange={event => {
+                      onChange(event.target.value);
+                    }}
+                    onFocus={onFocus}
+                    value={value}
+                  />
+                </Flex>
+              )}
+              value={monsters.find(option => option.id === selectedMonsterId) ?? null}
+            />
+          ) : null}
+
+          <Flex direction="column" gap="1">
+            <Text as="label" htmlFor="add-combatant-name" size="2" weight="medium">
+              Name
+            </Text>
+            <TextField.Root
+              id="add-combatant-name"
+              onChange={event => {
+                setName(event.target.value);
+              }}
+              value={name}
+            />
+          </Flex>
+
+          <Grid columns="3" gap="4">
+            <Flex direction="column" gap="1">
+              <Text as="label" htmlFor="add-combatant-ac" size="2" weight="medium">
+                AC
+              </Text>
+              <TextField.Root
+                id="add-combatant-ac"
+                onChange={event => {
+                  setArmorClass(event.target.value);
+                }}
+                type="number"
+                value={armorClass}
+              />
+            </Flex>
+            <Flex direction="column" gap="1">
+              <Text as="label" htmlFor="add-combatant-max-hp" size="2" weight="medium">
+                Max HP
+              </Text>
+              <TextField.Root
+                id="add-combatant-max-hp"
+                onChange={event => {
+                  setMaxHp(event.target.value);
+                }}
+                type="number"
+                value={maxHp}
+              />
+            </Flex>
+            <Flex direction="column" gap="1">
+              <Text as="label" htmlFor="add-combatant-initiative" size="2" weight="medium">
+                Initiative
+              </Text>
+              <TextField.Root
+                id="add-combatant-initiative"
+                onChange={event => {
+                  setInitiative(event.target.value);
+                }}
+                type="number"
+                value={initiative}
+              />
+            </Flex>
+          </Grid>
+
+          <Flex direction="column" gap="1">
+            <Text as="label" size="2" weight="medium">
+              Type
+            </Text>
+            <Select.Root
+              onValueChange={value => {
+                if (value === 'character' || value === 'monster') {
+                  setCombatantType(value);
+                }
+              }}
+              value={combatantType}
             >
-              Add
-            </button>
-          </div>
-        </Dialog.Content>
-      </Dialog.Portal>
+              <Select.Trigger />
+              <Select.Content>
+                <Select.Item value="character">Character (Player)</Select.Item>
+                <Select.Item value="monster">Monster</Select.Item>
+              </Select.Content>
+            </Select.Root>
+          </Flex>
+        </Flex>
+        <Flex gap="3" justify="end" mt="4">
+          <Dialog.Close>
+            <Button color="gray" onClick={handleClose} type="button" variant="soft">
+              Cancel
+            </Button>
+          </Dialog.Close>
+          <Button
+            disabled={
+              !canConfirm || (mode === 'monster-index' && monsterDetailQuery.isFetching) || parseIntOrZero(maxHp) <= 0
+            }
+            onClick={handleConfirm}
+            type="button"
+          >
+            Add
+          </Button>
+        </Flex>
+      </Dialog.Content>
     </Dialog.Root>
   );
 };

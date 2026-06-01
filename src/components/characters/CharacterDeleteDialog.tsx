@@ -1,4 +1,4 @@
-import * as Dialog from '@radix-ui/react-dialog';
+import { Button, Dialog, Flex, Text } from '@radix-ui/themes';
 import type { FC } from 'react';
 
 export interface CharacterDeleteDialogProps {
@@ -24,22 +24,21 @@ export const CharacterDeleteDialog: FC<CharacterDeleteDialogProps> = ({
     }}
     open={open}
   >
-    <Dialog.Portal>
-      <Dialog.Overlay className="radix-overlay" />
-      <Dialog.Content className="radix-dialog-content">
-        <Dialog.Title>Delete character</Dialog.Title>
-        <p style={{ margin: '1rem 0' }}>
-          Delete <strong>{characterName ?? 'this character'}</strong>? This cannot be undone.
-        </p>
-        <div className="dialog-actions">
-          <button onClick={onCancel} type="button">
+    <Dialog.Content maxWidth="480px">
+      <Dialog.Title>Delete character</Dialog.Title>
+      <Text as="p" mt="4">
+        Delete <strong>{characterName ?? 'this character'}</strong>? This cannot be undone.
+      </Text>
+      <Flex gap="3" justify="end" mt="4">
+        <Dialog.Close>
+          <Button color="gray" onClick={onCancel} type="button" variant="soft">
             Cancel
-          </button>
-          <button disabled={isPending} onClick={onConfirm} type="button">
-            Delete
-          </button>
-        </div>
-      </Dialog.Content>
-    </Dialog.Portal>
+          </Button>
+        </Dialog.Close>
+        <Button color="red" disabled={isPending} onClick={onConfirm} type="button">
+          Delete
+        </Button>
+      </Flex>
+    </Dialog.Content>
   </Dialog.Root>
 );

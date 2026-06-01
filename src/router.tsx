@@ -1,5 +1,5 @@
+import { Spinner } from '@radix-ui/themes';
 import { createRouter, RouterProvider } from '@tanstack/react-router';
-import { Loader2 } from 'lucide-react';
 import type { FC } from 'react';
 
 import { FullScreenCenter } from './components/FullScreenCenter';
@@ -13,7 +13,7 @@ const router = createRouter({
   defaultNotFoundComponent: NotFoundPage,
   defaultPendingComponent: () => (
     <FullScreenCenter>
-      <Loader2 aria-hidden className="spin" size={40} />
+      <Spinner size="3" />
     </FullScreenCenter>
   ),
   routeTree,

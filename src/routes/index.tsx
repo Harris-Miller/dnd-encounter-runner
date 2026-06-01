@@ -1,3 +1,4 @@
+import { Card, Flex, Heading } from '@radix-ui/themes';
 import { createFileRoute, redirect } from '@tanstack/react-router';
 import type { FC } from 'react';
 
@@ -11,26 +12,26 @@ import { supabase } from '../services/supabase';
 const IndexComponent: FC = () => {
   return (
     <FullScreenCenter>
-      <div className="auth-container" style={{ maxWidth: '48rem' }}>
-        <div className="auth-paper">
-          <h1 style={{ alignItems: 'center', display: 'flex', fontSize: '1.75rem', gap: 12, margin: '0 0 1.5rem' }}>
-            <img
-              alt="D&D Logo"
-              src={dndLogo}
-              style={{
-                display: 'block',
-                flexShrink: 0,
-                height: '1.75em',
-                width: 'auto',
-              }}
-            />
-            Encounter Runner
-          </h1>
-          <RouterLink style={{ marginBottom: 12 }} to="/sign-in">
-            Login
-          </RouterLink>
-        </div>
-      </div>
+      <Card size="4" style={{ maxWidth: '28rem', width: '100%' }}>
+        <Flex align="center" direction="column" gap="4" p="5">
+          <Heading align="center" size="7">
+            <Flex align="center" gap="3" justify="center">
+              <img
+                alt="D&D Logo"
+                src={dndLogo}
+                style={{
+                  display: 'block',
+                  flexShrink: 0,
+                  height: '1.75em',
+                  width: 'auto',
+                }}
+              />
+              Encounter Runner
+            </Flex>
+          </Heading>
+          <RouterLink to="/sign-in">Login</RouterLink>
+        </Flex>
+      </Card>
     </FullScreenCenter>
   );
 };

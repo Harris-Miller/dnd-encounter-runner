@@ -83,32 +83,6 @@ body {
   min-height: 100vh;
 }
 
-a {
-  color: var(--color-link);
-}
-
-.app-header {
-  background-color: var(--ddb-grey-900);
-  color: var(--ddb-white);
-  left: 0;
-  position: fixed;
-  right: 0;
-  top: 0;
-  z-index: 1100;
-}
-
-.app-header-toolbar {
-  align-items: center;
-  display: flex;
-  gap: 1rem;
-  min-height: 4rem;
-  padding: 0 1rem;
-}
-
-.app-main {
-  margin-top: 4.5rem;
-}
-
 .root-layout {
   bottom: 0;
   display: flex;
@@ -127,190 +101,46 @@ a {
   position: absolute;
 }
 
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+.app-header {
+  background-color: var(--ddb-grey-900);
+  color: var(--ddb-white);
+  left: 0;
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: 1100;
 }
 
-.spin {
-  animation: spin 1s linear infinite;
+.app-main {
+  margin-top: 4.5rem;
 }
 
-.text-secondary {
-  color: var(--color-text-secondary);
-}
-
-.flex-grow {
-  flex-grow: 1;
-}
-
-.grid-3 {
-  display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(3, 1fr);
-}
-
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  width: 100%;
-}
-
-.field-label {
-  display: block;
-  font-size: 0.875rem;
-  font-weight: 500;
-}
-
-.field-input {
-  background-color: var(--color-bg-paper);
-  border: 1px solid var(--color-divider);
-  border-radius: 4px;
-  color: var(--color-text-primary);
-  font: inherit;
-  padding: 0.5rem 0.75rem;
-  width: 100%;
-}
-
-.field-input:disabled {
-  opacity: 0.6;
-}
-
-.field-input:focus-visible {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 0;
-}
-
-@keyframes pulse {
-  50% {
-    opacity: 0.45;
-  }
-}
-
-.skeleton {
-  animation: pulse 1.5s ease-in-out infinite;
-  background-color: var(--color-divider);
-  border-radius: 4px;
-}
-
-.alert {
-  border-radius: 6px;
-  padding: 0.75rem 1rem;
-}
-
-.alert-error {
-  background-color: color-mix(in srgb, var(--color-error) 12%, transparent);
-  color: var(--color-error);
-}
-
-.alert-info {
-  background-color: color-mix(in srgb, var(--color-info) 12%, transparent);
-  color: var(--color-info);
-}
-
-.alert-success {
-  background-color: color-mix(in srgb, var(--color-success) 12%, transparent);
-  color: var(--color-success);
-}
-
-.card-outlined {
-  background-color: var(--color-bg-paper);
-  border: 1px solid var(--color-divider);
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.card-action {
-  background: none;
-  border: none;
-  color: inherit;
-  cursor: pointer;
-  display: block;
-  font: inherit;
-  padding: 0;
-  text-align: left;
-  width: 100%;
-}
-
-.card-content {
-  padding: 1rem;
-}
-
-.chip {
-  align-items: center;
-  border-radius: 9999px;
-  display: inline-flex;
-  font-size: 0.75rem;
-  font-weight: 500;
-  line-height: 1.25;
-  padding: 0.125rem 0.625rem;
-}
-
-.chip-outlined {
-  background: transparent;
-  border: 1px solid var(--color-divider);
-}
-
-.chip-error {
-  background-color: color-mix(in srgb, var(--color-error) 15%, transparent);
-  color: var(--color-error);
-}
-
-.chip-info {
-  background-color: color-mix(in srgb, var(--color-info) 15%, transparent);
-  color: var(--color-info);
-}
-
-.chip-success {
-  background-color: color-mix(in srgb, var(--color-success) 15%, transparent);
-  color: var(--color-success);
-}
-
-.chip-warning {
-  background-color: color-mix(in srgb, var(--color-warning) 15%, transparent);
-  color: var(--color-warning);
-}
-
-.chip-default {
-  background-color: color-mix(in srgb, var(--color-text-primary) 8%, transparent);
-}
-
-.progress-bar {
-  background-color: var(--color-divider);
-  border-radius: 4px;
-  height: 4px;
-  overflow: hidden;
-  width: 100%;
-}
-
-.progress-bar-fill {
-  background-color: var(--color-primary);
+.dialog-drawer {
+  bottom: 0;
   height: 100%;
-  transition: width 0.2s ease;
-}
-
-.dialog-actions {
-  display: flex;
-  gap: 0.5rem;
-  justify-content: flex-end;
-  margin-top: 1rem;
-}
-
-.auth-paper {
-  align-items: center;
-  background-color: var(--color-bg-paper);
-  border-radius: 8px;
-  box-shadow: 0 10px 38px -10px rgba(0, 0, 0, 0.35);
-  display: flex;
-  flex-direction: column;
-  max-width: 28rem;
-  padding: 1.5rem;
+  left: auto;
+  margin: 0;
+  max-height: 100vh;
+  max-width: min(480px, 100vw);
+  position: fixed;
+  right: 0;
+  top: 0;
+  transform: none;
   width: 100%;
 }
 
-.auth-container {
-  padding: 1rem;
-  width: 100%;
+/* Map Radix Themes red accent scale to DDB brand red */
+.radix-themes {
+  --red-9: var(--ddb-red-500);
+  --red-10: var(--ddb-red-600);
+  --red-11: var(--ddb-red-600);
+  --red-12: var(--ddb-grey-900);
+}
+
+.radix-themes.dark,
+.radix-themes.dark-theme {
+  --red-9: var(--ddb-red-400);
+  --red-10: var(--ddb-red-500);
+  --red-11: var(--ddb-red-400);
+  --red-12: var(--ddb-white);
 }

@@ -1,4 +1,4 @@
-import * as Tooltip from '@radix-ui/react-tooltip';
+import { Badge, Box, Card, Flex, Heading, Progress, Tooltip } from '@radix-ui/themes';
 import { Heart, Shield } from 'lucide-react';
 import type { FC } from 'react';
 
@@ -22,8 +22,7 @@ const summarizeEffect = (provides: EffectDescriptor[], fallback: string): string
   return fallback;
 };
 
-const chipClassForType = (type: Combatant['type']): string =>
-  type === 'monster' ? 'chip chip-error' : 'chip chip-info';
+const typeBadgeColor = (type: Combatant['type']): 'blue' | 'red' => (type === 'monster' ? 'red' : 'blue');
 
 const ActionEconomyDots: FC<{ combatant: Combatant }> = ({ combatant }) => {
   const dots: { label: string; used: boolean }[] = [
@@ -33,29 +32,22 @@ const ActionEconomyDots: FC<{ combatant: Combatant }> = ({ combatant }) => {
   ];
 
   return (
-    <div style={{ display: 'flex', gap: '0.5rem' }}>
+    <Flex gap="2">
       {dots.map(dot => (
-        <Tooltip.Root key={dot.label}>
-          <Tooltip.Trigger asChild>
-            <span
-              style={{
-                backgroundColor: dot.used ? 'var(--color-text-secondary)' : 'var(--color-success)',
-                border: '1px solid var(--color-divider)',
-                borderRadius: '50%',
-                display: 'inline-block',
-                height: 8,
-                width: 8,
-              }}
-            />
-          </Tooltip.Trigger>
-          <Tooltip.Portal>
-            <Tooltip.Content className="radix-tooltip-content" sideOffset={4}>
-              {`${dot.label}${dot.used ? ' (used)' : ''}`}
-            </Tooltip.Content>
-          </Tooltip.Portal>
-        </Tooltip.Root>
+        <Tooltip content={`${dot.label}${dot.used ? ' (used)' : ''}`} key={dot.label}>
+          <Box
+            style={{
+              backgroundColor: dot.used ? 'var(--gray-9)' : 'var(--green-9)',
+              border: '1px solid var(--gray-a6)',
+              borderRadius: '50%',
+              display: 'inline-block',
+              height: 8,
+              width: 8,
+            }}
+          />
+        </Tooltip>
       ))}
-    </div>
+    </Flex>
   );
 };
 
@@ -69,82 +61,77 @@ export interface CombatantCardProps {
 export const CombatantCard: FC<CombatantCardProps> = ({ combatant, isCurrentTurn, onSelect, selected = false }) => {
   const hpPercent = combatant.maxHp === 0 ? 0 : Math.min(100, (combatant.currentHp / combatant.maxHp) * 100);
 
-  const borderColor = selected
-    ? 'var(--color-primary)'
-    : isCurrentTurn
-      ? 'var(--color-warning)'
-      : 'var(--color-divider)';
+  const borderColor = selected ? 'var(--red-9)' : isCurrentTurn ? 'var(--amber-9)' : undefined;
 
   return (
-    <article
-      className="card-outlined"
+    <Card
       style={{
         borderColor,
         borderStyle: 'solid',
         borderWidth: isCurrentTurn || selected ? 2 : 1,
+        cursor: onSelect != null ? 'pointer' : undefined,
       }}
+      variant="surface"
     >
       <button
-        className="card-action"
         onClick={() => {
           onSelect?.(combatant.id);
         }}
-        style={{ padding: 16 }}
+        style={{
+          background: 'none',
+          border: 'none',
+          color: 'inherit',
+          cursor: onSelect != null ? 'pointer' : 'default',
+          font: 'inherit',
+          padding: 'var(--space-4)',
+          textAlign: 'left',
+          width: '100%',
+        }}
         type="button"
       >
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-          <div style={{ alignItems: 'center', display: 'flex', gap: 8 }}>
-            <Tooltip.Root>
-              <Tooltip.Trigger asChild>
-                <span className={chipClassForType(combatant.type)}>{combatant.type === 'monster' ? 'M' : 'P'}</span>
-              </Tooltip.Trigger>
-              <Tooltip.Portal>
-                <Tooltip.Content className="radix-tooltip-content" sideOffset={4}>
-                  {combatant.type === 'monster' ? 'Monster' : 'Player'}
-                </Tooltip.Content>
-              </Tooltip.Portal>
-            </Tooltip.Root>
-            <h3 style={{ flexGrow: 1, fontSize: '1.125rem', margin: 0, textAlign: 'left' }}>{combatant.name}</h3>
-            <span className="chip chip-outlined">{String(combatant.initiative ?? '—')}</span>
-          </div>
-          <div style={{ alignItems: 'center', display: 'flex', gap: 16 }}>
-            <div style={{ alignItems: 'center', display: 'flex', gap: 8 }}>
+        <Flex direction="column" gap="2">
+          <Flex align="center" gap="2">
+            <Tooltip content={combatant.type === 'monster' ? 'Monster' : 'Player'}>
+              <Badge color={typeBadgeColor(combatant.type)} variant="soft">
+                {combatant.type === 'monster' ? 'M' : 'P'}
+              </Badge>
+            </Tooltip>
+            <Heading size="4" style={{ flexGrow: 1, margin: 0 }}>
+              {combatant.name}
+            </Heading>
+            <Badge color="gray" variant="outline">
+              {String(combatant.initiative ?? '—')}
+            </Badge>
+          </Flex>
+          <Flex align="center" gap="4">
+            <Flex align="center" gap="2">
               <Shield size={16} />
               <span>{combatant.armorClass}</span>
-            </div>
-            <div style={{ alignItems: 'center', display: 'flex', flexGrow: 1, gap: 8 }}>
-              <Heart color="var(--color-error)" size={16} />
-              <div className="progress-bar" style={{ flexGrow: 1 }}>
-                <div className="progress-bar-fill" style={{ width: `${String(hpPercent)}%` }} />
-              </div>
+            </Flex>
+            <Flex align="center" flexGrow="1" gap="2" style={{ minWidth: 0 }}>
+              <Heart color="var(--red-9)" size={16} />
+              <Progress style={{ flexGrow: 1 }} value={hpPercent} />
               <span>
                 {String(combatant.currentHp)} / {String(combatant.maxHp)}
               </span>
-            </div>
+            </Flex>
             <ActionEconomyDots combatant={combatant} />
-          </div>
+          </Flex>
           {combatant.effects.length > 0 ? (
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+            <Flex gap="2" wrap="wrap">
               {combatant.effects.map(effect => (
-                <Tooltip.Root key={effect.id}>
-                  <Tooltip.Trigger asChild>
-                    <span className="chip chip-outlined">
-                      {`${summarizeEffect(effect.provides, effect.name)}${
-                        effect.remainingRounds != null ? ` · ${String(effect.remainingRounds)}` : ''
-                      }`}
-                    </span>
-                  </Tooltip.Trigger>
-                  <Tooltip.Portal>
-                    <Tooltip.Content className="radix-tooltip-content" sideOffset={4}>
-                      {effect.description}
-                    </Tooltip.Content>
-                  </Tooltip.Portal>
-                </Tooltip.Root>
+                <Tooltip content={effect.description} key={effect.id}>
+                  <Badge color="gray" variant="outline">
+                    {`${summarizeEffect(effect.provides, effect.name)}${
+                      effect.remainingRounds != null ? ` · ${String(effect.remainingRounds)}` : ''
+                    }`}
+                  </Badge>
+                </Tooltip>
               ))}
-            </div>
+            </Flex>
           ) : null}
-        </div>
+        </Flex>
       </button>
-    </article>
+    </Card>
   );
 };

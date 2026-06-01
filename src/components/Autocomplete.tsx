@@ -1,3 +1,4 @@
+import { Box } from '@radix-ui/themes';
 import type { FC, ReactNode, SyntheticEvent } from 'react';
 import { useEffect, useId, useRef, useState } from 'react';
 
@@ -62,7 +63,7 @@ export const Autocomplete = <T,>({
   };
 
   return (
-    <div ref={containerRef} style={{ position: 'relative', width: '100%' }}>
+    <Box position="relative" ref={containerRef} width="100%">
       {renderInput({
         id: inputId,
         onChange: handleInputChange,
@@ -72,25 +73,28 @@ export const Autocomplete = <T,>({
         value: inputValue,
       })}
       {open && filtered.length > 0 ? (
-        <ul
+        <Box
           id={listId}
+          position="absolute"
           role="listbox"
           style={{
-            backgroundColor: 'var(--color-bg-paper)',
-            border: '1px solid var(--color-divider)',
-            borderRadius: 6,
+            backgroundColor: 'var(--color-panel-solid)',
+            border: '1px solid var(--gray-a6)',
+            borderRadius: 'var(--radius-3)',
+            boxShadow: 'var(--shadow-4)',
+            left: 0,
             listStyle: 'none',
             margin: '4px 0 0',
             maxHeight: 240,
             overflow: 'auto',
             padding: 4,
-            position: 'absolute',
-            width: '100%',
+            right: 0,
+            top: '100%',
             zIndex: 1300,
           }}
         >
           {filtered.map((option, index) => (
-            <li
+            <Box
               aria-selected={index === activeIndex}
               key={getOptionLabel(option)}
               onMouseDown={event => {
@@ -102,19 +106,18 @@ export const Autocomplete = <T,>({
               }}
               role="option"
               style={{
-                backgroundColor:
-                  index === activeIndex ? 'color-mix(in srgb, var(--color-text-primary) 8%, transparent)' : undefined,
-                borderRadius: 4,
+                backgroundColor: index === activeIndex ? 'var(--gray-a3)' : undefined,
+                borderRadius: 'var(--radius-2)',
                 cursor: 'pointer',
-                fontSize: '0.875rem',
+                fontSize: 'var(--font-size-2)',
                 padding: '8px 12px',
               }}
             >
               {getOptionLabel(option)}
-            </li>
+            </Box>
           ))}
-        </ul>
+        </Box>
       ) : null}
-    </div>
+    </Box>
   );
 };

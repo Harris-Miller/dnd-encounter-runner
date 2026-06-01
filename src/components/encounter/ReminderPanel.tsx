@@ -1,4 +1,4 @@
-import * as ToggleGroup from '@radix-ui/react-toggle-group';
+import { Badge, Box, Button, Callout, Card, Flex, Heading, IconButton, SegmentedControl, Text } from '@radix-ui/themes';
 import { Bell, Check } from 'lucide-react';
 import { useState } from 'react';
 import type { FC } from 'react';
@@ -17,16 +17,16 @@ const REMINDER_KIND_LABEL: Record<Reminder['kind'], string> = {
   reaction_prompt: 'Reaction prompt',
 };
 
-const REMINDER_KIND_CHIP_CLASS: Record<Reminder['kind'], string> = {
-  concentration_save: 'chip chip-warning',
-  condition_tick: 'chip chip-info',
-  crit_damage_immunity: 'chip chip-success',
-  damage_immunity: 'chip chip-success',
-  damage_resistance: 'chip chip-info',
-  damage_vulnerability: 'chip chip-warning',
-  effect_expired: 'chip chip-default',
-  info: 'chip chip-default',
-  reaction_prompt: 'chip chip-error',
+const REMINDER_KIND_COLOR: Record<Reminder['kind'], 'blue' | 'gray' | 'green' | 'orange' | 'red' | 'yellow'> = {
+  concentration_save: 'yellow',
+  condition_tick: 'blue',
+  crit_damage_immunity: 'green',
+  damage_immunity: 'green',
+  damage_resistance: 'blue',
+  damage_vulnerability: 'orange',
+  effect_expired: 'gray',
+  info: 'gray',
+  reaction_prompt: 'red',
 };
 
 type FilterMode = 'active' | 'all';
@@ -44,108 +44,93 @@ export const ReminderPanel: FC<ReminderPanelProps> = ({ onDismissReminder, state
   const activeCount = allReminders.filter(reminder => !reminder.dismissed).length;
 
   return (
-    <article className="card-outlined">
-      <div className="card-content">
-        <div style={{ alignItems: 'center', display: 'flex', gap: 16, marginBottom: 16 }}>
-          <Bell color={activeCount > 0 ? 'var(--color-error)' : 'var(--color-text-secondary)'} size={24} />
-          <h2 style={{ fontSize: '1.125rem', margin: 0 }}>Reminders</h2>
-          <span className={activeCount > 0 ? 'chip chip-error' : 'chip chip-default'}>
-            {`${String(activeCount)} active`}
-          </span>
-          <span className="flex-grow" />
-          <ToggleGroup.Root
-            aria-label="Reminder filter"
-            className="radix-toggle-group"
-            onValueChange={value => {
-              if (value === 'active' || value === 'all') {
-                setFilter(value);
-              }
-            }}
-            type="single"
-            value={filter}
-          >
-            <ToggleGroup.Item className="radix-toggle-item" value="active">
-              Active
-            </ToggleGroup.Item>
-            <ToggleGroup.Item className="radix-toggle-item" value="all">
-              All
-            </ToggleGroup.Item>
-          </ToggleGroup.Root>
-        </div>
+    <Card size="3" variant="surface">
+      <Flex align="center" gap="4" mb="4">
+        <Bell color={activeCount > 0 ? 'var(--red-9)' : 'var(--gray-9)'} size={24} />
+        <Heading size="4">Reminders</Heading>
+        <Badge color={activeCount > 0 ? 'red' : 'gray'} variant="soft">
+          {`${String(activeCount)} active`}
+        </Badge>
+        <Box flexGrow="1" />
+        <SegmentedControl.Root
+          onValueChange={value => {
+            if (value === 'active' || value === 'all') {
+              setFilter(value);
+            }
+          }}
+          value={filter}
+        >
+          <SegmentedControl.Item value="active">Active</SegmentedControl.Item>
+          <SegmentedControl.Item value="all">All</SegmentedControl.Item>
+        </SegmentedControl.Root>
+      </Flex>
 
-        {visibleReminders.length === 0 ? (
-          <div className={activeCount === 0 ? 'alert alert-success' : 'alert alert-info'} role="status">
-            {filter === 'active' ? 'No active reminders.' : 'No reminders yet.'}
-          </div>
-        ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-            {visibleReminders.map(reminder => {
-              const combatant = reminder.combatantId == null ? null : state.combatants[reminder.combatantId];
-              return (
-                <div
-                  key={reminder.id}
-                  style={{
-                    alignItems: 'flex-start',
-                    border: '1px solid var(--color-divider)',
-                    borderRadius: 8,
-                    display: 'flex',
-                    gap: 8,
-                    opacity: reminder.dismissed ? 0.5 : 1,
-                    padding: 12,
-                  }}
-                >
-                  <div style={{ flexGrow: 1 }}>
-                    <div
-                      style={{
-                        alignItems: 'center',
-                        display: 'flex',
-                        flexWrap: 'wrap',
-                        gap: 4,
-                        marginBottom: 4,
-                      }}
-                    >
-                      <span className={REMINDER_KIND_CHIP_CLASS[reminder.kind]}>
+      {visibleReminders.length === 0 ? (
+        <Callout.Root color={activeCount === 0 ? 'green' : 'blue'} role="status">
+          <Callout.Text>{filter === 'active' ? 'No active reminders.' : 'No reminders yet.'}</Callout.Text>
+        </Callout.Root>
+      ) : (
+        <Flex direction="column" gap="2">
+          {visibleReminders.map(reminder => {
+            const combatant = reminder.combatantId == null ? null : state.combatants[reminder.combatantId];
+            return (
+              <Card
+                key={reminder.id}
+                style={{ opacity: reminder.dismissed ? 0.5 : 1 }}
+                variant={reminder.dismissed ? 'ghost' : 'surface'}
+              >
+                <Flex align="start" gap="2" p="3">
+                  <Flex direction="column" flexGrow="1" gap="1">
+                    <Flex align="center" gap="1" wrap="wrap">
+                      <Badge color={REMINDER_KIND_COLOR[reminder.kind]} variant="soft">
                         {REMINDER_KIND_LABEL[reminder.kind]}
-                      </span>
-                      {combatant != null ? <span className="chip chip-outlined">{combatant.name}</span> : null}
-                    </div>
-                    <p style={{ margin: 0 }}>{reminder.message}</p>
-                  </div>
+                      </Badge>
+                      {combatant != null ? (
+                        <Badge color="gray" variant="outline">
+                          {combatant.name}
+                        </Badge>
+                      ) : null}
+                    </Flex>
+                    <Text size="2">{reminder.message}</Text>
+                  </Flex>
                   {!reminder.dismissed ? (
-                    <button
+                    <IconButton
                       aria-label="Dismiss reminder"
+                      color="gray"
                       onClick={() => {
                         onDismissReminder(reminder.id);
                       }}
-                      style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '0.25rem' }}
                       type="button"
+                      variant="ghost"
                     >
                       <Check size={16} />
-                    </button>
+                    </IconButton>
                   ) : null}
-                </div>
-              );
-            })}
-          </div>
-        )}
+                </Flex>
+              </Card>
+            );
+          })}
+        </Flex>
+      )}
 
-        {filter === 'active' && activeCount > 0 ? (
-          <div style={{ marginTop: 16 }}>
-            <button
-              onClick={() => {
-                allReminders
-                  .filter(reminder => !reminder.dismissed)
-                  .forEach(reminder => {
-                    onDismissReminder(reminder.id);
-                  });
-              }}
-              type="button"
-            >
-              Dismiss all
-            </button>
-          </div>
-        ) : null}
-      </div>
-    </article>
+      {filter === 'active' && activeCount > 0 ? (
+        <Flex mt="4">
+          <Button
+            color="gray"
+            onClick={() => {
+              allReminders
+                .filter(reminder => !reminder.dismissed)
+                .forEach(reminder => {
+                  onDismissReminder(reminder.id);
+                });
+            }}
+            type="button"
+            variant="soft"
+          >
+            Dismiss all
+          </Button>
+        </Flex>
+      ) : null}
+    </Card>
   );
 };

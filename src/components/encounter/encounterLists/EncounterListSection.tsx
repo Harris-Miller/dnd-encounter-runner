@@ -1,5 +1,4 @@
-import * as Dialog from '@radix-ui/react-dialog';
-import * as Label from '@radix-ui/react-label';
+import { Box, Button, Callout, Dialog, Flex, Heading, Skeleton, Text, TextField } from '@radix-ui/themes';
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
 import { Plus } from 'lucide-react';
@@ -85,58 +84,52 @@ export const EncounterListSection: FC<EncounterListSectionProps> = ({
     pendingDeleteId == null ? null : (encounters.find(encounter => encounter.id === pendingDeleteId) ?? null);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+    <Flex direction="column" gap="4">
       {showHeading ? (
-        <div style={{ alignItems: 'center', display: 'flex', gap: 16 }}>
-          <h2 style={{ fontSize: '1.25rem', margin: 0 }}>Encounters</h2>
-          <span className="flex-grow" />
+        <Flex align="center" gap="4">
+          <Heading size="5">Encounters</Heading>
+          <Box flexGrow="1" />
           {isOwner ? (
-            <button
-              onClick={handleCreateOpen}
-              style={{ alignItems: 'center', display: 'inline-flex', gap: '0.5rem' }}
-              type="button"
-            >
+            <Button onClick={handleCreateOpen} type="button">
               <Plus size={18} />
               New encounter
-            </button>
+            </Button>
           ) : null}
-        </div>
+        </Flex>
       ) : isOwner ? (
-        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <button
-            onClick={handleCreateOpen}
-            style={{ alignItems: 'center', display: 'inline-flex', gap: '0.5rem' }}
-            type="button"
-          >
+        <Flex justify="end">
+          <Button onClick={handleCreateOpen} type="button">
             <Plus size={18} />
             New encounter
-          </button>
-        </div>
+          </Button>
+        </Flex>
       ) : null}
 
       {isLoading ? (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <div className="skeleton" style={{ height: 96 }} />
-          <div className="skeleton" style={{ height: 96 }} />
-        </div>
+        <Flex direction="column" gap="4">
+          <Skeleton height="96px" />
+          <Skeleton height="96px" />
+        </Flex>
       ) : null}
 
       {isError ? (
-        <div className="alert alert-error" role="alert">
-          Failed to load encounters.
-        </div>
+        <Callout.Root color="red" role="alert">
+          <Callout.Text>Failed to load encounters.</Callout.Text>
+        </Callout.Root>
       ) : null}
 
       {!isLoading && !isError && encounters.length === 0 ? (
-        <div className="alert alert-info" role="status">
-          {isOwner ? (
-            <>
-              No encounters yet. Click <strong>New encounter</strong> to get started.
-            </>
-          ) : (
-            'No encounters in this campaign yet.'
-          )}
-        </div>
+        <Callout.Root color="blue" role="status">
+          <Callout.Text>
+            {isOwner ? (
+              <>
+                No encounters yet. Click <strong>New encounter</strong> to get started.
+              </>
+            ) : (
+              'No encounters in this campaign yet.'
+            )}
+          </Callout.Text>
+        </Callout.Root>
       ) : null}
 
       {!isLoading && !isError && encounters.length > 0 ? (
@@ -157,34 +150,32 @@ export const EncounterListSection: FC<EncounterListSectionProps> = ({
         }}
         open={createOpen}
       >
-        <Dialog.Portal>
-          <Dialog.Overlay className="radix-overlay" />
-          <Dialog.Content className="radix-dialog-content">
-            <Dialog.Title>New encounter</Dialog.Title>
-            <div className="field" style={{ paddingTop: 8 }}>
-              <Label.Root className="field-label" htmlFor="encounter-create-name">
-                Encounter name
-              </Label.Root>
-              <input
-                className="field-input"
-                id="encounter-create-name"
-                onChange={event => {
-                  setCreateDraft(event.target.value);
-                }}
-                placeholder="Untitled Encounter"
-                value={createDraft ?? ''}
-              />
-            </div>
-            <div className="dialog-actions">
-              <button onClick={handleCreateClose} type="button">
+        <Dialog.Content maxWidth="480px">
+          <Dialog.Title>New encounter</Dialog.Title>
+          <Flex direction="column" gap="1" mt="4">
+            <Text as="label" htmlFor="encounter-create-name" size="2" weight="medium">
+              Encounter name
+            </Text>
+            <TextField.Root
+              id="encounter-create-name"
+              onChange={event => {
+                setCreateDraft(event.target.value);
+              }}
+              placeholder="Untitled Encounter"
+              value={createDraft ?? ''}
+            />
+          </Flex>
+          <Flex gap="3" justify="end" mt="4">
+            <Dialog.Close>
+              <Button color="gray" onClick={handleCreateClose} type="button" variant="soft">
                 Cancel
-              </button>
-              <button disabled={createMutation.isPending} onClick={handleCreateConfirm} type="button">
-                Create
-              </button>
-            </div>
-          </Dialog.Content>
-        </Dialog.Portal>
+              </Button>
+            </Dialog.Close>
+            <Button disabled={createMutation.isPending} onClick={handleCreateConfirm} type="button">
+              Create
+            </Button>
+          </Flex>
+        </Dialog.Content>
       </Dialog.Root>
 
       <Dialog.Root
@@ -195,24 +186,23 @@ export const EncounterListSection: FC<EncounterListSectionProps> = ({
         }}
         open={pendingDeleteId !== null}
       >
-        <Dialog.Portal>
-          <Dialog.Overlay className="radix-overlay" />
-          <Dialog.Content className="radix-dialog-content">
-            <Dialog.Title>Delete encounter</Dialog.Title>
-            <p style={{ margin: '1rem 0' }}>
-              Delete <strong>{pendingDeleteEncounter?.name ?? 'this encounter'}</strong>? This cannot be undone.
-            </p>
-            <div className="dialog-actions">
-              <button onClick={handleDeleteCancel} type="button">
+        <Dialog.Content maxWidth="480px">
+          <Dialog.Title>Delete encounter</Dialog.Title>
+          <Text as="p" mt="4">
+            Delete <strong>{pendingDeleteEncounter?.name ?? 'this encounter'}</strong>? This cannot be undone.
+          </Text>
+          <Flex gap="3" justify="end" mt="4">
+            <Dialog.Close>
+              <Button color="gray" onClick={handleDeleteCancel} type="button" variant="soft">
                 Cancel
-              </button>
-              <button disabled={deleteMutation.isPending} onClick={handleDeleteConfirm} type="button">
-                Delete
-              </button>
-            </div>
-          </Dialog.Content>
-        </Dialog.Portal>
+              </Button>
+            </Dialog.Close>
+            <Button color="red" disabled={deleteMutation.isPending} onClick={handleDeleteConfirm} type="button">
+              Delete
+            </Button>
+          </Flex>
+        </Dialog.Content>
       </Dialog.Root>
-    </div>
+    </Flex>
   );
 };

@@ -1,4 +1,4 @@
-import * as Label from '@radix-ui/react-label';
+import { Flex, Text, TextArea, TextField } from '@radix-ui/themes';
 import type { ChangeEvent, FC } from 'react';
 
 import type { CharacterFormValues } from './characterForm';
@@ -17,26 +17,24 @@ export const CharacterFormFields: FC<CharacterFormFieldsProps> = ({ disabled = f
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-      <div className="field">
-        <Label.Root className="field-label" htmlFor="character-name">
+    <Flex direction="column" gap="4">
+      <Flex direction="column" gap="1">
+        <Text as="label" htmlFor="character-name" size="2" weight="medium">
           Name
-        </Label.Root>
-        <input
-          className="field-input"
+        </Text>
+        <TextField.Root
           disabled={disabled}
           id="character-name"
           onChange={handleFieldChange('name')}
           required
           value={values.name}
         />
-      </div>
-      <div className="field">
-        <Label.Root className="field-label" htmlFor="character-level">
+      </Flex>
+      <Flex direction="column" gap="1">
+        <Text as="label" htmlFor="character-level" size="2" weight="medium">
           Level
-        </Label.Root>
-        <input
-          className="field-input"
+        </Text>
+        <TextField.Root
           disabled={disabled}
           id="character-level"
           min={1}
@@ -45,13 +43,12 @@ export const CharacterFormFields: FC<CharacterFormFieldsProps> = ({ disabled = f
           type="number"
           value={values.level}
         />
-      </div>
-      <div className="field">
-        <Label.Root className="field-label" htmlFor="character-ac">
+      </Flex>
+      <Flex direction="column" gap="1">
+        <Text as="label" htmlFor="character-ac" size="2" weight="medium">
           Armor Class
-        </Label.Root>
-        <input
-          className="field-input"
+        </Text>
+        <TextField.Root
           disabled={disabled}
           id="character-ac"
           min={0}
@@ -60,13 +57,12 @@ export const CharacterFormFields: FC<CharacterFormFieldsProps> = ({ disabled = f
           type="number"
           value={values.armorClass}
         />
-      </div>
-      <div className="field">
-        <Label.Root className="field-label" htmlFor="character-max-hp">
+      </Flex>
+      <Flex direction="column" gap="1">
+        <Text as="label" htmlFor="character-max-hp" size="2" weight="medium">
           Max Hit Points
-        </Label.Root>
-        <input
-          className="field-input"
+        </Text>
+        <TextField.Root
           disabled={disabled}
           id="character-max-hp"
           min={1}
@@ -75,20 +71,19 @@ export const CharacterFormFields: FC<CharacterFormFieldsProps> = ({ disabled = f
           type="number"
           value={values.maxHitPoints}
         />
-      </div>
-      <div className="field">
-        <Label.Root className="field-label" htmlFor="character-notes">
+      </Flex>
+      <Flex direction="column" gap="1">
+        <Text as="label" htmlFor="character-notes" size="2" weight="medium">
           Notes
-        </Label.Root>
-        <textarea
-          className="field-input"
+        </Text>
+        <TextArea
           disabled={disabled}
           id="character-notes"
           onChange={handleFieldChange('notes')}
           rows={3}
           value={values.notes}
         />
-      </div>
-    </div>
+      </Flex>
+    </Flex>
   );
 };

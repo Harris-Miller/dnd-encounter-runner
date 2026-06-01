@@ -2,8 +2,10 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 import type { FC, PropsWithChildren } from 'react';
 
 export type ColorSchemeMode = 'dark' | 'light' | 'system';
+export type ResolvedAppearance = 'dark' | 'light';
 
 type ColorSchemeContextValue = {
+  appearance: ResolvedAppearance;
   mode: ColorSchemeMode;
   setMode: (mode: ColorSchemeMode) => void;
 };
@@ -12,7 +14,7 @@ const STORAGE_KEY = 'dnd-encounter-runner-color-scheme';
 
 const ColorSchemeContext = createContext<ColorSchemeContextValue | null>(null);
 
-const resolveSystemMode = (): 'dark' | 'light' =>
+const resolveSystemMode = (): ResolvedAppearance =>
   window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 
 const applyModeToDocument = (mode: ColorSchemeMode): void => {
@@ -30,6 +32,13 @@ export const ColorSchemeProvider: FC<PropsWithChildren> = ({ children }) => {
     return 'system';
   });
 
+  const [systemAppearance, setSystemAppearance] = useState<ResolvedAppearance>(() => resolveSystemMode());
+
+  const appearance = useMemo(
+    () => (colorMode === 'system' ? systemAppearance : colorMode),
+    [colorMode, systemAppearance],
+  );
+
   const setMode = useCallback((next: ColorSchemeMode) => {
     setColorMode(next);
     localStorage.setItem(STORAGE_KEY, next);
@@ -44,6 +53,7 @@ export const ColorSchemeProvider: FC<PropsWithChildren> = ({ children }) => {
 
     const media = window.matchMedia('(prefers-color-scheme: dark)');
     const handleChange = () => {
+      setSystemAppearance(resolveSystemMode());
       applyModeToDocument('system');
     };
     media.addEventListener('change', handleChange);
@@ -52,7 +62,7 @@ export const ColorSchemeProvider: FC<PropsWithChildren> = ({ children }) => {
     };
   }, [colorMode]);
 
-  const value = useMemo(() => ({ mode: colorMode, setMode }), [colorMode, setMode]);
+  const value = useMemo(() => ({ appearance, mode: colorMode, setMode }), [appearance, colorMode, setMode]);
 
   return <ColorSchemeContext.Provider value={value}>{children}</ColorSchemeContext.Provider>;
 };

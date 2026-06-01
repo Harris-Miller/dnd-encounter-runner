@@ -1,4 +1,4 @@
-import * as Tooltip from '@radix-ui/react-tooltip';
+import { Badge, Box, Card, Flex, Heading, IconButton, Text, Tooltip } from '@radix-ui/themes';
 import { Trash2 } from 'lucide-react';
 import type { FC } from 'react';
 
@@ -11,8 +11,6 @@ const formatTimestamp = (raw: string): string => {
   return date.toLocaleString();
 };
 
-const chipClassForActive = (active: boolean): string => (active ? 'chip chip-success' : 'chip chip-default');
-
 interface EncounterCardsProps {
   encounters: EncounterListItem[];
   onDeleteRequest?: (encounterId: string) => void;
@@ -20,62 +18,56 @@ interface EncounterCardsProps {
 }
 
 export const EncounterCards: FC<EncounterCardsProps> = ({ encounters, onDeleteRequest, onSelectEncounter }) => (
-  <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+  <Flex direction="column" gap="4">
     {encounters.map(encounter => (
-      <article className="card-outlined" key={encounter.id}>
-        <div style={{ alignItems: 'center', display: 'flex' }}>
+      <Card key={encounter.id} variant="surface">
+        <Flex align="center">
           <button
-            className="card-action"
             onClick={() => {
               onSelectEncounter(encounter.id);
             }}
-            style={{ flexGrow: 1 }}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: 'inherit',
+              cursor: 'pointer',
+              flexGrow: 1,
+              font: 'inherit',
+              padding: 'var(--space-4)',
+              textAlign: 'left',
+            }}
             type="button"
           >
-            <div className="card-content">
-              <div
-                style={{
-                  alignItems: 'center',
-                  display: 'flex',
-                  flexWrap: 'wrap',
-                  gap: 8,
-                  marginBottom: 8,
-                }}
-              >
-                <h2 style={{ fontSize: '1.125rem', margin: 0 }}>{encounter.name}</h2>
-                <span className={chipClassForActive(encounter.active)}>{encounter.active ? 'Active' : 'Inactive'}</span>
-              </div>
-              <p className="text-secondary" style={{ margin: 0 }}>
-                Round {String(encounter.round)} · {String(encounter.combatantCount)} combatant
-                {encounter.combatantCount === 1 ? '' : 's'} · Updated {formatTimestamp(encounter.updatedAt)}
-              </p>
-            </div>
+            <Flex align="center" gap="2" mb="2" wrap="wrap">
+              <Heading size="4">{encounter.name}</Heading>
+              <Badge color={encounter.active ? 'green' : 'gray'} variant="soft">
+                {encounter.active ? 'Active' : 'Inactive'}
+              </Badge>
+            </Flex>
+            <Text color="gray" size="2">
+              Round {String(encounter.round)} · {String(encounter.combatantCount)} combatant
+              {encounter.combatantCount === 1 ? '' : 's'} · Updated {formatTimestamp(encounter.updatedAt)}
+            </Text>
           </button>
           {onDeleteRequest != null ? (
-            <div style={{ paddingRight: 8 }}>
-              <Tooltip.Root>
-                <Tooltip.Trigger asChild>
-                  <button
-                    aria-label="Delete encounter"
-                    onClick={() => {
-                      onDeleteRequest(encounter.id);
-                    }}
-                    style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '0.5rem' }}
-                    type="button"
-                  >
-                    <Trash2 color="var(--color-error)" size={20} />
-                  </button>
-                </Tooltip.Trigger>
-                <Tooltip.Portal>
-                  <Tooltip.Content className="radix-tooltip-content" sideOffset={4}>
-                    Delete encounter
-                  </Tooltip.Content>
-                </Tooltip.Portal>
-              </Tooltip.Root>
-            </div>
+            <Box pr="2">
+              <Tooltip content="Delete encounter">
+                <IconButton
+                  aria-label="Delete encounter"
+                  color="red"
+                  onClick={() => {
+                    onDeleteRequest(encounter.id);
+                  }}
+                  type="button"
+                  variant="ghost"
+                >
+                  <Trash2 size={20} />
+                </IconButton>
+              </Tooltip>
+            </Box>
           ) : null}
-        </div>
-      </article>
+        </Flex>
+      </Card>
     ))}
-  </div>
+  </Flex>
 );

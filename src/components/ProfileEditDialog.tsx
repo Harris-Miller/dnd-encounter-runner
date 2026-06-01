@@ -1,7 +1,4 @@
-import * as Avatar from '@radix-ui/react-avatar';
-import * as Dialog from '@radix-ui/react-dialog';
-import * as Label from '@radix-ui/react-label';
-import * as ToggleGroup from '@radix-ui/react-toggle-group';
+import { Avatar, Button, Callout, Dialog, Flex, SegmentedControl, Text, TextField } from '@radix-ui/themes';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Camera } from 'lucide-react';
 import { useRef, useState } from 'react';
@@ -135,64 +132,55 @@ const ProfileEditForm: FC<ProfileEditFormProps> = ({ onClose, profileData }) => 
 
   return (
     <>
-      {mutationError != null ? <p style={{ color: 'var(--color-error)', marginBottom: 16 }}>{mutationError}</p> : null}
-      <div style={{ alignItems: 'center', display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: 16 }}>
-        <Avatar.Root className="radix-avatar-root">
-          <Avatar.Image alt={trimmedName} className="radix-avatar-image" src={previewAvatarUrl} />
-          <Avatar.Fallback className="radix-avatar-fallback" delayMs={300}>
-            {avatarInitial}
-          </Avatar.Fallback>
-        </Avatar.Root>
+      {mutationError != null ? (
+        <Callout.Root color="red" mb="4" role="alert">
+          <Callout.Text>{mutationError}</Callout.Text>
+        </Callout.Root>
+      ) : null}
+      <Flex align="center" direction="column" gap="4" mb="4">
+        <Avatar alt={trimmedName} fallback={avatarInitial} radius="full" size="6" src={previewAvatarUrl} />
         <input accept="image/*" hidden onChange={handleFileChange} ref={fileInputRef} type="file" />
-        <button
-          onClick={handlePhotoButtonClick}
-          style={{ alignItems: 'center', display: 'inline-flex', gap: '0.5rem' }}
-          type="button"
-        >
+        <Button onClick={handlePhotoButtonClick} type="button" variant="soft">
           <Camera size={18} />
           Change photo
-        </button>
-        <ToggleGroup.Root
-          aria-label="Avatar source"
-          className="radix-toggle-group"
+        </Button>
+        <SegmentedControl.Root
           disabled={!hasUploadedAvatar && draftAvatarSource === 'uploaded'}
           onValueChange={value => {
-            if (value === 'oauth' || value === 'uploaded') {
-              setDraftAvatarSource(value);
+            if (value === 'oauth') {
+              setDraftAvatarSource('oauth');
+              return;
+            }
+            if (value === 'uploaded' && hasUploadedAvatar) {
+              setDraftAvatarSource('uploaded');
             }
           }}
-          type="single"
           value={draftAvatarSource}
         >
-          <ToggleGroup.Item className="radix-toggle-item" value="oauth">
-            OAuth
-          </ToggleGroup.Item>
-          <ToggleGroup.Item className="radix-toggle-item" disabled={!hasUploadedAvatar} value="uploaded">
-            Uploaded
-          </ToggleGroup.Item>
-        </ToggleGroup.Root>
-      </div>
-      <div className="field">
-        <Label.Root className="field-label" htmlFor="profile-name">
+          <SegmentedControl.Item value="oauth">OAuth</SegmentedControl.Item>
+          <SegmentedControl.Item value="uploaded">Uploaded</SegmentedControl.Item>
+        </SegmentedControl.Root>
+      </Flex>
+      <Flex direction="column" gap="1" mb="4">
+        <Text as="label" htmlFor="profile-name" size="2" weight="medium">
           Name
-        </Label.Root>
-        <input
-          className="field-input"
+        </Text>
+        <TextField.Root
           id="profile-name"
           onChange={event => {
             setDraftName(event.target.value);
           }}
           value={draftName}
         />
-      </div>
-      <div className="dialog-actions">
-        <button disabled={isPending} onClick={handleCancel} type="button">
+      </Flex>
+      <Flex gap="3" justify="end">
+        <Button color="gray" disabled={isPending} onClick={handleCancel} type="button" variant="soft">
           Cancel
-        </button>
-        <button disabled={!isNameValid || isPending || user.isPending} onClick={handleUpdate} type="button">
+        </Button>
+        <Button disabled={!isNameValid || isPending || user.isPending} onClick={handleUpdate} type="button">
           Update
-        </button>
-      </div>
+        </Button>
+      </Flex>
     </>
   );
 };
@@ -211,14 +199,15 @@ export const ProfileEditDialog: FC<ProfileEditDialogProps> = ({ onClose, open })
       }}
       open={open}
     >
-      <Dialog.Portal>
-        <Dialog.Overlay className="radix-overlay" />
-        <Dialog.Content className="radix-dialog-content">
-          <Dialog.Title>Edit Profile</Dialog.Title>
-          {profile.isError ? <p style={{ color: 'var(--color-error)' }}>{profile.error.message}</p> : null}
-          {profileData != null ? <ProfileEditForm onClose={onClose} profileData={profileData} /> : null}
-        </Dialog.Content>
-      </Dialog.Portal>
+      <Dialog.Content maxWidth="480px">
+        <Dialog.Title>Edit Profile</Dialog.Title>
+        {profile.isError ? (
+          <Callout.Root color="red" mt="4" role="alert">
+            <Callout.Text>{profile.error.message}</Callout.Text>
+          </Callout.Root>
+        ) : null}
+        {profileData != null ? <ProfileEditForm onClose={onClose} profileData={profileData} /> : null}
+      </Dialog.Content>
     </Dialog.Root>
   );
 };

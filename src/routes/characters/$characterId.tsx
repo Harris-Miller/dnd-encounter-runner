@@ -1,3 +1,4 @@
+import { Box, Button, Callout, Flex, Heading, Skeleton } from '@radix-ui/themes';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { createFileRoute, getRouteApi, useNavigate } from '@tanstack/react-router';
 import { ArrowLeft, Trash2 } from 'lucide-react';
@@ -56,20 +57,22 @@ const CharacterEditForm: FC<CharacterEditFormProps> = ({ character, characterId 
 
   return (
     <>
-      <h1 style={{ fontSize: '1.5rem', margin: '0 0 1rem' }}>{character.name}</h1>
+      <Heading mb="4" size="6">
+        {character.name}
+      </Heading>
 
       <CharacterFormFields disabled={updateMutation.isPending} onChange={setForm} values={form} />
 
-      <div style={{ alignItems: 'center', display: 'flex', gap: 16, marginTop: '1rem' }}>
-        <button disabled={!formValid || !isDirty || updateMutation.isPending} onClick={handleSave} type="button">
+      <Flex align="center" gap="4" mt="4">
+        <Button disabled={!formValid || !isDirty || updateMutation.isPending} onClick={handleSave} type="button">
           Save changes
-        </button>
+        </Button>
         {updateMutation.isError ? (
-          <div className="alert alert-error" role="alert">
-            Failed to save character.
-          </div>
+          <Callout.Root color="red" role="alert">
+            <Callout.Text>Failed to save character.</Callout.Text>
+          </Callout.Root>
         ) : null}
-      </div>
+      </Flex>
     </>
   );
 };
@@ -95,42 +98,45 @@ const CharacterDetailPage: FC = () => {
 
   if (isLoading) {
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-        <div className="skeleton" style={{ height: 40, maxWidth: 200 }} />
-        <div className="skeleton" style={{ height: 320 }} />
-      </div>
+      <Flex direction="column" gap="5">
+        <Skeleton height="40px" style={{ maxWidth: 200 }} />
+        <Skeleton height="320px" />
+      </Flex>
     );
   }
 
   if (isError || data == null) {
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-        <div className="alert alert-error" role="alert">
-          Character not found or failed to load.
-        </div>
+      <Flex direction="column" gap="4">
+        <Callout.Root color="red" role="alert">
+          <Callout.Text>Character not found or failed to load.</Callout.Text>
+        </Callout.Root>
         <RouterLink to="/characters">Back to characters</RouterLink>
-      </div>
+      </Flex>
     );
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-      <div style={{ alignItems: 'center', display: 'flex', gap: 16 }}>
-        <RouterLink style={{ alignItems: 'center', display: 'inline-flex', gap: '0.5rem' }} to="/characters">
-          <ArrowLeft size={18} /> Characters
+    <Flex direction="column" gap="5">
+      <Flex align="center" gap="4">
+        <RouterLink to="/characters">
+          <Flex align="center" gap="2">
+            <ArrowLeft size={18} /> Characters
+          </Flex>
         </RouterLink>
-        <span className="flex-grow" />
-        <button
+        <Box flexGrow="1" />
+        <Button
+          color="red"
           onClick={() => {
             setDeleteOpen(true);
           }}
-          style={{ alignItems: 'center', display: 'inline-flex', gap: '0.5rem' }}
           type="button"
+          variant="soft"
         >
           <Trash2 size={18} />
           Delete
-        </button>
-      </div>
+        </Button>
+      </Flex>
 
       <CharacterEditForm character={data} characterId={characterId} key={`${data.id}-${data.updatedAt}`} />
 
@@ -143,7 +149,7 @@ const CharacterDetailPage: FC = () => {
         onConfirm={handleDeleteConfirm}
         open={deleteOpen}
       />
-    </div>
+    </Flex>
   );
 };
 

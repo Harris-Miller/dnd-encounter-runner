@@ -1,3 +1,4 @@
+import { Flex, Heading } from '@radix-ui/themes';
 import { useQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
 import type { FC } from 'react';
@@ -10,10 +11,10 @@ const EncountersPage: FC = () => {
   const { data, isError, isLoading } = useQuery(queryEncountersList());
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-      <h1 style={{ fontSize: '1.5rem', margin: 0 }}>Encounters</h1>
+    <Flex direction="column" gap="4">
+      <Heading size="5">Encounters</Heading>
       <EncounterListReadOnly encounters={data ?? []} isError={isError} isLoading={isLoading} />
-    </div>
+    </Flex>
   );
 };
 

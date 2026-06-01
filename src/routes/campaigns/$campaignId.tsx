@@ -1,6 +1,17 @@
-import * as Dialog from '@radix-ui/react-dialog';
-import * as Label from '@radix-ui/react-label';
-import * as Tooltip from '@radix-ui/react-tooltip';
+import {
+  Box,
+  Button,
+  Callout,
+  Card,
+  Dialog,
+  Flex,
+  Heading,
+  IconButton,
+  Skeleton,
+  Text,
+  TextField,
+  Tooltip,
+} from '@radix-ui/themes';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { createFileRoute, getRouteApi, useNavigate } from '@tanstack/react-router';
 import { Copy, Link as LinkIcon, Pencil, RefreshCw, UserMinus } from 'lucide-react';
@@ -54,18 +65,18 @@ const CampaignDetailPage: FC = () => {
 
   if (campaignQuery.isLoading || profileQuery.isLoading) {
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-        <div className="skeleton" style={{ height: 48 }} />
-        <div className="skeleton" style={{ height: 240 }} />
-      </div>
+      <Flex direction="column" gap="4">
+        <Skeleton height="48px" />
+        <Skeleton height="240px" />
+      </Flex>
     );
   }
 
   if (campaignQuery.isError || campaignQuery.data == null) {
     return (
-      <div className="alert alert-error" role="alert">
-        Campaign not found.
-      </div>
+      <Callout.Root color="red" role="alert">
+        <Callout.Text>Campaign not found.</Callout.Text>
+      </Callout.Root>
     );
   }
 
@@ -147,155 +158,151 @@ const CampaignDetailPage: FC = () => {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-      <div>
-        <p style={{ margin: '0 0 0.5rem' }}>
+    <Flex direction="column" gap="6">
+      <Box>
+        <Text as="p" mb="2">
           <RouterLink to="/campaigns">Back to campaigns</RouterLink>
-        </p>
-        <div style={{ alignItems: 'center', display: 'flex', flexWrap: 'wrap', gap: 16 }}>
-          <h1 style={{ fontSize: '1.5rem', margin: 0 }}>{campaign.name}</h1>
+        </Text>
+        <Flex align="center" gap="4" wrap="wrap">
+          <Heading size="6">{campaign.name}</Heading>
           {isOwner ? (
-            <button
-              aria-label="Rename campaign"
-              onClick={handleRenameOpen}
-              style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '0.25rem' }}
-              type="button"
-            >
+            <IconButton aria-label="Rename campaign" onClick={handleRenameOpen} type="button" variant="ghost">
               <Pencil size={20} />
-            </button>
+            </IconButton>
           ) : null}
-        </div>
-      </div>
+        </Flex>
+      </Box>
 
       {isOwner ? (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <h2 style={{ fontSize: '1.25rem', margin: 0 }}>Invite link</h2>
+        <Flex direction="column" gap="4">
+          <Heading size="5">Invite link</Heading>
           {campaign.inviteId == null ? (
-            <div>
-              <p className="text-secondary" style={{ margin: '0 0 1rem' }}>
+            <Box>
+              <Text color="gray" mb="4" size="2">
                 Generate a link to invite others to join this campaign with one of their characters.
-              </p>
-              <button
-                disabled={inviteMutation.isPending}
-                onClick={handleEnableInvite}
-                style={{ alignItems: 'center', display: 'inline-flex', gap: '0.5rem' }}
-                type="button"
-              >
+              </Text>
+              <Button disabled={inviteMutation.isPending} onClick={handleEnableInvite} type="button">
                 <LinkIcon size={18} />
                 Enable invite link
-              </button>
-            </div>
+              </Button>
+            </Box>
           ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              <div className="field">
-                <Label.Root className="field-label" htmlFor="invite-link">
+            <Flex direction="column" gap="4">
+              <Flex direction="column" gap="1">
+                <Text as="label" htmlFor="invite-link" size="2" weight="medium">
                   Invite link
-                </Label.Root>
-                <div style={{ alignItems: 'center', display: 'flex', gap: '0.5rem' }}>
-                  <input className="field-input" id="invite-link" readOnly value={buildInviteUrl(campaign.inviteId)} />
-                  <Tooltip.Root>
-                    <Tooltip.Trigger asChild>
-                      <button aria-label="Copy invite link" onClick={handleCopyInviteLink} type="button">
-                        <Copy size={18} />
-                      </button>
-                    </Tooltip.Trigger>
-                    <Tooltip.Portal>
-                      <Tooltip.Content className="radix-tooltip-content" sideOffset={4}>
-                        {copySuccess ? 'Copied!' : 'Copy link'}
-                      </Tooltip.Content>
-                    </Tooltip.Portal>
-                  </Tooltip.Root>
-                </div>
-              </div>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-                <button
+                </Text>
+                <Flex align="center" gap="2">
+                  <TextField.Root id="invite-link" readOnly value={buildInviteUrl(campaign.inviteId)} />
+                  <Tooltip content={copySuccess ? 'Copied!' : 'Copy link'}>
+                    <IconButton
+                      aria-label="Copy invite link"
+                      onClick={handleCopyInviteLink}
+                      type="button"
+                      variant="soft"
+                    >
+                      <Copy size={18} />
+                    </IconButton>
+                  </Tooltip>
+                </Flex>
+              </Flex>
+              <Flex gap="2" wrap="wrap">
+                <Button
                   disabled={inviteMutation.isPending}
                   onClick={handleRegenerateInvite}
-                  style={{ alignItems: 'center', display: 'inline-flex', gap: '0.5rem' }}
                   type="button"
+                  variant="soft"
                 >
                   <RefreshCw size={18} />
                   Regenerate
-                </button>
-                <button disabled={inviteMutation.isPending} onClick={handleDisableInvite} type="button">
+                </Button>
+                <Button
+                  color="gray"
+                  disabled={inviteMutation.isPending}
+                  onClick={handleDisableInvite}
+                  type="button"
+                  variant="soft"
+                >
                   Disable
-                </button>
-              </div>
-              <p className="text-secondary" style={{ margin: 0 }}>
+                </Button>
+              </Flex>
+              <Text color="gray" size="2">
                 Regenerating creates a new link and invalidates the previous one.
-              </p>
-            </div>
+              </Text>
+            </Flex>
           )}
-        </div>
+        </Flex>
       ) : null}
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-        <h2 style={{ fontSize: '1.25rem', margin: 0 }}>Characters</h2>
+      <Flex direction="column" gap="4">
+        <Heading size="5">Characters</Heading>
 
-        {charactersQuery.isLoading ? <div className="skeleton" style={{ height: 72 }} /> : null}
+        {charactersQuery.isLoading ? <Skeleton height="72px" /> : null}
 
         {charactersQuery.isError ? (
-          <div className="alert alert-error" role="alert">
-            Failed to load characters.
-          </div>
+          <Callout.Root color="red" role="alert">
+            <Callout.Text>Failed to load characters.</Callout.Text>
+          </Callout.Root>
         ) : null}
 
         {!charactersQuery.isLoading && !charactersQuery.isError && characters.length === 0 ? (
-          <div className="alert alert-info" role="status">
-            No characters in this campaign yet.
-          </div>
+          <Callout.Root color="blue" role="status">
+            <Callout.Text>No characters in this campaign yet.</Callout.Text>
+          </Callout.Root>
         ) : null}
 
         {!charactersQuery.isLoading && !charactersQuery.isError && characters.length > 0 ? (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <Flex direction="column" gap="4">
             {characters.map(character => (
-              <article className="card-outlined" key={character.id}>
-                <div style={{ alignItems: 'center', display: 'flex' }}>
+              <Card key={character.id} variant="surface">
+                <Flex align="center">
                   <button
-                    className="card-action"
                     onClick={() => {
                       navigate({ params: { characterId: character.id }, to: '/characters/$characterId' });
                     }}
-                    style={{ flexGrow: 1 }}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      color: 'inherit',
+                      cursor: 'pointer',
+                      flexGrow: 1,
+                      font: 'inherit',
+                      padding: 'var(--space-4)',
+                      textAlign: 'left',
+                    }}
                     type="button"
                   >
-                    <div className="card-content">
-                      <h3 style={{ fontSize: '1.125rem', margin: '0 0 0.5rem' }}>{character.name}</h3>
-                      <p className="text-secondary" style={{ margin: 0 }}>
-                        Level {String(character.level)} · AC {String(character.armorClass)} ·{' '}
-                        {String(character.maxHitPoints)} HP
-                      </p>
-                    </div>
+                    <Heading mb="1" size="4">
+                      {character.name}
+                    </Heading>
+                    <Text color="gray" size="2">
+                      Level {String(character.level)} · AC {String(character.armorClass)} ·{' '}
+                      {String(character.maxHitPoints)} HP
+                    </Text>
                   </button>
                   {isOwner ? (
-                    <div style={{ paddingRight: 8 }}>
-                      <Tooltip.Root>
-                        <Tooltip.Trigger asChild>
-                          <button
-                            aria-label="Remove from campaign"
-                            onClick={() => {
-                              handleRemoveCharacterRequest(character.id);
-                            }}
-                            style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '0.5rem' }}
-                            type="button"
-                          >
-                            <UserMinus size={20} />
-                          </button>
-                        </Tooltip.Trigger>
-                        <Tooltip.Portal>
-                          <Tooltip.Content className="radix-tooltip-content" sideOffset={4}>
-                            Remove from campaign
-                          </Tooltip.Content>
-                        </Tooltip.Portal>
-                      </Tooltip.Root>
-                    </div>
+                    <Box pr="2">
+                      <Tooltip content="Remove from campaign">
+                        <IconButton
+                          aria-label="Remove from campaign"
+                          color="red"
+                          onClick={() => {
+                            handleRemoveCharacterRequest(character.id);
+                          }}
+                          type="button"
+                          variant="ghost"
+                        >
+                          <UserMinus size={20} />
+                        </IconButton>
+                      </Tooltip>
+                    </Box>
                   ) : null}
-                </div>
-              </article>
+                </Flex>
+              </Card>
             ))}
-          </div>
+          </Flex>
         ) : null}
-      </div>
+      </Flex>
 
       <EncounterListSection
         campaignId={campaignId}
@@ -313,33 +320,31 @@ const CampaignDetailPage: FC = () => {
         }}
         open={renameOpen}
       >
-        <Dialog.Portal>
-          <Dialog.Overlay className="radix-overlay" />
-          <Dialog.Content className="radix-dialog-content">
-            <Dialog.Title>Rename campaign</Dialog.Title>
-            <div className="field" style={{ paddingTop: 8 }}>
-              <Label.Root className="field-label" htmlFor="campaign-rename">
-                Campaign name
-              </Label.Root>
-              <input
-                className="field-input"
-                id="campaign-rename"
-                onChange={event => {
-                  setRenameDraft(event.target.value);
-                }}
-                value={renameDraft ?? ''}
-              />
-            </div>
-            <div className="dialog-actions">
-              <button onClick={handleRenameClose} type="button">
+        <Dialog.Content maxWidth="480px">
+          <Dialog.Title>Rename campaign</Dialog.Title>
+          <Flex direction="column" gap="1" mt="4">
+            <Text as="label" htmlFor="campaign-rename" size="2" weight="medium">
+              Campaign name
+            </Text>
+            <TextField.Root
+              id="campaign-rename"
+              onChange={event => {
+                setRenameDraft(event.target.value);
+              }}
+              value={renameDraft ?? ''}
+            />
+          </Flex>
+          <Flex gap="3" justify="end" mt="4">
+            <Dialog.Close>
+              <Button color="gray" onClick={handleRenameClose} type="button" variant="soft">
                 Cancel
-              </button>
-              <button disabled={updateMutation.isPending} onClick={handleRenameConfirm} type="button">
-                Save
-              </button>
-            </div>
-          </Dialog.Content>
-        </Dialog.Portal>
+              </Button>
+            </Dialog.Close>
+            <Button disabled={updateMutation.isPending} onClick={handleRenameConfirm} type="button">
+              Save
+            </Button>
+          </Flex>
+        </Dialog.Content>
       </Dialog.Root>
 
       <Dialog.Root
@@ -350,26 +355,30 @@ const CampaignDetailPage: FC = () => {
         }}
         open={pendingRemoveCharacterId !== null}
       >
-        <Dialog.Portal>
-          <Dialog.Overlay className="radix-overlay" />
-          <Dialog.Content className="radix-dialog-content">
-            <Dialog.Title>Remove from campaign</Dialog.Title>
-            <p style={{ margin: '1rem 0' }}>
-              Remove <strong>{pendingRemoveCharacter?.name ?? 'this character'}</strong> from this campaign? The
-              character will not be deleted.
-            </p>
-            <div className="dialog-actions">
-              <button onClick={handleRemoveCharacterCancel} type="button">
+        <Dialog.Content maxWidth="480px">
+          <Dialog.Title>Remove from campaign</Dialog.Title>
+          <Text as="p" mt="4">
+            Remove <strong>{pendingRemoveCharacter?.name ?? 'this character'}</strong> from this campaign? The character
+            will not be deleted.
+          </Text>
+          <Flex gap="3" justify="end" mt="4">
+            <Dialog.Close>
+              <Button color="gray" onClick={handleRemoveCharacterCancel} type="button" variant="soft">
                 Cancel
-              </button>
-              <button disabled={removeCharacterMutation.isPending} onClick={handleRemoveCharacterConfirm} type="button">
-                Remove
-              </button>
-            </div>
-          </Dialog.Content>
-        </Dialog.Portal>
+              </Button>
+            </Dialog.Close>
+            <Button
+              color="red"
+              disabled={removeCharacterMutation.isPending}
+              onClick={handleRemoveCharacterConfirm}
+              type="button"
+            >
+              Remove
+            </Button>
+          </Flex>
+        </Dialog.Content>
       </Dialog.Root>
-    </div>
+    </Flex>
   );
 };
 

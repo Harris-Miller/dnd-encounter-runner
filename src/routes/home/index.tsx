@@ -1,3 +1,4 @@
+import { Box, Card, Flex, Heading, Text } from '@radix-ui/themes';
 import { useQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
 import { BookOpen, Users } from 'lucide-react';
@@ -12,50 +13,50 @@ const HomePage: FC = () => {
   const displayName = profile?.name ?? 'there';
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-      <div>
-        <h1 style={{ fontSize: '1.5rem', margin: '0 0 0.5rem' }}>Welcome, {displayName}</h1>
-        <p className="text-secondary" style={{ margin: 0 }}>
+    <Flex direction="column" gap="6">
+      <Box>
+        <Heading mb="2" size="6">
+          Welcome, {displayName}
+        </Heading>
+        <Text color="gray" size="3">
           Organize campaigns and manage your party from here.
-        </p>
-      </div>
+        </Text>
+      </Box>
 
-      <div
-        style={{
-          display: 'grid',
-          gap: '1rem',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(16rem, 1fr))',
-        }}
-      >
-        <article className="card-outlined">
+      <Flex gap="4" wrap="wrap">
+        <Card asChild size="3" style={{ flex: '1 1 16rem', maxWidth: '100%' }} variant="surface">
           <RouterLink style={{ color: 'inherit', textDecoration: 'none' }} to="/campaigns">
-            <div className="card-content" style={{ alignItems: 'center', display: 'flex', gap: '1rem' }}>
-              <BookOpen color="var(--color-primary)" size={32} />
-              <div>
-                <h2 style={{ fontSize: '1.125rem', margin: '0 0 0.25rem' }}>Campaigns</h2>
-                <p className="text-secondary" style={{ margin: 0 }}>
+            <Flex align="center" gap="4" p="4">
+              <BookOpen color="var(--red-9)" size={32} />
+              <Box>
+                <Heading mb="1" size="4">
+                  Campaigns
+                </Heading>
+                <Text color="gray" size="2">
                   Organize characters and encounters by campaign
-                </p>
-              </div>
-            </div>
+                </Text>
+              </Box>
+            </Flex>
           </RouterLink>
-        </article>
+        </Card>
 
-        <article className="card-outlined">
+        <Card asChild size="3" style={{ flex: '1 1 16rem', maxWidth: '100%' }} variant="surface">
           <RouterLink style={{ color: 'inherit', textDecoration: 'none' }} to="/characters">
-            <div className="card-content" style={{ alignItems: 'center', display: 'flex', gap: '1rem' }}>
-              <Users color="var(--color-primary)" size={32} />
-              <div>
-                <h2 style={{ fontSize: '1.125rem', margin: '0 0 0.25rem' }}>Characters</h2>
-                <p className="text-secondary" style={{ margin: 0 }}>
+            <Flex align="center" gap="4" p="4">
+              <Users color="var(--red-9)" size={32} />
+              <Box>
+                <Heading mb="1" size="4">
+                  Characters
+                </Heading>
+                <Text color="gray" size="2">
                   Manage player characters and stats
-                </p>
-              </div>
-            </div>
+                </Text>
+              </Box>
+            </Flex>
           </RouterLink>
-        </article>
-      </div>
-    </div>
+        </Card>
+      </Flex>
+    </Flex>
   );
 };
 

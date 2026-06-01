@@ -1,4 +1,4 @@
-import * as Label from '@radix-ui/react-label';
+import { Button, Callout, Card, Flex, Heading, Separator, Text, TextField } from '@radix-ui/themes';
 import type { Provider } from '@supabase/supabase-js';
 import { useMutation } from '@tanstack/react-query';
 import { createFileRoute, useSearch } from '@tanstack/react-router';
@@ -79,61 +79,53 @@ const SignInComponent: FC = () => {
     passwordMutation.mutate({ email: email.trim(), password });
   };
 
-  const oauthButtonStyle = {
-    alignItems: 'center' as const,
-    display: 'inline-flex' as const,
-    gap: '0.5rem',
-    justifyContent: 'center' as const,
-    marginBottom: 12,
-    width: '100%',
-  };
-
   return (
     <FullScreenCenter>
-      <div className="auth-container">
-        <div className="auth-paper">
-          <h1 style={{ fontSize: '1.75rem', margin: '0 0 1.5rem' }}>DnD Encounter Runner</h1>
-          <h2 style={{ fontSize: '1.25rem', margin: '0 0 1.5rem' }}>Sign In</h2>
-          <button
+      <Card size="4" style={{ maxWidth: '28rem', width: '100%' }}>
+        <Flex align="center" direction="column" gap="4" p="5">
+          <Heading align="center" size="7">
+            DnD Encounter Runner
+          </Heading>
+          <Heading align="center" size="5">
+            Sign In
+          </Heading>
+          <Button
             onClick={() => {
               handleOAuthSignIn('google');
             }}
-            style={oauthButtonStyle}
+            style={{ width: '100%' }}
             type="button"
+            variant="outline"
           >
             <GoogleIcon />
             Google
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={() => {
               handleOAuthSignIn('discord');
             }}
-            style={oauthButtonStyle}
+            style={{ width: '100%' }}
             type="button"
+            variant="outline"
           >
             <DiscordIcon />
             Discord
-          </button>
-          <button disabled style={{ ...oauthButtonStyle, cursor: 'not-allowed', opacity: 0.6 }} type="button">
+          </Button>
+          <Button disabled style={{ width: '100%' }} type="button" variant="outline">
             <FacebookIcon />
             Facebook
-          </button>
-          <div
-            style={{
-              alignItems: 'center',
-              color: 'var(--color-text-secondary)',
-              display: 'flex',
-              gap: '1rem',
-              margin: '1rem 0',
-              width: '100%',
-            }}
-          >
-            <hr style={{ border: 0, borderTop: '1px solid var(--color-divider)', flexGrow: 1, margin: 0 }} />
-            <span>or</span>
-            <hr style={{ border: 0, borderTop: '1px solid var(--color-divider)', flexGrow: 1, margin: 0 }} />
-          </div>
+          </Button>
+          <Flex align="center" gap="3" width="100%">
+            <Separator size="4" style={{ flexGrow: 1 }} />
+            <Text color="gray" size="2">
+              or
+            </Text>
+            <Separator size="4" style={{ flexGrow: 1 }} />
+          </Flex>
           {passwordMutation.isError ? (
-            <p style={{ color: 'var(--color-error)', marginBottom: 16 }}>{passwordMutation.error.message}</p>
+            <Callout.Root color="red" role="alert" style={{ width: '100%' }}>
+              <Callout.Text>{passwordMutation.error.message}</Callout.Text>
+            </Callout.Root>
           ) : null}
           <form
             onSubmit={event => {
@@ -142,45 +134,45 @@ const SignInComponent: FC = () => {
             }}
             style={{ width: '100%' }}
           >
-            <div className="field">
-              <Label.Root className="field-label" htmlFor="sign-in-email">
-                Email
-              </Label.Root>
-              <input
-                autoComplete="email"
-                className="field-input"
-                id="sign-in-email"
-                onChange={event => {
-                  setEmail(event.target.value);
-                }}
-                type="email"
-                value={email}
-              />
-            </div>
-            <div className="field" style={{ marginBottom: 16, marginTop: 8 }}>
-              <Label.Root className="field-label" htmlFor="sign-in-password">
-                Password
-              </Label.Root>
-              <input
-                autoComplete="current-password"
-                className="field-input"
-                id="sign-in-password"
-                onChange={event => {
-                  setPassword(event.target.value);
-                }}
-                type="password"
-                value={password}
-              />
-            </div>
-            <button disabled={isPasswordSubmitDisabled} style={{ width: '100%' }} type="submit">
-              Sign In
-            </button>
+            <Flex direction="column" gap="3">
+              <Flex direction="column" gap="1">
+                <Text as="label" htmlFor="sign-in-email" size="2" weight="medium">
+                  Email
+                </Text>
+                <TextField.Root
+                  autoComplete="email"
+                  id="sign-in-email"
+                  onChange={event => {
+                    setEmail(event.target.value);
+                  }}
+                  type="email"
+                  value={email}
+                />
+              </Flex>
+              <Flex direction="column" gap="1">
+                <Text as="label" htmlFor="sign-in-password" size="2" weight="medium">
+                  Password
+                </Text>
+                <TextField.Root
+                  autoComplete="current-password"
+                  id="sign-in-password"
+                  onChange={event => {
+                    setPassword(event.target.value);
+                  }}
+                  type="password"
+                  value={password}
+                />
+              </Flex>
+              <Button disabled={isPasswordSubmitDisabled} style={{ width: '100%' }} type="submit">
+                Sign In
+              </Button>
+            </Flex>
           </form>
-          <p className="text-secondary" style={{ fontSize: '0.875rem', marginTop: 16 }}>
+          <Text color="gray" size="2">
             Don&apos;t have an account? <RouterLink to="/sign-up">Sign up</RouterLink>
-          </p>
-        </div>
-      </div>
+          </Text>
+        </Flex>
+      </Card>
     </FullScreenCenter>
   );
 };

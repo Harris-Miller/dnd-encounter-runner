@@ -1,3 +1,4 @@
+import { Callout, Flex, Skeleton } from '@radix-ui/themes';
 import { useNavigate } from '@tanstack/react-router';
 import type { FC } from 'react';
 
@@ -21,24 +22,24 @@ export const EncounterListReadOnly: FC<EncounterListReadOnlyProps> = ({
   const navigate = useNavigate();
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+    <Flex direction="column" gap="4">
       {isLoading ? (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <div className="skeleton" style={{ height: 96 }} />
-          <div className="skeleton" style={{ height: 96 }} />
-        </div>
+        <Flex direction="column" gap="4">
+          <Skeleton height="96px" />
+          <Skeleton height="96px" />
+        </Flex>
       ) : null}
 
       {isError ? (
-        <div className="alert alert-error" role="alert">
-          Failed to load encounters.
-        </div>
+        <Callout.Root color="red" role="alert">
+          <Callout.Text>Failed to load encounters.</Callout.Text>
+        </Callout.Root>
       ) : null}
 
       {!isLoading && !isError && encounters.length === 0 ? (
-        <div className="alert alert-info" role="status">
-          {emptyMessage}
-        </div>
+        <Callout.Root color="blue" role="status">
+          <Callout.Text>{emptyMessage}</Callout.Text>
+        </Callout.Root>
       ) : null}
 
       {!isLoading && !isError && encounters.length > 0 ? (
@@ -49,6 +50,6 @@ export const EncounterListReadOnly: FC<EncounterListReadOnlyProps> = ({
           }}
         />
       ) : null}
-    </div>
+    </Flex>
   );
 };

@@ -1,22 +1,24 @@
-# MUI → Radix UI migration
+# MUI → Radix Themes migration
 
 ## Approach
 
-- **Primitives:** Import `@radix-ui/react-*` at call sites (Dialog, Tabs, Tooltip, Label, Avatar, etc.)
+- **UI:** [`@radix-ui/themes`](https://www.radix-ui.com/themes) components (`Button`, `Dialog`, `TextField`, `Card`, `Flex`, etc.)
 - **Icons:** `lucide-react`
-- **Palette:** D&D Beyond tokens in `src/styles/global.css` (from former `theme.ts`)
-- **Primitive layout:** Minimal classes in `src/styles/radix.css` (overlay, dialog content, dropdown, tabs)
-- **No `src/components/ui`:** No MUI-shaped wrapper components; native HTML for buttons, layout, typography
-- **Domain-only:** `src/components/Autocomplete.tsx` (combobox behavior, not a design-system shim)
+- **Palette:** D&D Beyond tokens in `src/styles/global.css`, mapped onto Themes via `.radix-themes` CSS variables (`--red-9`, etc.)
+- **Theme shell:** `<Theme accentColor="ruby" appearance={…}>` in `App.tsx`, driven by `ColorSchemeProvider`
+- **Routing links:** `RouterLink` = `createLink(Link)` from Themes
+- **Domain-only:** `src/components/Autocomplete.tsx` (combobox; uses Themes `Box` for layout)
 
-## Theme
+## Intentional exceptions
 
-- Light/dark via `ColorSchemeProvider` in `src/providers/`
-- `html` gets `.light` / `.dark` class
+- Hidden `<input type="file">` for avatar upload
+- Native `<select multiple>` where multi-select is required (Themes `Select` is single-value)
+- Plain `<button>` on full-width card rows in some list UIs
 
 ## Verify
 
 ```bash
+pnpm install
 pnpm run typecheck
 pnpm run lint
 pnpm dev
