@@ -19,6 +19,12 @@
       "skillPath": "skills/penpot-uiux-design/SKILL.md",
       "computedHash": "cd29e08bb7d2d4b9212582bcd9b70823619fbc6397078b8ba853962054ba4230"
     },
+    "shadcn": {
+      "source": "shadcn/ui",
+      "sourceType": "github",
+      "skillPath": "skills/shadcn/SKILL.md",
+      "computedHash": "80a6226e78f6d1fe464214ae0ef449d49d8ffaa3e7704f011e9b418c678ad4d1"
+    },
     "supabase": {
       "source": "supabase/agent-skills",
       "sourceType": "github",
