@@ -46,6 +46,13 @@ const eslintConfig = defineConfig([
     },
   },
   {
+    files: ['src/components/ui/**'],
+    rules: {
+      'react/no-unused-prop-types': 'off',
+      'react/require-default-props': 'off',
+    },
+  },
+  {
     files: ['**/*.ts', '**/*.tsx'],
     languageOptions: {
       parserOptions: {
