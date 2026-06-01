@@ -5,15 +5,15 @@ import { useState } from 'react';
 import type { FC } from 'react';
 
 import { mutateJoinCampaignViaInvite, queryInviteCampaign, queryMyCharactersWithCampaign } from '../../api/invites';
+import { Alert } from '../../components/compat/Alert';
+import { Box } from '../../components/compat/Box';
+import { Button } from '../../components/compat/Button';
+import { Card, CardActionArea, CardContent } from '../../components/compat/Card';
+import { Chip } from '../../components/compat/Chip';
+import { Skeleton } from '../../components/compat/Skeleton';
+import { Stack } from '../../components/compat/Stack';
+import { Typography } from '../../components/compat/Typography';
 import { RouterLink } from '../../components/RouterLink';
-import { Alert } from '../../components/ui/Alert';
-import { Box } from '../../components/ui/Box';
-import { Button } from '../../components/ui/Button';
-import { Card, CardActionArea, CardContent } from '../../components/ui/Card';
-import { Chip } from '../../components/ui/Chip';
-import { Skeleton } from '../../components/ui/Skeleton';
-import { Stack } from '../../components/ui/Stack';
-import { Typography } from '../../components/ui/Typography';
 import { queryClient } from '../../queryClient';
 import { fetchQueryOrNotFound } from '../../utils/fetchQueryOrNotFound';
 

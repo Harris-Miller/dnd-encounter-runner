@@ -5,14 +5,14 @@ import { useState } from 'react';
 import type { FC, SVGProps } from 'react';
 
 import { mutateSignInWithOAuth, mutateSignInWithPassword } from '../api/auth';
+import { Button } from '../components/compat/Button';
+import { Container } from '../components/compat/Container';
+import { Divider } from '../components/compat/Divider';
+import { Paper } from '../components/compat/Paper';
+import { TextField } from '../components/compat/TextField';
+import { Typography } from '../components/compat/Typography';
 import { FullScreenCenter } from '../components/FullScreenCenter';
 import { RouterLink } from '../components/RouterLink';
-import { Button } from '../components/ui/Button';
-import { Container } from '../components/ui/Container';
-import { Divider } from '../components/ui/Divider';
-import { Paper } from '../components/ui/Paper';
-import { TextField } from '../components/ui/TextField';
-import { Typography } from '../components/ui/Typography';
 import { basepath } from '../router';
 
 const GoogleIcon: FC<SVGProps<SVGSVGElement>> = props => (

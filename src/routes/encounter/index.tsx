@@ -3,9 +3,9 @@ import { createFileRoute } from '@tanstack/react-router';
 import type { FC } from 'react';
 
 import { queryEncountersList } from '../../api/encounters';
+import { Stack } from '../../components/compat/Stack';
+import { Typography } from '../../components/compat/Typography';
 import { EncounterListReadOnly } from '../../components/encounter/encounterLists/EncounterListReadOnlyProps';
-import { Stack } from '../../components/ui/Stack';
-import { Typography } from '../../components/ui/Typography';
 import { queryClient } from '../../queryClient';
 
 const EncountersPage: FC = () => {

@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 
-import { ColorSchemeProvider } from './components/ui/ColorSchemeProvider';
-import { TooltipProvider } from './components/ui/Tooltip';
+import { ColorSchemeProvider } from './components/compat/ColorSchemeProvider';
+import { TooltipProvider } from './components/compat/Tooltip';
 import { Router } from './router';
 import './styles/global.css';
 

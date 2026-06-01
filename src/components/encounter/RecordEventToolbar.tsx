@@ -2,13 +2,13 @@ import { useMemo, useState } from 'react';
 import type { FC } from 'react';
 
 import type { Combatant, EncounterEvent, EncounterState, TriggerEvent } from '../../types/encounterState';
-import { Box } from '../ui/Box';
-import { Button } from '../ui/Button';
-import { Card, CardContent } from '../ui/Card';
-import { Dialog, DialogActions, DialogContent, DialogTitle } from '../ui/Dialog';
-import { Stack } from '../ui/Stack';
-import { MenuItem, TextField } from '../ui/TextField';
-import { Typography } from '../ui/Typography';
+import { Box } from '../compat/Box';
+import { Button } from '../compat/Button';
+import { Card, CardContent } from '../compat/Card';
+import { Dialog, DialogActions, DialogContent, DialogTitle } from '../compat/Dialog';
+import { Stack } from '../compat/Stack';
+import { MenuItem, TextField } from '../compat/TextField';
+import { Typography } from '../compat/Typography';
 
 const DAMAGE_TYPES = [
   'acid',

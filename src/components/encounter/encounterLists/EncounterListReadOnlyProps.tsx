@@ -2,9 +2,9 @@ import { useNavigate } from '@tanstack/react-router';
 import type { FC } from 'react';
 
 import type { EncounterListItem } from '../../../api/encounters';
-import { Alert } from '../../ui/Alert';
-import { Skeleton } from '../../ui/Skeleton';
-import { Stack } from '../../ui/Stack';
+import { Alert } from '../../compat/Alert';
+import { Skeleton } from '../../compat/Skeleton';
+import { Stack } from '../../compat/Stack';
 
 import { EncounterCards } from './EncounterCards';
 

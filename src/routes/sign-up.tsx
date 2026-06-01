@@ -5,15 +5,15 @@ import { useState } from 'react';
 import type { FC } from 'react';
 
 import { mutateSignUpWithPassword } from '../api/auth';
+import { Button } from '../components/compat/Button';
+import { Container } from '../components/compat/Container';
+import { IconButton } from '../components/compat/IconButton';
+import { InputAdornment } from '../components/compat/InputAdornment';
+import { Paper } from '../components/compat/Paper';
+import { TextField } from '../components/compat/TextField';
+import { Typography } from '../components/compat/Typography';
 import { FullScreenCenter } from '../components/FullScreenCenter';
 import { RouterLink } from '../components/RouterLink';
-import { Button } from '../components/ui/Button';
-import { Container } from '../components/ui/Container';
-import { IconButton } from '../components/ui/IconButton';
-import { InputAdornment } from '../components/ui/InputAdornment';
-import { Paper } from '../components/ui/Paper';
-import { TextField } from '../components/ui/TextField';
-import { Typography } from '../components/ui/Typography';
 
 const MINIMUM_DISPLAY_NAME_LENGTH = 3;
 const MINIMUM_PASSWORD_LENGTH = 6;

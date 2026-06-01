@@ -17,16 +17,16 @@ import type {
   TriggerEvent,
 } from '../../types/encounterState';
 import { STANDARD_CONDITION_IDS, TRIGGER_EVENT_TYPES } from '../../types/encounterState';
-import { Autocomplete } from '../ui/Autocomplete';
-import { Box } from '../ui/Box';
-import { Button } from '../ui/Button';
-import { Dialog, DialogActions, DialogContent, DialogTitle } from '../ui/Dialog';
-import { FormControlLabel } from '../ui/FormControlLabel';
-import { Stack } from '../ui/Stack';
-import { Switch } from '../ui/Switch';
-import { Tab, Tabs } from '../ui/Tabs';
-import { MenuItem, TextField } from '../ui/TextField';
-import { Typography } from '../ui/Typography';
+import { Autocomplete } from '../compat/Autocomplete';
+import { Box } from '../compat/Box';
+import { Button } from '../compat/Button';
+import { Dialog, DialogActions, DialogContent, DialogTitle } from '../compat/Dialog';
+import { FormControlLabel } from '../compat/FormControlLabel';
+import { Stack } from '../compat/Stack';
+import { Switch } from '../compat/Switch';
+import { Tab, Tabs } from '../compat/Tabs';
+import { MenuItem, TextField } from '../compat/TextField';
+import { Typography } from '../compat/Typography';
 
 type Source = 'condition' | 'custom' | 'item' | 'spell';
 

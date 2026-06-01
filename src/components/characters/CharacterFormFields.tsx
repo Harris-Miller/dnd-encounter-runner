@@ -1,7 +1,7 @@
 import type { ChangeEvent, FC } from 'react';
 
-import { Stack } from '../ui/Stack';
-import { TextField } from '../ui/TextField';
+import { Stack } from '../compat/Stack';
+import { TextField } from '../compat/TextField';
 
 import type { CharacterFormValues } from './characterForm';
 

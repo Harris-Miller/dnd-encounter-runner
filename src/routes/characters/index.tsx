@@ -13,16 +13,16 @@ import {
 } from '../../components/characters/characterForm';
 import type { CharacterFormValues } from '../../components/characters/characterForm';
 import { CharacterFormFields } from '../../components/characters/CharacterFormFields';
-import { Alert } from '../../components/ui/Alert';
-import { Box } from '../../components/ui/Box';
-import { Button } from '../../components/ui/Button';
-import { Card, CardActionArea, CardContent } from '../../components/ui/Card';
-import { Dialog, DialogActions, DialogContent, DialogTitle } from '../../components/ui/Dialog';
-import { IconButton } from '../../components/ui/IconButton';
-import { Skeleton } from '../../components/ui/Skeleton';
-import { Stack } from '../../components/ui/Stack';
-import { Tooltip } from '../../components/ui/Tooltip';
-import { Typography } from '../../components/ui/Typography';
+import { Alert } from '../../components/compat/Alert';
+import { Box } from '../../components/compat/Box';
+import { Button } from '../../components/compat/Button';
+import { Card, CardActionArea, CardContent } from '../../components/compat/Card';
+import { Dialog, DialogActions, DialogContent, DialogTitle } from '../../components/compat/Dialog';
+import { IconButton } from '../../components/compat/IconButton';
+import { Skeleton } from '../../components/compat/Skeleton';
+import { Stack } from '../../components/compat/Stack';
+import { Tooltip } from '../../components/compat/Tooltip';
+import { Typography } from '../../components/compat/Typography';
 import { queryClient } from '../../queryClient';
 
 const formatTimestamp = (raw: string): string => {

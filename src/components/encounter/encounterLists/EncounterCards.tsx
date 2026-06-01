@@ -2,13 +2,13 @@ import { Trash2 } from 'lucide-react';
 import type { FC } from 'react';
 
 import type { EncounterListItem } from '../../../api/encounters';
-import { Box } from '../../ui/Box';
-import { Card, CardActionArea, CardContent } from '../../ui/Card';
-import { Chip } from '../../ui/Chip';
-import { IconButton } from '../../ui/IconButton';
-import { Stack } from '../../ui/Stack';
-import { Tooltip } from '../../ui/Tooltip';
-import { Typography } from '../../ui/Typography';
+import { Box } from '../../compat/Box';
+import { Card, CardActionArea, CardContent } from '../../compat/Card';
+import { Chip } from '../../compat/Chip';
+import { IconButton } from '../../compat/IconButton';
+import { Stack } from '../../compat/Stack';
+import { Tooltip } from '../../compat/Tooltip';
+import { Typography } from '../../compat/Typography';
 
 const formatTimestamp = (raw: string): string => {
   if (raw === '') return '';

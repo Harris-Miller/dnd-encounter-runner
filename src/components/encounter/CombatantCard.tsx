@@ -3,13 +3,13 @@ import type { FC } from 'react';
 
 import { STANDARD_CONDITIONS } from '../../data/conditions';
 import type { Combatant, EffectDescriptor } from '../../types/encounterState';
-import { Box } from '../ui/Box';
-import { Card, CardActionArea } from '../ui/Card';
-import { Chip } from '../ui/Chip';
-import { LinearProgress } from '../ui/LinearProgress';
-import { Stack } from '../ui/Stack';
-import { Tooltip } from '../ui/Tooltip';
-import { Typography } from '../ui/Typography';
+import { Box } from '../compat/Box';
+import { Card, CardActionArea } from '../compat/Card';
+import { Chip } from '../compat/Chip';
+import { LinearProgress } from '../compat/LinearProgress';
+import { Stack } from '../compat/Stack';
+import { Tooltip } from '../compat/Tooltip';
+import { Typography } from '../compat/Typography';
 
 const isStandardCondition = (provides: EffectDescriptor[]): null | string => {
   for (const descriptor of provides) {

@@ -1,8 +1,8 @@
 import { Outlet } from '@tanstack/react-router';
 import type { FC } from 'react';
 
+import { Container } from './compat/Container';
 import { Header } from './Header';
-import { Container } from './ui/Container';
 
 export const AppLayout: FC = () => (
   <>

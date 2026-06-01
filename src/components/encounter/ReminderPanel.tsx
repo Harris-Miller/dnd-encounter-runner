@@ -3,15 +3,15 @@ import { useState } from 'react';
 import type { FC } from 'react';
 
 import type { EncounterState, Reminder } from '../../types/encounterState';
-import { Alert } from '../ui/Alert';
-import { Box } from '../ui/Box';
-import { Button } from '../ui/Button';
-import { Card, CardContent } from '../ui/Card';
-import { Chip } from '../ui/Chip';
-import { IconButton } from '../ui/IconButton';
-import { Stack } from '../ui/Stack';
-import { ToggleButton, ToggleButtonGroup } from '../ui/ToggleButtonGroup';
-import { Typography } from '../ui/Typography';
+import { Alert } from '../compat/Alert';
+import { Box } from '../compat/Box';
+import { Button } from '../compat/Button';
+import { Card, CardContent } from '../compat/Card';
+import { Chip } from '../compat/Chip';
+import { IconButton } from '../compat/IconButton';
+import { Stack } from '../compat/Stack';
+import { ToggleButton, ToggleButtonGroup } from '../compat/ToggleButtonGroup';
+import { Typography } from '../compat/Typography';
 
 const REMINDER_KIND_LABEL: Record<Reminder['kind'], string> = {
   concentration_save: 'Concentration save',

@@ -7,13 +7,13 @@ import { queryMonster, queryMonstersSearch } from '../../api/monsters';
 import type { MonsterSummary } from '../../api/monsters';
 import type { Combatant, CombatantType } from '../../types/encounterState';
 import { DEFAULT_ACTION_ECONOMY } from '../../types/encounterState';
-import { Autocomplete } from '../ui/Autocomplete';
-import { Box } from '../ui/Box';
-import { Button } from '../ui/Button';
-import { Dialog, DialogActions, DialogContent, DialogTitle } from '../ui/Dialog';
-import { Stack } from '../ui/Stack';
-import { Tab, Tabs } from '../ui/Tabs';
-import { MenuItem, TextField } from '../ui/TextField';
+import { Autocomplete } from '../compat/Autocomplete';
+import { Box } from '../compat/Box';
+import { Button } from '../compat/Button';
+import { Dialog, DialogActions, DialogContent, DialogTitle } from '../compat/Dialog';
+import { Stack } from '../compat/Stack';
+import { Tab, Tabs } from '../compat/Tabs';
+import { MenuItem, TextField } from '../compat/TextField';
 
 type Mode = 'character-roster' | 'custom' | 'monster-index';
 

@@ -6,14 +6,14 @@ import type { FC } from 'react';
 
 import { mutateCreateEncounter, mutateDeleteEncounter } from '../../../api/encounters';
 import type { EncounterListItem } from '../../../api/encounters';
-import { Alert } from '../../ui/Alert';
-import { Box } from '../../ui/Box';
-import { Button } from '../../ui/Button';
-import { Dialog, DialogActions, DialogContent, DialogTitle } from '../../ui/Dialog';
-import { Skeleton } from '../../ui/Skeleton';
-import { Stack } from '../../ui/Stack';
-import { TextField } from '../../ui/TextField';
-import { Typography } from '../../ui/Typography';
+import { Alert } from '../../compat/Alert';
+import { Box } from '../../compat/Box';
+import { Button } from '../../compat/Button';
+import { Dialog, DialogActions, DialogContent, DialogTitle } from '../../compat/Dialog';
+import { Skeleton } from '../../compat/Skeleton';
+import { Stack } from '../../compat/Stack';
+import { TextField } from '../../compat/TextField';
+import { Typography } from '../../compat/Typography';
 
 import { EncounterCards } from './EncounterCards';
 

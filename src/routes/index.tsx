@@ -3,11 +3,11 @@ import type { FC } from 'react';
 
 import { queryUser } from '../api/user';
 import dndLogo from '../assets/dnd-logo.svg';
+import { Container } from '../components/compat/Container';
+import { Paper } from '../components/compat/Paper';
+import { Typography } from '../components/compat/Typography';
 import { FullScreenCenter } from '../components/FullScreenCenter';
 import { RouterLink } from '../components/RouterLink';
-import { Container } from '../components/ui/Container';
-import { Paper } from '../components/ui/Paper';
-import { Typography } from '../components/ui/Typography';
 import { queryClient } from '../queryClient';
 import { supabase } from '../services/supabase';
 

@@ -1,8 +1,8 @@
 import type { FC } from 'react';
 
-import { Button } from '../ui/Button';
-import { Dialog, DialogActions, DialogContent, DialogTitle } from '../ui/Dialog';
-import { Typography } from '../ui/Typography';
+import { Button } from '../compat/Button';
+import { Dialog, DialogActions, DialogContent, DialogTitle } from '../compat/Dialog';
+import { Typography } from '../compat/Typography';
 
 export interface CharacterDeleteDialogProps {
   characterName: null | string;

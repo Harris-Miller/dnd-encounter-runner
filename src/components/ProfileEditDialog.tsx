@@ -14,13 +14,13 @@ import type { Profile, ProfileAvatarSource } from '../api/profile';
 import { queryUser } from '../api/user';
 import { resolveProfileAvatarUrl } from '../api/utils/resolveProfileAvatarUrl';
 
-import { Avatar } from './ui/Avatar';
-import { Button } from './ui/Button';
-import { Dialog, DialogActions, DialogContent, DialogTitle } from './ui/Dialog';
-import { Stack } from './ui/Stack';
-import { TextField } from './ui/TextField';
-import { ToggleButton, ToggleButtonGroup } from './ui/ToggleButtonGroup';
-import { Typography } from './ui/Typography';
+import { Avatar } from './compat/Avatar';
+import { Button } from './compat/Button';
+import { Dialog, DialogActions, DialogContent, DialogTitle } from './compat/Dialog';
+import { Stack } from './compat/Stack';
+import { TextField } from './compat/TextField';
+import { ToggleButton, ToggleButtonGroup } from './compat/ToggleButtonGroup';
+import { Typography } from './compat/Typography';
 
 type ProfileEditDialogProps = {
   onClose: () => void;

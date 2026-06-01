@@ -1,9 +1,9 @@
 import { useNavigate } from '@tanstack/react-router';
 import type { FC } from 'react';
 
-import { Button } from './ui/Button';
-import { Stack } from './ui/Stack';
-import { Typography } from './ui/Typography';
+import { Button } from './compat/Button';
+import { Stack } from './compat/Stack';
+import { Typography } from './compat/Typography';
 
 export const NotFoundPage: FC = () => {
   const navigate = useNavigate();

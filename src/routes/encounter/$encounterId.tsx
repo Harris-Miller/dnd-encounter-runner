@@ -10,6 +10,16 @@ import {
   queryEncounter,
   useApplyTransform,
 } from '../../api/encounters';
+import { Alert } from '../../components/compat/Alert';
+import { Box } from '../../components/compat/Box';
+import { Button } from '../../components/compat/Button';
+import { Chip } from '../../components/compat/Chip';
+import { Dialog, DialogActions, DialogContent, DialogTitle } from '../../components/compat/Dialog';
+import { IconButton } from '../../components/compat/IconButton';
+import { Skeleton } from '../../components/compat/Skeleton';
+import { Stack } from '../../components/compat/Stack';
+import { TextField } from '../../components/compat/TextField';
+import { Typography } from '../../components/compat/Typography';
 import { AddCombatantDialog } from '../../components/encounter/AddCombatantDialog';
 import { ApplyEffectDialog } from '../../components/encounter/ApplyEffectDialog';
 import { CombatantDetailDrawer } from '../../components/encounter/CombatantDetailDrawer';
@@ -17,16 +27,6 @@ import { InitiativeTracker } from '../../components/encounter/InitiativeTracker'
 import { RecordEventToolbar } from '../../components/encounter/RecordEventToolbar';
 import { ReminderPanel } from '../../components/encounter/ReminderPanel';
 import { RouterLink } from '../../components/RouterLink';
-import { Alert } from '../../components/ui/Alert';
-import { Box } from '../../components/ui/Box';
-import { Button } from '../../components/ui/Button';
-import { Chip } from '../../components/ui/Chip';
-import { Dialog, DialogActions, DialogContent, DialogTitle } from '../../components/ui/Dialog';
-import { IconButton } from '../../components/ui/IconButton';
-import { Skeleton } from '../../components/ui/Skeleton';
-import { Stack } from '../../components/ui/Stack';
-import { TextField } from '../../components/ui/TextField';
-import { Typography } from '../../components/ui/Typography';
 import { queryClient } from '../../queryClient';
 import { fetchQueryOrNotFound } from '../../utils/fetchQueryOrNotFound';
 

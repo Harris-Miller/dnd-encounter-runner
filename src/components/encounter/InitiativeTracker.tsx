@@ -2,11 +2,11 @@ import { SkipForward } from 'lucide-react';
 import type { FC } from 'react';
 
 import type { EncounterState } from '../../types/encounterState';
-import { Box } from '../ui/Box';
-import { Button } from '../ui/Button';
-import { Card, CardContent } from '../ui/Card';
-import { Stack } from '../ui/Stack';
-import { Typography } from '../ui/Typography';
+import { Box } from '../compat/Box';
+import { Button } from '../compat/Button';
+import { Card, CardContent } from '../compat/Card';
+import { Stack } from '../compat/Stack';
+import { Typography } from '../compat/Typography';
 
 import { CombatantCard } from './CombatantCard';
 

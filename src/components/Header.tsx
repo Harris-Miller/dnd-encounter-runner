@@ -10,17 +10,17 @@ import { queryProfile } from '../api/profile';
 import { queryUser } from '../api/user';
 import { resolveProfileAvatarUrl } from '../api/utils/resolveProfileAvatarUrl';
 
+import { AppBar, Toolbar } from './compat/AppBar';
+import { Avatar } from './compat/Avatar';
+import { Box } from './compat/Box';
+import { ButtonGroup } from './compat/ButtonGroup';
+import { useColorScheme } from './compat/ColorSchemeProvider';
+import { IconButton } from './compat/IconButton';
+import { Popover } from './compat/Popover';
+import { Tooltip } from './compat/Tooltip';
+import { Typography } from './compat/Typography';
 import { ProfileEditDialog } from './ProfileEditDialog';
 import { RouterLink } from './RouterLink';
-import { AppBar, Toolbar } from './ui/AppBar';
-import { Avatar } from './ui/Avatar';
-import { Box } from './ui/Box';
-import { ButtonGroup } from './ui/ButtonGroup';
-import { useColorScheme } from './ui/ColorSchemeProvider';
-import { IconButton } from './ui/IconButton';
-import { Popover } from './ui/Popover';
-import { Tooltip } from './ui/Tooltip';
-import { Typography } from './ui/Typography';
 
 export const Header: FC = () => {
   const { mode, setMode } = useColorScheme();

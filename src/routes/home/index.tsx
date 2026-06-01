@@ -4,11 +4,11 @@ import { BookOpen, Users } from 'lucide-react';
 import type { FC } from 'react';
 
 import { queryProfile } from '../../api/profile';
+import { Box } from '../../components/compat/Box';
+import { Card, CardActionArea, CardContent } from '../../components/compat/Card';
+import { Stack } from '../../components/compat/Stack';
+import { Typography } from '../../components/compat/Typography';
 import { RouterLink } from '../../components/RouterLink';
-import { Box } from '../../components/ui/Box';
-import { Card, CardActionArea, CardContent } from '../../components/ui/Card';
-import { Stack } from '../../components/ui/Stack';
-import { Typography } from '../../components/ui/Typography';
 import { queryClient } from '../../queryClient';
 
 const HomePage: FC = () => {

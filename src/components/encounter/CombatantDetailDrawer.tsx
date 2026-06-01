@@ -3,18 +3,18 @@ import { useState } from 'react';
 import type { FC } from 'react';
 
 import type { Combatant } from '../../types/encounterState';
-import { Box } from '../ui/Box';
-import { Button } from '../ui/Button';
-import { Chip } from '../ui/Chip';
-import { Divider } from '../ui/Divider';
-import { Drawer } from '../ui/Drawer';
-import { IconButton } from '../ui/IconButton';
-import { LinearProgress } from '../ui/LinearProgress';
-import { Stack } from '../ui/Stack';
-import { TextField } from '../ui/TextField';
-import { ToggleButton, ToggleButtonGroup } from '../ui/ToggleButtonGroup';
-import { Tooltip } from '../ui/Tooltip';
-import { Typography } from '../ui/Typography';
+import { Box } from '../compat/Box';
+import { Button } from '../compat/Button';
+import { Chip } from '../compat/Chip';
+import { Divider } from '../compat/Divider';
+import { Drawer } from '../compat/Drawer';
+import { IconButton } from '../compat/IconButton';
+import { LinearProgress } from '../compat/LinearProgress';
+import { Stack } from '../compat/Stack';
+import { TextField } from '../compat/TextField';
+import { ToggleButton, ToggleButtonGroup } from '../compat/ToggleButtonGroup';
+import { Tooltip } from '../compat/Tooltip';
+import { Typography } from '../compat/Typography';
 
 export interface CombatantDetailDrawerProps {
   combatant: Combatant | null;

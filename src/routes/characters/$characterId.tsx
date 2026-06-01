@@ -14,13 +14,13 @@ import {
 } from '../../components/characters/characterForm';
 import type { CharacterFormValues } from '../../components/characters/characterForm';
 import { CharacterFormFields } from '../../components/characters/CharacterFormFields';
+import { Alert } from '../../components/compat/Alert';
+import { Box } from '../../components/compat/Box';
+import { Button } from '../../components/compat/Button';
+import { Skeleton } from '../../components/compat/Skeleton';
+import { Stack } from '../../components/compat/Stack';
+import { Typography } from '../../components/compat/Typography';
 import { RouterLink } from '../../components/RouterLink';
-import { Alert } from '../../components/ui/Alert';
-import { Box } from '../../components/ui/Box';
-import { Button } from '../../components/ui/Button';
-import { Skeleton } from '../../components/ui/Skeleton';
-import { Stack } from '../../components/ui/Stack';
-import { Typography } from '../../components/ui/Typography';
 import { queryClient } from '../../queryClient';
 import { fetchQueryOrNotFound } from '../../utils/fetchQueryOrNotFound';
 
