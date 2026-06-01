@@ -1,9 +1,9 @@
-import { CircularProgress } from '@mui/material';
 import { createRouter, RouterProvider } from '@tanstack/react-router';
 import type { FC } from 'react';
 
 import { FullScreenCenter } from './components/FullScreenCenter';
 import { NotFoundPage } from './components/NotFoundPage';
+import { CircularProgress } from './components/ui/CircularProgress';
 import { routeTree } from './routeTree.gen';
 
 export const basepath = import.meta.env.BASE_URL === '/' ? '/' : import.meta.env.BASE_URL.replace(/\/$/, '');

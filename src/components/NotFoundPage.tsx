@@ -1,21 +1,27 @@
-import { Box, Button, Typography } from '@mui/material';
+import { useNavigate } from '@tanstack/react-router';
 import type { FC } from 'react';
 
-import { FullScreenCenter } from './FullScreenCenter';
-import { RouterLink } from './RouterLink';
+import { Button } from './ui/Button';
+import { Stack } from './ui/Stack';
+import { Typography } from './ui/Typography';
 
-export const NotFoundPage: FC = () => (
-  <FullScreenCenter>
-    <Box sx={{ px: 2, textAlign: 'center' }}>
-      <Typography component="h1" sx={{ fontWeight: 700, mb: 1 }} variant="h3">
-        404
+export const NotFoundPage: FC = () => {
+  const navigate = useNavigate();
+
+  return (
+    <Stack alignItems="center" spacing={2} style={{ padding: 48, textAlign: 'center' }}>
+      <Typography variant="h4">Page not found</Typography>
+      <Typography className="text-secondary" variant="body1">
+        The page you are looking for does not exist.
       </Typography>
-      <Typography color="text.secondary" sx={{ mb: 3 }} variant="body1">
-        This page does not exist or the resource could not be found.
-      </Typography>
-      <Button component={RouterLink} to="/" variant="contained">
+      <Button
+        onClick={() => {
+          navigate({ to: '/home' });
+        }}
+        variant="contained"
+      >
         Go home
       </Button>
-    </Box>
-  </FullScreenCenter>
-);
+    </Stack>
+  );
+};

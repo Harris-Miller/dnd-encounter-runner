@@ -1,13 +1,13 @@
-import { Container } from '@mui/material';
 import { Outlet } from '@tanstack/react-router';
 import type { FC } from 'react';
 
 import { Header } from './Header';
+import { Container } from './ui/Container';
 
 export const AppLayout: FC = () => (
   <>
     <Header />
-    <Container maxWidth="xl" sx={{ marginTop: 9 }}>
+    <Container className="app-main" maxWidth="xl">
       <Outlet />
     </Container>
   </>

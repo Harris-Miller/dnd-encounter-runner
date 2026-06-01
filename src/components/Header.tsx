@@ -1,22 +1,7 @@
-import DarkModeIcon from '@mui/icons-material/DarkMode';
-import LightModeIcon from '@mui/icons-material/LightMode';
-import SettingsBrightnessIcon from '@mui/icons-material/SettingsBrightness';
-import {
-  AppBar,
-  Avatar,
-  Box,
-  ButtonGroup,
-  IconButton,
-  Menu,
-  MenuItem,
-  Popover,
-  Toolbar,
-  Tooltip,
-  Typography,
-} from '@mui/material';
-import { useColorScheme } from '@mui/material/styles';
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
+import { Monitor, Moon, Sun } from 'lucide-react';
 import { useState } from 'react';
 import type { FC, MouseEvent } from 'react';
 import { match } from 'ts-pattern';
@@ -27,13 +12,21 @@ import { resolveProfileAvatarUrl } from '../api/utils/resolveProfileAvatarUrl';
 
 import { ProfileEditDialog } from './ProfileEditDialog';
 import { RouterLink } from './RouterLink';
+import { AppBar, Toolbar } from './ui/AppBar';
+import { Avatar } from './ui/Avatar';
+import { Box } from './ui/Box';
+import { ButtonGroup } from './ui/ButtonGroup';
+import { useColorScheme } from './ui/ColorSchemeProvider';
+import { IconButton } from './ui/IconButton';
+import { Popover } from './ui/Popover';
+import { Tooltip } from './ui/Tooltip';
+import { Typography } from './ui/Typography';
 
 export const Header: FC = () => {
   const { mode, setMode } = useColorScheme();
   const navigate = useNavigate();
 
   const [themeAnchorEl, setThemeAnchorEl] = useState<HTMLButtonElement | null>(null);
-  const [avatarAnchorEl, setAvatarAnchorEl] = useState<HTMLElement | null>(null);
   const [profileDialogOpen, setProfileDialogOpen] = useState(false);
 
   const user = useQuery(queryUser);
@@ -51,16 +44,7 @@ export const Header: FC = () => {
     setThemeAnchorEl(null);
   };
 
-  const handleAvatarOpen = (event: MouseEvent<HTMLButtonElement>) => {
-    setAvatarAnchorEl(event.currentTarget);
-  };
-
-  const handleAvatarClose = () => {
-    setAvatarAnchorEl(null);
-  };
-
   const handleProfileOpen = () => {
-    handleAvatarClose();
     setProfileDialogOpen(true);
   };
 
@@ -69,115 +53,97 @@ export const Header: FC = () => {
   };
 
   const handleLogout = () => {
-    handleAvatarClose();
     navigate({ to: '/sign-out' });
   };
 
-  const themeOpen = Boolean(themeAnchorEl);
-  const avatarMenuOpen = Boolean(avatarAnchorEl);
+  const themeOpen = themeAnchorEl != null;
 
   return (
     <>
       <AppBar position="fixed">
         <Toolbar>
-          <RouterLink
-            activeOptions={{ exact: true, includeSearch: false }}
-            color="inherit"
-            sx={{ mr: 3, textDecoration: 'none' }}
-            to="/home"
-            underline="none"
-          >
+          <RouterLink className="nav-link" style={{ marginRight: 24, textDecoration: 'none' }} to="/home">
             <Typography component="h1" variant="h6">
               D&D Encounter Runner
             </Typography>
           </RouterLink>
-          <Box sx={{ display: 'flex', gap: 2 }}>
+          <Box style={{ display: 'flex', gap: 16 }}>
             <RouterLink
               activeOptions={{ includeSearch: false }}
-              activeProps={{ sx: { fontWeight: 700, textDecoration: 'underline' } }}
-              color="inherit"
+              activeProps={{ className: 'nav-link nav-link-active' }}
+              className="nav-link"
               to="/campaigns"
-              underline="hover"
             >
               Campaigns
             </RouterLink>
             <RouterLink
               activeOptions={{ includeSearch: false }}
-              activeProps={{ sx: { fontWeight: 700, textDecoration: 'underline' } }}
-              color="inherit"
+              activeProps={{ className: 'nav-link nav-link-active' }}
+              className="nav-link"
               to="/characters"
-              underline="hover"
             >
               Characters
             </RouterLink>
           </Box>
-          <Box sx={{ flexGrow: 1 }} />
-          <Box sx={{ alignItems: 'center', display: 'flex' }}>
-            <IconButton color="inherit" onClick={handleThemeOpen}>
-              {match(mode!)
-                .with('light', () => <LightModeIcon />)
-                .with('system', () => <SettingsBrightnessIcon />)
-                .with('dark', () => <DarkModeIcon />)
+          <span className="toolbar-spacer" />
+          <Box style={{ alignItems: 'center', display: 'flex' }}>
+            <IconButton aria-label="Theme" onClick={handleThemeOpen} type="button">
+              {match(mode)
+                .with('light', () => <Sun size={20} />)
+                .with('system', () => <Monitor size={20} />)
+                .with('dark', () => <Moon size={20} />)
                 .exhaustive()}
             </IconButton>
-            <Popover
-              anchorEl={themeAnchorEl}
-              anchorOrigin={{
-                horizontal: 'center',
-                vertical: 'bottom',
-              }}
-              onClose={handleThemeClose}
-              open={themeOpen}
-              transformOrigin={{
-                horizontal: 'center',
-                vertical: 'top',
-              }}
-            >
-              <ButtonGroup aria-label="Basic button group" variant="contained">
+            <Popover anchorEl={themeAnchorEl} onClose={handleThemeClose} open={themeOpen}>
+              <ButtonGroup aria-label="Color scheme">
                 <IconButton
+                  aria-label="Light mode"
                   onClick={() => {
                     setMode('light');
                   }}
+                  type="button"
                 >
-                  <LightModeIcon />
+                  <Sun size={20} />
                 </IconButton>
                 <IconButton
+                  aria-label="System mode"
                   onClick={() => {
                     setMode('system');
                   }}
+                  type="button"
                 >
-                  <SettingsBrightnessIcon />
+                  <Monitor size={20} />
                 </IconButton>
                 <IconButton
+                  aria-label="Dark mode"
                   onClick={() => {
                     setMode('dark');
                   }}
+                  type="button"
                 >
-                  <DarkModeIcon />
+                  <Moon size={20} />
                 </IconButton>
               </ButtonGroup>
             </Popover>
-            <Tooltip title="Account">
-              <IconButton onClick={handleAvatarOpen} sx={{ p: 0 }}>
-                <Avatar alt={avatarAlt} src={avatarUrl} />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              anchorEl={avatarAnchorEl}
-              anchorOrigin={{
-                horizontal: 'right',
-                vertical: 'bottom',
-              }}
-              onClose={handleAvatarClose}
-              open={avatarMenuOpen}
-              transformOrigin={{
-                horizontal: 'right',
-                vertical: 'top',
-              }}
-            >
-              <MenuItem onClick={handleProfileOpen}>Profile</MenuItem>
-              <MenuItem onClick={handleLogout}>Logout</MenuItem>
-            </Menu>
+            <DropdownMenu.Root>
+              <Tooltip title="Account">
+                <DropdownMenu.Trigger asChild>
+                  <IconButton aria-label="Account menu" style={{ padding: 0 }} type="button">
+                    <Avatar alt={avatarAlt} src={avatarUrl} />
+                  </IconButton>
+                </DropdownMenu.Trigger>
+              </Tooltip>
+              <DropdownMenu.Portal>
+                <DropdownMenu.Content align="end" className="dropdown-content" sideOffset={4}>
+                  <DropdownMenu.Item className="dropdown-item" onSelect={handleProfileOpen}>
+                    Profile
+                  </DropdownMenu.Item>
+                  <DropdownMenu.Item className="dropdown-item" onSelect={handleLogout}>
+                    Logout
+                  </DropdownMenu.Item>
+                </DropdownMenu.Content>
+              </DropdownMenu.Portal>
+            </DropdownMenu.Root>
           </Box>
         </Toolbar>
       </AppBar>
