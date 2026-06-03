@@ -1,2 +1,4 @@
-onlyBuiltDependencies:
-  - supabase
+allowBuilds:
+  esbuild: true
+  supabase: true
+  unrs-resolver: true
