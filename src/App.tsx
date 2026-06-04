@@ -7,7 +7,7 @@ import { theme } from './theme';
 
 export const App: FC = () => {
   return (
-    <ThemeProvider noSsr theme={theme}>
+    <ThemeProvider defaultMode="system" noSsr theme={theme}>
       <CssBaseline />
       <Router />
     </ThemeProvider>
