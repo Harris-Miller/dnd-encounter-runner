@@ -68,7 +68,7 @@ export const EncounterListSection: FC<EncounterListSectionProps> = ({
       {
         onSuccess: created => {
           setCreateDraft(null);
-          navigate({ params: { encounterId: created.id }, to: '/encounter/$encounterId' });
+          navigate({ params: { encounterId: created.id }, to: '/dashboard/encounters/$encounterId' });
         },
       },
     );
@@ -141,7 +141,7 @@ export const EncounterListSection: FC<EncounterListSectionProps> = ({
           encounters={encounters}
           onDeleteRequest={isOwner ? handleDeleteRequest : undefined}
           onSelectEncounter={encounterId => {
-            navigate({ params: { encounterId }, to: '/encounter/$encounterId' });
+            navigate({ params: { encounterId }, to: '/dashboard/encounters/$encounterId' });
           }}
         />
       )}

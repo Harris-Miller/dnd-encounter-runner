@@ -22,16 +22,16 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { useState } from 'react';
 import type { FC } from 'react';
 
-import { mutateCreateCharacter, mutateDeleteCharacter, queryCharactersList } from '../../api/characters';
-import { CharacterDeleteDialog } from '../../components/characters/CharacterDeleteDialog';
+import { mutateCreateCharacter, mutateDeleteCharacter, queryCharactersList } from '../../../api/characters';
+import { CharacterDeleteDialog } from '../../../components/characters/CharacterDeleteDialog';
 import {
   emptyCharacterFormValues,
   isCharacterFormValid,
   parseCharacterForm,
-} from '../../components/characters/characterForm';
-import type { CharacterFormValues } from '../../components/characters/characterForm';
-import { CharacterFormFields } from '../../components/characters/CharacterFormFields';
-import { queryClient } from '../../queryClient';
+} from '../../../components/characters/characterForm';
+import type { CharacterFormValues } from '../../../components/characters/characterForm';
+import { CharacterFormFields } from '../../../components/characters/CharacterFormFields';
+import { queryClient } from '../../../queryClient';
 
 const formatTimestamp = (raw: string): string => {
   if (raw === '') return '';

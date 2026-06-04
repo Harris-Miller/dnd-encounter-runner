@@ -38,7 +38,7 @@ export const EncounterListReadOnly: FC<EncounterListReadOnlyProps> = ({
         <EncounterCards
           encounters={encounters}
           onSelectEncounter={encounterId => {
-            navigate({ params: { encounterId }, to: '/encounter/$encounterId' });
+            navigate({ params: { encounterId }, to: '/dashboard/encounters/$encounterId' });
           }}
         />
       )}
