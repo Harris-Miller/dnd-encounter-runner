@@ -25,18 +25,18 @@ import {
   mutateSetEncounterName,
   queryEncounter,
   useApplyTransform,
-} from '../../api/encounters';
-import { AddCombatantDialog } from '../../components/encounter/AddCombatantDialog';
-import { ApplyEffectDialog } from '../../components/encounter/ApplyEffectDialog';
-import { CombatantDetailDrawer } from '../../components/encounter/CombatantDetailDrawer';
-import { InitiativeTracker } from '../../components/encounter/InitiativeTracker';
-import { RecordEventToolbar } from '../../components/encounter/RecordEventToolbar';
-import { ReminderPanel } from '../../components/encounter/ReminderPanel';
-import { RouterLink } from '../../components/RouterLink';
-import { queryClient } from '../../queryClient';
-import { fetchQueryOrNotFound } from '../../utils/fetchQueryOrNotFound';
+} from '../../../api/encounters';
+import { AddCombatantDialog } from '../../../components/encounter/AddCombatantDialog';
+import { ApplyEffectDialog } from '../../../components/encounter/ApplyEffectDialog';
+import { CombatantDetailDrawer } from '../../../components/encounter/CombatantDetailDrawer';
+import { InitiativeTracker } from '../../../components/encounter/InitiativeTracker';
+import { RecordEventToolbar } from '../../../components/encounter/RecordEventToolbar';
+import { ReminderPanel } from '../../../components/encounter/ReminderPanel';
+import { RouterLink } from '../../../components/RouterLink';
+import { queryClient } from '../../../queryClient';
+import { fetchQueryOrNotFound } from '../../../utils/fetchQueryOrNotFound';
 
-const routeApi = getRouteApi('/encounter/$encounterId');
+const routeApi = getRouteApi('/dashboard/encounters/$encounterId');
 
 const EncounterPage: FC = () => {
   const { encounterId } = routeApi.useParams();
@@ -127,7 +127,7 @@ const EncounterPage: FC = () => {
     <Stack spacing={3}>
       <Box>
         <Typography sx={{ mb: 1 }} variant="body2">
-          <RouterLink to="/encounter">Back to encounters</RouterLink>
+          <RouterLink to="/dashboard/encounters">Back to encounters</RouterLink>
         </Typography>
         <Box sx={{ alignItems: 'center', display: 'flex', flexWrap: 'wrap', gap: 2 }}>
           <Typography variant="h4">{data.name}</Typography>
@@ -259,7 +259,7 @@ const EncounterPage: FC = () => {
   );
 };
 
-export const Route = createFileRoute('/encounter/$encounterId')({
+export const Route = createFileRoute('/dashboard/encounters/$encounterId')({
   component: EncounterPage,
   loader: async ({ params }) => {
     await fetchQueryOrNotFound(queryClient, queryEncounter(params.encounterId));

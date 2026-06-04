@@ -23,8 +23,8 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { useState } from 'react';
 import type { FC } from 'react';
 
-import { mutateCreateCampaign, mutateDeleteCampaign, queryCampaignsList } from '../../api/campaigns';
-import { queryClient } from '../../queryClient';
+import { mutateCreateCampaign, mutateDeleteCampaign, queryCampaignsList } from '../../../api/campaigns';
+import { queryClient } from '../../../queryClient';
 
 const formatTimestamp = (raw: string): string => {
   if (raw === '') return '';
@@ -61,7 +61,7 @@ const CampaignsPage: FC = () => {
       {
         onSuccess: created => {
           setCreateDraft(null);
-          navigate({ params: { campaignId: created.id }, to: '/campaigns/$campaignId' });
+          navigate({ params: { campaignId: created.id }, to: '/dashboard/campaigns/$campaignId' });
         },
       },
     );
@@ -121,7 +121,7 @@ const CampaignsPage: FC = () => {
               <Box sx={{ alignItems: 'center', display: 'flex' }}>
                 <CardActionArea
                   onClick={() => {
-                    navigate({ params: { campaignId: campaign.id }, to: '/campaigns/$campaignId' });
+                    navigate({ params: { campaignId: campaign.id }, to: '/dashboard/campaigns/$campaignId' });
                   }}
                   sx={{ flexGrow: 1 }}
                 >
@@ -195,7 +195,7 @@ const CampaignsPage: FC = () => {
   );
 };
 
-export const Route = createFileRoute('/campaigns/')({
+export const Route = createFileRoute('/dashboard/campaigns/')({
   component: CampaignsPage,
   loader: async () => {
     await queryClient.ensureQueryData(queryCampaignsList);

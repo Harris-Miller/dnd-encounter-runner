@@ -84,7 +84,7 @@ export const Header: FC = () => {
             activeOptions={{ exact: true, includeSearch: false }}
             color="inherit"
             sx={{ mr: 3, textDecoration: 'none' }}
-            to="/home"
+            to="/dashboard"
             underline="none"
           >
             <Typography component="h1" variant="h6">
@@ -96,7 +96,7 @@ export const Header: FC = () => {
               activeOptions={{ includeSearch: false }}
               activeProps={{ sx: { fontWeight: 700, textDecoration: 'underline' } }}
               color="inherit"
-              to="/campaigns"
+              to="/dashboard/campaigns"
               underline="hover"
             >
               Campaigns
@@ -105,7 +105,7 @@ export const Header: FC = () => {
               activeOptions={{ includeSearch: false }}
               activeProps={{ sx: { fontWeight: 700, textDecoration: 'underline' } }}
               color="inherit"
-              to="/characters"
+              to="/dashboard/characters"
               underline="hover"
             >
               Characters

@@ -33,17 +33,17 @@ import {
   mutateUpdateCampaign,
   queryCampaign,
   queryCampaignCharacters,
-} from '../../api/campaigns';
-import { queryEncountersList } from '../../api/encounters';
-import { queryProfile } from '../../api/profile';
-import { EncounterListSection } from '../../components/encounter/encounterLists/EncounterListSection';
-import { RouterLink } from '../../components/RouterLink';
-import { queryClient } from '../../queryClient';
-import { fetchQueryOrNotFound } from '../../utils/fetchQueryOrNotFound';
+} from '../../../api/campaigns';
+import { queryEncountersList } from '../../../api/encounters';
+import { queryProfile } from '../../../api/profile';
+import { EncounterListSection } from '../../../components/encounter/encounterLists/EncounterListSection';
+import { RouterLink } from '../../../components/RouterLink';
+import { queryClient } from '../../../queryClient';
+import { fetchQueryOrNotFound } from '../../../utils/fetchQueryOrNotFound';
 
-const routeApi = getRouteApi('/campaigns/$campaignId');
+const routeApi = getRouteApi('/dashboard/campaigns/$campaignId');
 
-const buildInviteUrl = (inviteId: string): string => `${window.location.origin}/invite/${inviteId}`;
+const buildInviteUrl = (inviteId: string): string => `${window.location.origin}/dashboard/invite/${inviteId}`;
 
 const CampaignDetailPage: FC = () => {
   const navigate = useNavigate();
@@ -166,7 +166,7 @@ const CampaignDetailPage: FC = () => {
     <Stack spacing={4}>
       <Box>
         <Typography sx={{ mb: 1 }} variant="body2">
-          <RouterLink to="/campaigns">Back to campaigns</RouterLink>
+          <RouterLink to="/dashboard/campaigns">Back to campaigns</RouterLink>
         </Typography>
         <Box sx={{ alignItems: 'center', display: 'flex', flexWrap: 'wrap', gap: 2 }}>
           <Typography variant="h4">{campaign.name}</Typography>
@@ -264,7 +264,7 @@ const CampaignDetailPage: FC = () => {
                 <Box sx={{ alignItems: 'center', display: 'flex' }}>
                   <CardActionArea
                     onClick={() => {
-                      navigate({ params: { characterId: character.id }, to: '/characters/$characterId' });
+                      navigate({ params: { characterId: character.id }, to: '/dashboard/characters/$characterId' });
                     }}
                     sx={{ flexGrow: 1 }}
                   >
@@ -354,7 +354,7 @@ const CampaignDetailPage: FC = () => {
   );
 };
 
-export const Route = createFileRoute('/campaigns/$campaignId')({
+export const Route = createFileRoute('/dashboard/campaigns/$campaignId')({
   component: CampaignDetailPage,
   loader: async ({ params }) => {
     const { campaignId } = params;

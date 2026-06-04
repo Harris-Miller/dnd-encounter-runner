@@ -6,21 +6,21 @@ import { createFileRoute, getRouteApi, useNavigate } from '@tanstack/react-route
 import { useState } from 'react';
 import type { FC } from 'react';
 
-import type { Character } from '../../api/characters';
-import { mutateDeleteCharacter, mutateUpdateCharacter, queryCharacter } from '../../api/characters';
-import { CharacterDeleteDialog } from '../../components/characters/CharacterDeleteDialog';
+import type { Character } from '../../../api/characters';
+import { mutateDeleteCharacter, mutateUpdateCharacter, queryCharacter } from '../../../api/characters';
+import { CharacterDeleteDialog } from '../../../components/characters/CharacterDeleteDialog';
 import {
   characterToFormValues,
   isCharacterFormValid,
   parseCharacterForm,
-} from '../../components/characters/characterForm';
-import type { CharacterFormValues } from '../../components/characters/characterForm';
-import { CharacterFormFields } from '../../components/characters/CharacterFormFields';
-import { RouterLink } from '../../components/RouterLink';
-import { queryClient } from '../../queryClient';
-import { fetchQueryOrNotFound } from '../../utils/fetchQueryOrNotFound';
+} from '../../../components/characters/characterForm';
+import type { CharacterFormValues } from '../../../components/characters/characterForm';
+import { CharacterFormFields } from '../../../components/characters/CharacterFormFields';
+import { RouterLink } from '../../../components/RouterLink';
+import { queryClient } from '../../../queryClient';
+import { fetchQueryOrNotFound } from '../../../utils/fetchQueryOrNotFound';
 
-const routeApi = getRouteApi('/characters/$characterId');
+const routeApi = getRouteApi('/dashboard/characters/$characterId');
 
 interface CharacterEditFormProps {
   character: Character;
@@ -86,7 +86,7 @@ const CharacterDetailPage: FC = () => {
   const handleDeleteConfirm = () => {
     deleteMutation.mutate(characterId, {
       onSuccess: () => {
-        navigate({ to: '/characters' });
+        navigate({ to: '/dashboard/characters' });
       },
     });
   };
@@ -104,7 +104,7 @@ const CharacterDetailPage: FC = () => {
     return (
       <Stack spacing={2}>
         <Alert severity="error">Character not found or failed to load.</Alert>
-        <Button component={RouterLink} to="/characters" variant="outlined">
+        <Button component={RouterLink} to="/dashboard/characters" variant="outlined">
           Back to characters
         </Button>
       </Stack>
@@ -114,7 +114,7 @@ const CharacterDetailPage: FC = () => {
   return (
     <Stack spacing={3}>
       <Box sx={{ alignItems: 'center', display: 'flex', gap: 2 }}>
-        <Button component={RouterLink} startIcon={<ArrowBackIcon />} to="/characters" variant="text">
+        <Button component={RouterLink} startIcon={<ArrowBackIcon />} to="/dashboard/characters" variant="text">
           Characters
         </Button>
         <Box sx={{ flexGrow: 1 }} />
@@ -145,7 +145,7 @@ const CharacterDetailPage: FC = () => {
   );
 };
 
-export const Route = createFileRoute('/characters/$characterId')({
+export const Route = createFileRoute('/dashboard/characters/$characterId')({
   component: CharacterDetailPage,
   loader: async ({ params }) => {
     await fetchQueryOrNotFound(queryClient, queryCharacter(params.characterId));

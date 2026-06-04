@@ -16,12 +16,12 @@ import { createFileRoute, getRouteApi, notFound } from '@tanstack/react-router';
 import { useState } from 'react';
 import type { FC } from 'react';
 
-import { mutateJoinCampaignViaInvite, queryInviteCampaign, queryMyCharactersWithCampaign } from '../../api/invites';
-import { RouterLink } from '../../components/RouterLink';
-import { queryClient } from '../../queryClient';
-import { fetchQueryOrNotFound } from '../../utils/fetchQueryOrNotFound';
+import { mutateJoinCampaignViaInvite, queryInviteCampaign, queryMyCharactersWithCampaign } from '../../../api/invites';
+import { RouterLink } from '../../../components/RouterLink';
+import { queryClient } from '../../../queryClient';
+import { fetchQueryOrNotFound } from '../../../utils/fetchQueryOrNotFound';
 
-const routeApi = getRouteApi('/invite/$inviteId');
+const routeApi = getRouteApi('/dashboard/invite/$inviteId');
 
 const InvitePage: FC = () => {
   const { inviteId } = routeApi.useParams();
@@ -60,7 +60,7 @@ const InvitePage: FC = () => {
           You joined <strong>{inviteCampaign.name}</strong>!
         </Alert>
         <Box>
-          <RouterLink params={{ campaignId: joinedCampaignId }} to="/campaigns/$campaignId">
+          <RouterLink params={{ campaignId: joinedCampaignId }} to="/dashboard/campaigns/$campaignId">
             View campaign
           </RouterLink>
         </Box>
@@ -147,7 +147,7 @@ const InvitePage: FC = () => {
   );
 };
 
-export const Route = createFileRoute('/invite/$inviteId')({
+export const Route = createFileRoute('/dashboard/invite/$inviteId')({
   component: InvitePage,
   loader: async ({ params }) => {
     const { inviteId } = params;

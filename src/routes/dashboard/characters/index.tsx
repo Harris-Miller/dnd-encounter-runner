@@ -22,16 +22,16 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { useState } from 'react';
 import type { FC } from 'react';
 
-import { mutateCreateCharacter, mutateDeleteCharacter, queryCharactersList } from '../../api/characters';
-import { CharacterDeleteDialog } from '../../components/characters/CharacterDeleteDialog';
+import { mutateCreateCharacter, mutateDeleteCharacter, queryCharactersList } from '../../../api/characters';
+import { CharacterDeleteDialog } from '../../../components/characters/CharacterDeleteDialog';
 import {
   emptyCharacterFormValues,
   isCharacterFormValid,
   parseCharacterForm,
-} from '../../components/characters/characterForm';
-import type { CharacterFormValues } from '../../components/characters/characterForm';
-import { CharacterFormFields } from '../../components/characters/CharacterFormFields';
-import { queryClient } from '../../queryClient';
+} from '../../../components/characters/characterForm';
+import type { CharacterFormValues } from '../../../components/characters/characterForm';
+import { CharacterFormFields } from '../../../components/characters/CharacterFormFields';
+import { queryClient } from '../../../queryClient';
 
 const formatTimestamp = (raw: string): string => {
   if (raw === '') return '';
@@ -66,7 +66,7 @@ const CharactersPage: FC = () => {
     createMutation.mutate(parsed, {
       onSuccess: created => {
         setCreateOpen(false);
-        navigate({ params: { characterId: created.id }, to: '/characters/$characterId' });
+        navigate({ params: { characterId: created.id }, to: '/dashboard/characters/$characterId' });
       },
     });
   };
@@ -126,7 +126,7 @@ const CharactersPage: FC = () => {
               <Box sx={{ alignItems: 'center', display: 'flex' }}>
                 <CardActionArea
                   onClick={() => {
-                    navigate({ params: { characterId: character.id }, to: '/characters/$characterId' });
+                    navigate({ params: { characterId: character.id }, to: '/dashboard/characters/$characterId' });
                   }}
                   sx={{ flexGrow: 1 }}
                 >
@@ -192,7 +192,7 @@ const CharactersPage: FC = () => {
   );
 };
 
-export const Route = createFileRoute('/characters/')({
+export const Route = createFileRoute('/dashboard/characters/')({
   component: CharactersPage,
   loader: async () => {
     await queryClient.ensureQueryData(queryCharactersList);
