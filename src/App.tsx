@@ -3,7 +3,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import type { FC } from 'react';
 
 import { Router } from './router';
-import { theme } from './theme';
+import { theme } from './themes/default-dense';
 
 export const App: FC = () => {
   return (
