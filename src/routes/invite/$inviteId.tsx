@@ -60,7 +60,7 @@ const InvitePage: FC = () => {
           You joined <strong>{inviteCampaign.name}</strong>!
         </Alert>
         <Box>
-          <RouterLink params={{ campaignId: joinedCampaignId }} to="/campaigns/$campaignId">
+          <RouterLink params={{ campaignId: joinedCampaignId }} to="/dashboard/campaigns/$campaignId">
             View campaign
           </RouterLink>
         </Box>

@@ -96,7 +96,7 @@ export const Header: FC = () => {
               activeOptions={{ includeSearch: false }}
               activeProps={{ sx: { fontWeight: 700, textDecoration: 'underline' } }}
               color="inherit"
-              to="/campaigns"
+              to="/dashboard/campaigns"
               underline="hover"
             >
               Campaigns
