@@ -9,7 +9,7 @@ import { queryProfile } from '../../api/profile';
 import { RouterLink } from '../../components/RouterLink';
 import { queryClient } from '../../queryClient';
 
-const HomePage: FC = () => {
+const DashboardPage: FC = () => {
   const { data: profile } = useQuery(queryProfile);
   const displayName = profile?.name ?? 'there';
 
@@ -26,7 +26,7 @@ const HomePage: FC = () => {
 
       <Stack direction={{ sm: 'row', xs: 'column' }} spacing={2}>
         <Card sx={{ flex: 1 }} variant="outlined">
-          <RouterLink sx={{ color: 'inherit', textDecoration: 'none' }} to="/campaigns">
+          <RouterLink sx={{ color: 'inherit', textDecoration: 'none' }} to="/dashboard/campaigns">
             <CardActionArea>
               <CardContent>
                 <Stack direction="row" spacing={2} sx={{ alignItems: 'center' }}>
@@ -44,7 +44,7 @@ const HomePage: FC = () => {
         </Card>
 
         <Card sx={{ flex: 1 }} variant="outlined">
-          <RouterLink sx={{ color: 'inherit', textDecoration: 'none' }} to="/characters">
+          <RouterLink sx={{ color: 'inherit', textDecoration: 'none' }} to="/dashboard/characters">
             <CardActionArea>
               <CardContent>
                 <Stack direction="row" spacing={2} sx={{ alignItems: 'center' }}>
@@ -65,8 +65,8 @@ const HomePage: FC = () => {
   );
 };
 
-export const Route = createFileRoute('/home/')({
-  component: HomePage,
+export const Route = createFileRoute('/dashboard/')({
+  component: DashboardPage,
   loader: async () => {
     await queryClient.ensureQueryData(queryProfile);
   },

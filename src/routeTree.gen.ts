@@ -14,13 +14,13 @@ import { Route as SignOutRouteImport } from './routes/sign-out'
 import { Route as SignInRouteImport } from './routes/sign-in'
 import { Route as SplatRouteImport } from './routes/$'
 import { Route as InviteRouteRouteImport } from './routes/invite/route'
-import { Route as HomeRouteRouteImport } from './routes/home/route'
 import { Route as EncounterRouteRouteImport } from './routes/encounter/route'
+import { Route as DashboardRouteRouteImport } from './routes/dashboard/route'
 import { Route as CharactersRouteRouteImport } from './routes/characters/route'
 import { Route as CampaignsRouteRouteImport } from './routes/campaigns/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as HomeIndexRouteImport } from './routes/home/index'
 import { Route as EncounterIndexRouteImport } from './routes/encounter/index'
+import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
 import { Route as CharactersIndexRouteImport } from './routes/characters/index'
 import { Route as CampaignsIndexRouteImport } from './routes/campaigns/index'
 import { Route as InviteInviteIdRouteImport } from './routes/invite/$inviteId'
@@ -53,14 +53,14 @@ const InviteRouteRoute = InviteRouteRouteImport.update({
   path: '/invite',
   getParentRoute: () => rootRouteImport,
 } as any)
-const HomeRouteRoute = HomeRouteRouteImport.update({
-  id: '/home',
-  path: '/home',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const EncounterRouteRoute = EncounterRouteRouteImport.update({
   id: '/encounter',
   path: '/encounter',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRouteRoute = DashboardRouteRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CharactersRouteRoute = CharactersRouteRouteImport.update({
@@ -78,15 +78,15 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const HomeIndexRoute = HomeIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => HomeRouteRoute,
-} as any)
 const EncounterIndexRoute = EncounterIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => EncounterRouteRoute,
+} as any)
+const DashboardIndexRoute = DashboardIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DashboardRouteRoute,
 } as any)
 const CharactersIndexRoute = CharactersIndexRouteImport.update({
   id: '/',
@@ -123,8 +123,8 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/campaigns': typeof CampaignsRouteRouteWithChildren
   '/characters': typeof CharactersRouteRouteWithChildren
+  '/dashboard': typeof DashboardRouteRouteWithChildren
   '/encounter': typeof EncounterRouteRouteWithChildren
-  '/home': typeof HomeRouteRouteWithChildren
   '/invite': typeof InviteRouteRouteWithChildren
   '/$': typeof SplatRoute
   '/sign-in': typeof SignInRoute
@@ -136,8 +136,8 @@ export interface FileRoutesByFullPath {
   '/invite/$inviteId': typeof InviteInviteIdRoute
   '/campaigns/': typeof CampaignsIndexRoute
   '/characters/': typeof CharactersIndexRoute
+  '/dashboard/': typeof DashboardIndexRoute
   '/encounter/': typeof EncounterIndexRoute
-  '/home/': typeof HomeIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -152,16 +152,16 @@ export interface FileRoutesByTo {
   '/invite/$inviteId': typeof InviteInviteIdRoute
   '/campaigns': typeof CampaignsIndexRoute
   '/characters': typeof CharactersIndexRoute
+  '/dashboard': typeof DashboardIndexRoute
   '/encounter': typeof EncounterIndexRoute
-  '/home': typeof HomeIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/campaigns': typeof CampaignsRouteRouteWithChildren
   '/characters': typeof CharactersRouteRouteWithChildren
+  '/dashboard': typeof DashboardRouteRouteWithChildren
   '/encounter': typeof EncounterRouteRouteWithChildren
-  '/home': typeof HomeRouteRouteWithChildren
   '/invite': typeof InviteRouteRouteWithChildren
   '/$': typeof SplatRoute
   '/sign-in': typeof SignInRoute
@@ -173,8 +173,8 @@ export interface FileRoutesById {
   '/invite/$inviteId': typeof InviteInviteIdRoute
   '/campaigns/': typeof CampaignsIndexRoute
   '/characters/': typeof CharactersIndexRoute
+  '/dashboard/': typeof DashboardIndexRoute
   '/encounter/': typeof EncounterIndexRoute
-  '/home/': typeof HomeIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -182,8 +182,8 @@ export interface FileRouteTypes {
     | '/'
     | '/campaigns'
     | '/characters'
+    | '/dashboard'
     | '/encounter'
-    | '/home'
     | '/invite'
     | '/$'
     | '/sign-in'
@@ -195,8 +195,8 @@ export interface FileRouteTypes {
     | '/invite/$inviteId'
     | '/campaigns/'
     | '/characters/'
+    | '/dashboard/'
     | '/encounter/'
-    | '/home/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -211,15 +211,15 @@ export interface FileRouteTypes {
     | '/invite/$inviteId'
     | '/campaigns'
     | '/characters'
+    | '/dashboard'
     | '/encounter'
-    | '/home'
   id:
     | '__root__'
     | '/'
     | '/campaigns'
     | '/characters'
+    | '/dashboard'
     | '/encounter'
-    | '/home'
     | '/invite'
     | '/$'
     | '/sign-in'
@@ -231,16 +231,16 @@ export interface FileRouteTypes {
     | '/invite/$inviteId'
     | '/campaigns/'
     | '/characters/'
+    | '/dashboard/'
     | '/encounter/'
-    | '/home/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CampaignsRouteRoute: typeof CampaignsRouteRouteWithChildren
   CharactersRouteRoute: typeof CharactersRouteRouteWithChildren
+  DashboardRouteRoute: typeof DashboardRouteRouteWithChildren
   EncounterRouteRoute: typeof EncounterRouteRouteWithChildren
-  HomeRouteRoute: typeof HomeRouteRouteWithChildren
   InviteRouteRoute: typeof InviteRouteRouteWithChildren
   SplatRoute: typeof SplatRoute
   SignInRoute: typeof SignInRoute
@@ -285,18 +285,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InviteRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/home': {
-      id: '/home'
-      path: '/home'
-      fullPath: '/home'
-      preLoaderRoute: typeof HomeRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/encounter': {
       id: '/encounter'
       path: '/encounter'
       fullPath: '/encounter'
       preLoaderRoute: typeof EncounterRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/characters': {
@@ -320,19 +320,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/home/': {
-      id: '/home/'
-      path: '/'
-      fullPath: '/home/'
-      preLoaderRoute: typeof HomeIndexRouteImport
-      parentRoute: typeof HomeRouteRoute
-    }
     '/encounter/': {
       id: '/encounter/'
       path: '/'
       fullPath: '/encounter/'
       preLoaderRoute: typeof EncounterIndexRouteImport
       parentRoute: typeof EncounterRouteRoute
+    }
+    '/dashboard/': {
+      id: '/dashboard/'
+      path: '/'
+      fullPath: '/dashboard/'
+      preLoaderRoute: typeof DashboardIndexRouteImport
+      parentRoute: typeof DashboardRouteRoute
     }
     '/characters/': {
       id: '/characters/'
@@ -407,6 +407,18 @@ const CharactersRouteRouteWithChildren = CharactersRouteRoute._addFileChildren(
   CharactersRouteRouteChildren,
 )
 
+interface DashboardRouteRouteChildren {
+  DashboardIndexRoute: typeof DashboardIndexRoute
+}
+
+const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
+  DashboardIndexRoute: DashboardIndexRoute,
+}
+
+const DashboardRouteRouteWithChildren = DashboardRouteRoute._addFileChildren(
+  DashboardRouteRouteChildren,
+)
+
 interface EncounterRouteRouteChildren {
   EncounterEncounterIdRoute: typeof EncounterEncounterIdRoute
   EncounterIndexRoute: typeof EncounterIndexRoute
@@ -419,18 +431,6 @@ const EncounterRouteRouteChildren: EncounterRouteRouteChildren = {
 
 const EncounterRouteRouteWithChildren = EncounterRouteRoute._addFileChildren(
   EncounterRouteRouteChildren,
-)
-
-interface HomeRouteRouteChildren {
-  HomeIndexRoute: typeof HomeIndexRoute
-}
-
-const HomeRouteRouteChildren: HomeRouteRouteChildren = {
-  HomeIndexRoute: HomeIndexRoute,
-}
-
-const HomeRouteRouteWithChildren = HomeRouteRoute._addFileChildren(
-  HomeRouteRouteChildren,
 )
 
 interface InviteRouteRouteChildren {
@@ -449,8 +449,8 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CampaignsRouteRoute: CampaignsRouteRouteWithChildren,
   CharactersRouteRoute: CharactersRouteRouteWithChildren,
+  DashboardRouteRoute: DashboardRouteRouteWithChildren,
   EncounterRouteRoute: EncounterRouteRouteWithChildren,
-  HomeRouteRoute: HomeRouteRouteWithChildren,
   InviteRouteRoute: InviteRouteRouteWithChildren,
   SplatRoute: SplatRoute,
   SignInRoute: SignInRoute,

@@ -84,7 +84,7 @@ export const Header: FC = () => {
             activeOptions={{ exact: true, includeSearch: false }}
             color="inherit"
             sx={{ mr: 3, textDecoration: 'none' }}
-            to="/home"
+            to="/dashboard"
             underline="none"
           >
             <Typography component="h1" variant="h6">

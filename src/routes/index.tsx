@@ -56,7 +56,7 @@ export const Route = createFileRoute('/')({
 
     // eslint-disable-next-line @typescript-eslint/only-throw-error -- TanStack Router redirect API
     throw redirect({
-      to: '/home',
+      to: '/dashboard',
     });
   },
   component: IndexComponent,
