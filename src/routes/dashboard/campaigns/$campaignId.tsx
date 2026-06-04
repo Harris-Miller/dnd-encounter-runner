@@ -43,7 +43,7 @@ import { fetchQueryOrNotFound } from '../../../utils/fetchQueryOrNotFound';
 
 const routeApi = getRouteApi('/dashboard/campaigns/$campaignId');
 
-const buildInviteUrl = (inviteId: string): string => `${window.location.origin}/invite/${inviteId}`;
+const buildInviteUrl = (inviteId: string): string => `${window.location.origin}/dashboard/invite/${inviteId}`;
 
 const CampaignDetailPage: FC = () => {
   const navigate = useNavigate();
