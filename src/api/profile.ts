@@ -180,5 +180,5 @@ export const mutateUpdateProfileGravatarId = mutationOptions({
   },
 });
 
-export const getCachedProfile = (): Profile | undefined =>
-  queryClient.getQueryCache().find<unknown, Error, Profile>(queryProfile)?.state.data;
+export const getCachedProfile = (): null | Profile =>
+  queryClient.getQueryCache().find<unknown, Error, Profile>(queryProfile)?.state.data ?? null;

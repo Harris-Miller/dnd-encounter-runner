@@ -8,29 +8,35 @@ import { HeroSection } from '../components/marketing/HeroSection';
 import { MarketingFooter } from '../components/marketing/MarketingFooter';
 import { PublicHeader } from '../components/marketing/PublicHeader';
 
-const FEATURES = [
+interface Features {
+  description: string;
+  imagePosition: 'left' | 'right';
+  title: string;
+}
+
+const FEATURES: readonly Features[] = [
   {
     description:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Create campaigns, share invite links with your party, and keep every session organized in one workspace.',
-    imagePosition: 'right' as const,
+    imagePosition: 'right',
     title: 'Campaign management',
   },
   {
     description:
       'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Track armor class, hit points, and level for every character in your roster — ready to drop into any encounter.',
-    imagePosition: 'left' as const,
+    imagePosition: 'left',
     title: 'Character roster',
   },
   {
     description:
       'Ut enim ad minim veniam, quis nostrud exercitation. Run initiative order, apply effects, and log combat events in real time so nothing gets lost between turns.',
-    imagePosition: 'right' as const,
+    imagePosition: 'right',
     title: 'Encounter runner',
   },
 ];
 
 const IndexComponent: FC = () => (
-  <AppLayout footer={<MarketingFooter />} header={<PublicHeader />}>
+  <AppLayout header={<PublicHeader />}>
     <HeroSection />
     {FEATURES.map(feature => (
       <FeatureSection
@@ -41,6 +47,7 @@ const IndexComponent: FC = () => (
       />
     ))}
     <FinalCtaSection />
+    <MarketingFooter />
   </AppLayout>
 );
 

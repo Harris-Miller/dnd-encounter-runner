@@ -5,7 +5,7 @@ import { AppLayout } from '../../components/AppLayout';
 import { PrivateHeader } from '../../components/PrivateHeader';
 import { requireSession } from '../../utils/routeGuards';
 
-const DashboardLayout: FC = () => <AppLayout contained header={<PrivateHeader />} />;
+const DashboardLayout: FC = () => <AppLayout header={<PrivateHeader />} />;
 
 export const Route = createFileRoute('/dashboard')({
   beforeLoad: async () => {

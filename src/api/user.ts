@@ -17,4 +17,5 @@ export const queryUser = queryOptions({
   refetchOnWindowFocus: false,
 });
 
-export const getCachedUser = () => queryClient.getQueryCache().find<unknown, Error, User>(queryUser)?.state.data;
+export const getCachedUser = (): null | User =>
+  queryClient.getQueryCache().find<unknown, Error, User>(queryUser)?.state.data ?? null;

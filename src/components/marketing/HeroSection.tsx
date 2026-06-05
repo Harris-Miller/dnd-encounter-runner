@@ -1,12 +1,23 @@
 import { Box, Button, Container, Stack, Typography } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 import type { FC } from 'react';
 
-import { useOptionalUser } from '../../hooks/useOptionalUser';
+import { queryUser } from '../../api/user';
 import { RouterLink } from '../RouterLink';
 
 export const HeroSection: FC = () => {
-  const user = useOptionalUser();
-  const isSignedIn = user != null;
+  const { data: user, isError, isLoading } = useQuery({ ...queryUser, retry: false });
+  const isSignedIn = !isLoading && !isError && user != null;
+
+  const stackOptions = isLoading ? null : isSignedIn ? (
+    <Button color="primary" component={RouterLink} size="medium" to="/dashboard" variant="contained">
+      Go to Dashboard
+    </Button>
+  ) : (
+    <Button color="primary" component={RouterLink} size="medium" to="/sign-in" variant="contained">
+      Get Started
+    </Button>
+  );
 
   return (
     <Box
@@ -26,20 +37,7 @@ export const HeroSection: FC = () => {
             built for dungeon masters and players.
           </Typography>
           <Stack direction={{ sm: 'row', xs: 'column' }} spacing={2}>
-            {isSignedIn ? (
-              <Button color="primary" component={RouterLink} size="medium" to="/dashboard" variant="contained">
-                Go to Dashboard
-              </Button>
-            ) : (
-              <>
-                <Button color="primary" component={RouterLink} size="medium" to="/sign-up" variant="contained">
-                  Get Started
-                </Button>
-                <Button color="primary" component={RouterLink} size="medium" to="/sign-in" variant="outlined">
-                  Sign In
-                </Button>
-              </>
-            )}
+            {stackOptions}
           </Stack>
         </Stack>
       </Container>
