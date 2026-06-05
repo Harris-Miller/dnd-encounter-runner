@@ -12,7 +12,7 @@ import { ProfileEditDialog } from './ProfileEditDialog';
 import { RouterLink } from './RouterLink';
 import { ThemeModeMenu } from './ThemeModeMenu';
 
-export const Header: FC = () => {
+export const PrivateHeader: FC = () => {
   const navigate = useNavigate();
 
   const [avatarAnchorEl, setAvatarAnchorEl] = useState<HTMLElement | null>(null);

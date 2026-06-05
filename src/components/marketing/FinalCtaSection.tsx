@@ -1,13 +1,12 @@
 import { Box, Button, Container, Stack, Typography } from '@mui/material';
-import { useQuery } from '@tanstack/react-query';
 import type { FC } from 'react';
 
-import { queryUser } from '../../api/user';
+import { useOptionalUser } from '../../hooks/useOptionalUser';
 import { RouterLink } from '../RouterLink';
 
 export const FinalCtaSection: FC = () => {
-  const user = useQuery(queryUser);
-  const isSignedIn = user.data != null;
+  const user = useOptionalUser();
+  const isSignedIn = user != null;
 
   return (
     <Box

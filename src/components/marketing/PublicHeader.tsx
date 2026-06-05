@@ -1,19 +1,18 @@
 import { AppBar, Box, Button, Container, styled, Toolbar, Typography } from '@mui/material';
-import { useQuery } from '@tanstack/react-query';
 import type { FC } from 'react';
 
-import { queryUser } from '../../api/user';
 import dndLogo from '../../assets/dnd-logo.svg';
+import { useOptionalUser } from '../../hooks/useOptionalUser';
 import { RouterLink } from '../RouterLink';
 import { ThemeModeMenu } from '../ThemeModeMenu';
 
-import { PUBLIC_NAV_LINKS } from './publicNavLinks';
-
 const Img = styled('img')();
 
+const PUBLIC_NAV_LINKS: readonly { label: string; to: string }[] = [];
+
 export const PublicHeader: FC = () => {
-  const user = useQuery(queryUser);
-  const isSignedIn = user.data != null;
+  const user = useOptionalUser();
+  const isSignedIn = user != null;
 
   return (
     <AppBar color="default" elevation={0} position="sticky" sx={{ borderBottom: 1, borderColor: 'divider' }}>

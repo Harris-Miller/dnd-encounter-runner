@@ -1,12 +1,12 @@
 import { createFileRoute } from '@tanstack/react-router';
 import type { FC } from 'react';
 
-import { queryUser } from '../api/user';
+import { AppLayout } from '../components/AppLayout';
 import { FeatureSection } from '../components/marketing/FeatureSection';
 import { FinalCtaSection } from '../components/marketing/FinalCtaSection';
 import { HeroSection } from '../components/marketing/HeroSection';
-import { MarketingLayout } from '../components/marketing/MarketingLayout';
-import { queryClient } from '../queryClient';
+import { MarketingFooter } from '../components/marketing/MarketingFooter';
+import { PublicHeader } from '../components/marketing/PublicHeader';
 
 const FEATURES = [
   {
@@ -30,7 +30,7 @@ const FEATURES = [
 ];
 
 const IndexComponent: FC = () => (
-  <MarketingLayout>
+  <AppLayout footer={<MarketingFooter />} header={<PublicHeader />}>
     <HeroSection />
     {FEATURES.map(feature => (
       <FeatureSection
@@ -41,12 +41,9 @@ const IndexComponent: FC = () => (
       />
     ))}
     <FinalCtaSection />
-  </MarketingLayout>
+  </AppLayout>
 );
 
 export const Route = createFileRoute('/')({
   component: IndexComponent,
-  loader: async () => {
-    await queryClient.ensureQueryData(queryUser);
-  },
 });
