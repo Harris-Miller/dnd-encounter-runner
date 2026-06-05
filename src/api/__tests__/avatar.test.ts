@@ -38,7 +38,7 @@ describe('uploadAvatar', () => {
   });
 
   it('throws when no cached user is available', async () => {
-    vi.mocked(getCachedUser).mockReturnValue(undefined);
+    vi.mocked(getCachedUser).mockReturnValue(null);
 
     const file = createPngFile(100);
 

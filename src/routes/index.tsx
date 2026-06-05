@@ -1,39 +1,55 @@
-import { Container, Paper, styled, Typography } from '@mui/material';
 import { createFileRoute } from '@tanstack/react-router';
 import type { FC } from 'react';
 
-import dndLogo from '../assets/dnd-logo.svg';
-import { FullScreenCenter } from '../components/FullScreenCenter';
-import { RouterLink } from '../components/RouterLink';
+import { AppLayout } from '../components/AppLayout';
+import { FeatureSection } from '../components/marketing/FeatureSection';
+import { FinalCtaSection } from '../components/marketing/FinalCtaSection';
+import { HeroSection } from '../components/marketing/HeroSection';
+import { MarketingFooter } from '../components/marketing/MarketingFooter';
+import { PublicHeader } from '../components/marketing/PublicHeader';
 
-const Img = styled('img')();
+interface Features {
+  description: string;
+  imagePosition: 'left' | 'right';
+  title: string;
+}
 
-const IndexComponent: FC = () => {
-  return (
-    <FullScreenCenter>
-      <Container maxWidth="md">
-        <Paper elevation={6} sx={{ alignItems: 'center', display: 'flex', flexDirection: 'column', padding: '24px' }}>
-          <Typography sx={{ alignItems: 'center', display: 'flex', gap: 1.5, marginBottom: '24px' }} variant="h3">
-            <Img
-              alt="D&D Logo"
-              src={dndLogo}
-              sx={{
-                display: 'block',
-                flexShrink: 0,
-                height: '1.75em',
-                width: 'auto',
-              }}
-            />
-            Encounter Runner
-          </Typography>
-          <RouterLink sx={{ marginBottom: '12px' }} to="/sign-in">
-            Login
-          </RouterLink>
-        </Paper>
-      </Container>
-    </FullScreenCenter>
-  );
-};
+const FEATURES: readonly Features[] = [
+  {
+    description:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Create campaigns, share invite links with your party, and keep every session organized in one workspace.',
+    imagePosition: 'right',
+    title: 'Campaign management',
+  },
+  {
+    description:
+      'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Track armor class, hit points, and level for every character in your roster — ready to drop into any encounter.',
+    imagePosition: 'left',
+    title: 'Character roster',
+  },
+  {
+    description:
+      'Ut enim ad minim veniam, quis nostrud exercitation. Run initiative order, apply effects, and log combat events in real time so nothing gets lost between turns.',
+    imagePosition: 'right',
+    title: 'Encounter runner',
+  },
+];
+
+const IndexComponent: FC = () => (
+  <AppLayout header={<PublicHeader />}>
+    <HeroSection />
+    {FEATURES.map(feature => (
+      <FeatureSection
+        description={feature.description}
+        imagePosition={feature.imagePosition}
+        key={feature.title}
+        title={feature.title}
+      />
+    ))}
+    <FinalCtaSection />
+    <MarketingFooter />
+  </AppLayout>
+);
 
 export const Route = createFileRoute('/')({
   component: IndexComponent,

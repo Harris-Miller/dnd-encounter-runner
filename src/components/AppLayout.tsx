@@ -1,14 +1,22 @@
-import { Container } from '@mui/material';
+import { Box, Container } from '@mui/material';
 import { Outlet } from '@tanstack/react-router';
-import type { FC } from 'react';
+import type { FC, PropsWithChildren, ReactNode } from 'react';
 
-import { Header } from './Header';
+interface AppLayoutProps {
+  header: ReactNode;
+}
 
-export const AppLayout: FC = () => (
-  <>
-    <Header />
-    <Container maxWidth="xl" sx={{ marginTop: 9 }}>
-      <Outlet />
-    </Container>
-  </>
-);
+export const AppLayout: FC<PropsWithChildren<AppLayoutProps>> = ({ children, header }) => {
+  const content = children ?? <Outlet />;
+
+  return (
+    <>
+      {header}
+      <Box component="main" sx={{ flexGrow: 1 }}>
+        <Container maxWidth="xl" sx={{ marginTop: 9 }}>
+          {content}
+        </Container>
+      </Box>
+    </>
+  );
+};
