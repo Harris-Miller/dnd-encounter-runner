@@ -6,7 +6,7 @@ import { queryUser } from '../../api/user';
 import { RouterLink } from '../RouterLink';
 
 export const HeroSection: FC = () => {
-  const { data: user, isError, isLoading } = useQuery({ ...queryUser, retry: false });
+  const { data: user, isError, isLoading } = useQuery(queryUser);
   const isSignedIn = !isLoading && !isError && user != null;
 
   const stackOptions = isLoading ? null : isSignedIn ? (

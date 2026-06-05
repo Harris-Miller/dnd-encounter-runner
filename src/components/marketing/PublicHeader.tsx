@@ -1,8 +1,9 @@
 import { AppBar, Box, Button, styled, Toolbar, Typography } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 import type { FC } from 'react';
 
+import { queryUser } from '../../api/user';
 import dndLogo from '../../assets/dnd-logo.svg';
-import { useOptionalUser } from '../../hooks/useOptionalUser';
 import { RouterLink } from '../RouterLink';
 import { ThemeModeMenu } from '../ThemeModeMenu';
 
@@ -11,8 +12,23 @@ const Img = styled('img')();
 const PUBLIC_NAV_LINKS: readonly { label: string; to: string }[] = [];
 
 export const PublicHeader: FC = () => {
-  const user = useOptionalUser();
-  const isSignedIn = user != null;
+  const { data: user, isError, isLoading } = useQuery(queryUser);
+  const isSignedIn = !isLoading && !isError && user != null;
+
+  const buttons = isLoading ? null : isSignedIn ? (
+    <Button color="primary" component={RouterLink} to="/dashboard" variant="contained">
+      Dashboard
+    </Button>
+  ) : (
+    <>
+      <Button color="inherit" component={RouterLink} sx={{ display: { sm: 'inline-flex', xs: 'none' } }} to="/sign-in">
+        Sign In
+      </Button>
+      <Button color="primary" component={RouterLink} to="/sign-up" variant="contained">
+        Sign Up
+      </Button>
+    </>
+  );
 
   return (
     <AppBar position="fixed">
@@ -58,25 +74,7 @@ export const PublicHeader: FC = () => {
 
         <Box sx={{ alignItems: 'center', display: 'flex', gap: 1 }}>
           <ThemeModeMenu />
-          {isSignedIn ? (
-            <Button color="primary" component={RouterLink} to="/dashboard" variant="contained">
-              Dashboard
-            </Button>
-          ) : (
-            <>
-              <Button
-                color="inherit"
-                component={RouterLink}
-                sx={{ display: { sm: 'inline-flex', xs: 'none' } }}
-                to="/sign-in"
-              >
-                Sign In
-              </Button>
-              <Button color="primary" component={RouterLink} to="/sign-up" variant="contained">
-                Sign Up
-              </Button>
-            </>
-          )}
+          {buttons}
         </Box>
       </Toolbar>
     </AppBar>
