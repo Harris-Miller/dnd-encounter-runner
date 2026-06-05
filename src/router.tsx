@@ -8,6 +8,8 @@ import { routeTree } from './routeTree.gen';
 
 export const basepath = import.meta.env.BASE_URL === '/' ? '/' : import.meta.env.BASE_URL.replace(/\/$/, '');
 
+export const absoluteBasepath = `${window.location.origin}${basepath}`.replace(/\/$/, '');
+
 const router = createRouter({
   basepath,
   defaultNotFoundComponent: NotFoundPage,

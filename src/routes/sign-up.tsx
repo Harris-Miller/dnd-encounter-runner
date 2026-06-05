@@ -25,7 +25,7 @@ const SignUpComponent: FC = () => {
   const signUpMutation = useMutation({
     ...mutateSignUpWithPassword,
     onSuccess: () => {
-      navigate({ to: '/' });
+      navigate({ to: '/dashboard' });
     },
   });
 

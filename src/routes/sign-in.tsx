@@ -11,7 +11,7 @@ import type { ComponentProps, FC } from 'react';
 import { mutateSignInWithOAuth, mutateSignInWithPassword } from '../api/auth';
 import { FullScreenCenter } from '../components/FullScreenCenter';
 import { RouterLink } from '../components/RouterLink';
-import { basepath } from '../router';
+import { absoluteBasepath } from '../router';
 
 const DiscordIcon: FC<ComponentProps<typeof SvgIcon>> = props => {
   return (
@@ -23,7 +23,7 @@ const DiscordIcon: FC<ComponentProps<typeof SvgIcon>> = props => {
 
 const SignInComponent: FC = () => {
   const searchParams = useSearch({ from: '/sign-in' });
-  const redirectParam = (searchParams as { redirect?: string }).redirect ?? '/';
+  const redirectParam = (searchParams as { redirect?: string }).redirect ?? '/dashboard';
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -33,14 +33,14 @@ const SignInComponent: FC = () => {
   const passwordMutation = useMutation({
     ...mutateSignInWithPassword,
     onSuccess: () => {
-      window.location.assign(`${window.location.origin}${decodeURIComponent(redirectParam)}`);
+      window.location.assign(`${absoluteBasepath}${decodeURIComponent(redirectParam)}`);
     },
   });
 
   const handleOAuthSignIn = (provider: Provider) => {
     oauthMutation.mutate({
       provider,
-      redirectTo: `${window.location.origin}${basepath}${decodeURIComponent(redirectParam)}`,
+      redirectTo: `${absoluteBasepath}${decodeURIComponent(redirectParam)}`,
     });
   };
 
