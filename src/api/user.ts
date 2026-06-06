@@ -15,6 +15,7 @@ export const queryUser = queryOptions({
   queryKey: ['user'],
   refetchOnMount: false,
   refetchOnWindowFocus: false,
+  retry: false,
 });
 
 export const getCachedUser = (): null | User =>
