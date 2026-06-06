@@ -7,7 +7,9 @@ export const AVATAR_BUCKET = 'avatars';
 
 export const AVATAR_OBJECT_PATH_SUFFIX = 'avatar';
 
-export const MAX_AVATAR_BYTES = 1_048_576;
+// updated to 10MB
+// TODO: uncommented when ready to enforce again
+// export const MAX_AVATAR_BYTES = 1_048_576;
 
 export const ALLOWED_AVATAR_MIME_TYPES = ['image/gif', 'image/jpeg', 'image/png', 'image/webp'] as const;
 
@@ -21,9 +23,10 @@ export const uploadAvatar = async (file: File): Promise<string> => {
     throw new Error(`Avatar must be one of: ${ALLOWED_AVATAR_MIME_TYPES.join(', ')}`);
   }
 
-  if (file.size > MAX_AVATAR_BYTES) {
-    throw new Error(`Avatar must be at most ${MAX_AVATAR_BYTES} bytes`);
-  }
+  // TODO: uncommented when ready to enforce again
+  // if (file.size > MAX_AVATAR_BYTES) {
+  //   throw new Error(`Avatar must be at most ${MAX_AVATAR_BYTES} bytes`);
+  // }
 
   const user = getCachedUser();
 

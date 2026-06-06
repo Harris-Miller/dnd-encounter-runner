@@ -48,8 +48,8 @@ export const queryProfile = queryOptions({
     return data;
   },
   queryKey: ['profile'],
-  refetchOnMount: false,
-  refetchOnWindowFocus: false,
+  // refetchOnMount: false,
+  // refetchOnWindowFocus: false,
 });
 
 export const mutateUpdateProfile = mutationOptions({
@@ -70,6 +70,7 @@ export const mutateUpdateProfile = mutationOptions({
       .from('profiles')
       .update({ name: trimmedName })
       .eq('user_id', user.id)
+      .select()
       .single();
 
     if (error != null) {
@@ -96,6 +97,7 @@ export const mutateUpdateProfileAvatarSource = mutationOptions({
         .from('profiles')
         .select('uploaded_avatar_id')
         .eq('user_id', user.id)
+        .select()
         .single();
 
       if (fetchError != null) {
@@ -111,6 +113,7 @@ export const mutateUpdateProfileAvatarSource = mutationOptions({
       .from('profiles')
       .update({ avatar_source: avatarSource })
       .eq('user_id', user.id)
+      .select()
       .single();
 
     if (error != null) {
@@ -136,11 +139,14 @@ export const mutateUpdateProfileAfterUpload = mutationOptions({
       .from('profiles')
       .update({ avatar_source: avatarSource, uploaded_avatar_id: uploadedAvatarId })
       .eq('user_id', user.id)
+      .select()
       .single();
 
     if (error != null) {
       throw error;
     }
+
+    console.log('mutateUpdateProfileAfterUpload :: updatedProfile', data);
 
     return data;
   },
@@ -167,6 +173,7 @@ export const mutateUpdateProfileGravatarId = mutationOptions({
       .from('profiles')
       .update({ gravatar_id: trimmedGravatarId })
       .eq('user_id', user.id)
+      .select()
       .single();
 
     if (error != null) {
