@@ -23,10 +23,10 @@ describe('pickLandingReviews', () => {
     vi.restoreAllMocks();
   });
 
-  it('returns exactly 10 reviews from the landing reviewer pool', () => {
+  it('returns exactly 8 reviews from the landing reviewer pool', () => {
     const reviews = pickLandingReviews(LANDING_REVIEWERS);
 
-    expect(reviews).toHaveLength(10);
+    expect(reviews).toHaveLength(8);
   });
 
   it('returns at most one review per person', () => {
@@ -64,7 +64,7 @@ describe('pickLandingReviews', () => {
   });
 
   it('throws when display count exceeds reviewer pool size', () => {
-    const smallPool = LANDING_REVIEWERS.slice(0, 9);
+    const smallPool = LANDING_REVIEWERS.slice(0, 7);
 
     expect(() => pickLandingReviews(smallPool)).toThrow(/exceeds reviewer pool size/);
   });

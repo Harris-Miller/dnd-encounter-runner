@@ -26,7 +26,7 @@ const shuffle = <T>(arr: readonly T[]): T[] => {
   return result;
 };
 
-const LANDING_REVIEW_DISPLAY_COUNT = 10;
+const LANDING_REVIEW_DISPLAY_COUNT = 8;
 
 export const pickLandingReviews = (reviewers: readonly LandingReviewer[]): DisplayedReview[] => {
   const count = LANDING_REVIEW_DISPLAY_COUNT;
