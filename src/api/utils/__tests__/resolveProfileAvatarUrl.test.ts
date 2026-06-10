@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { supabase } from '../../../services/supabase';
 import { AVATAR_BUCKET } from '../../avatar';
-import type { Profile } from '../../profile';
+import type { Profile } from '../../userProfile';
 import { buildAvatarObjectPath, resolveProfileAvatarUrl } from '../resolveProfileAvatarUrl';
 
 vi.mock('../../../services/supabase', () => ({
@@ -18,10 +18,9 @@ vi.mock('../../../services/supabase', () => ({
 const baseProfile: Profile = {
   avatar_source: 'oauth',
   gravatar_id: null,
-  id: 'profile-id',
+  id: 'user-123',
   name: 'Gandalf',
   uploaded_avatar_id: null,
-  user_id: 'user-123',
 };
 
 const baseUser = {

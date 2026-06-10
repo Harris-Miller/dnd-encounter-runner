@@ -62,7 +62,7 @@ describeIfDb('RPC parity (server JSONB transforms vs client reducer)', () => {
     `;
 
     const profileRows = await sql<{ id: string }[]>`
-      SELECT id FROM public.profiles WHERE user_id = ${TEST_USER_ID}::uuid LIMIT 1
+      SELECT id FROM public.profiles WHERE id = ${TEST_USER_ID}::uuid LIMIT 1
     `;
     const [existingProfile] = profileRows;
 
@@ -70,7 +70,7 @@ describeIfDb('RPC parity (server JSONB transforms vs client reducer)', () => {
       profileId = existingProfile.id;
     } else {
       const inserted = await sql<{ id: string }[]>`
-        INSERT INTO public.profiles (user_id, name)
+        INSERT INTO public.profiles (id, name)
         VALUES (${TEST_USER_ID}::uuid, 'Parity Test')
         RETURNING id
       `;

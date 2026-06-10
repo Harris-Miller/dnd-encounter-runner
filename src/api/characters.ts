@@ -3,7 +3,7 @@ import { mutationOptions, queryOptions } from '@tanstack/react-query';
 import { supabase } from '../services/supabase';
 import type { Database } from '../types/database.gen';
 
-import { getCachedProfile } from './profile';
+import { getCachedUserProfile } from './userProfile';
 
 export type CharacterRow = Database['public']['Tables']['characters']['Row'];
 
@@ -70,9 +70,9 @@ export interface CreateCharacterInput {
 
 export const mutateCreateCharacter = mutationOptions({
   mutationFn: async (input: CreateCharacterInput): Promise<Character> => {
-    const profile = getCachedProfile();
+    const userProfile = getCachedUserProfile();
 
-    if (profile == null) {
+    if (userProfile == null) {
       throw new Error('No profile loaded; cannot create character');
     }
 
@@ -84,7 +84,7 @@ export const mutateCreateCharacter = mutationOptions({
         max_hit_points: input.maxHitPoints,
         name: input.name,
         notes: input.notes ?? null,
-        profile_id: profile.id,
+        profile_id: userProfile.id,
       })
       .select()
       .single();

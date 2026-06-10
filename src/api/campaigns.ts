@@ -5,7 +5,7 @@ import type { Database } from '../types/database.gen';
 
 import { rowToCharacter } from './characters';
 import type { Character } from './characters';
-import { getCachedProfile } from './profile';
+import { getCachedUserProfile } from './userProfile';
 
 type CampaignRow = Database['public']['Tables']['campaigns']['Row'];
 
@@ -78,13 +78,17 @@ export interface CreateCampaignInput {
 
 export const mutateCreateCampaign = mutationOptions({
   mutationFn: async ({ name = 'Untitled Campaign' }: CreateCampaignInput = {}): Promise<Campaign> => {
-    const profile = getCachedProfile();
+    const userProfile = getCachedUserProfile();
 
-    if (profile == null) {
+    if (userProfile == null) {
       throw new Error('No profile loaded; cannot create campaign');
     }
 
-    const { data, error } = await supabase.from('campaigns').insert({ name, profile_id: profile.id }).select().single();
+    const { data, error } = await supabase
+      .from('campaigns')
+      .insert({ name, profile_id: userProfile.id })
+      .select()
+      .single();
 
     if (error != null) {
       throw error;

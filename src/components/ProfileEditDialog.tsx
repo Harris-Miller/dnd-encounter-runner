@@ -21,10 +21,9 @@ import {
   mutateUpdateProfile,
   mutateUpdateProfileAfterUpload,
   mutateUpdateProfileAvatarSource,
-  queryProfile,
-} from '../api/profile';
-import type { Profile, ProfileAvatarSource } from '../api/profile';
-import { queryUser } from '../api/user';
+  queryUserProfile,
+} from '../api/userProfile';
+import type { ProfileAvatarSource, UserProfile } from '../api/userProfile';
 import { resolveProfileAvatarUrl } from '../api/utils/resolveProfileAvatarUrl';
 
 type ProfileEditDialogProps = {
@@ -34,17 +33,16 @@ type ProfileEditDialogProps = {
 
 type ProfileEditFormProps = {
   onClose: () => void;
-  profileData: Profile;
+  userProfile: UserProfile;
 };
 
-const ProfileEditForm: FC<ProfileEditFormProps> = ({ onClose, profileData }) => {
+const ProfileEditForm: FC<ProfileEditFormProps> = ({ onClose, userProfile }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const user = useQuery(queryUser);
 
-  const [draftName, setDraftName] = useState(profileData.name ?? '');
+  const [draftName, setDraftName] = useState(userProfile.name ?? '');
   const [pendingAvatarFile, setPendingAvatarFile] = useState<File | null>(null);
   const [pendingAvatarPreviewUrl, setPendingAvatarPreviewUrl] = useState<null | string>(null);
-  const [draftAvatarSource, setDraftAvatarSource] = useState<ProfileAvatarSource>(profileData.avatar_source);
+  const [draftAvatarSource, setDraftAvatarSource] = useState<ProfileAvatarSource>(userProfile.avatar_source);
   const [formError, setFormError] = useState<null | string>(null);
 
   const updateNameMutation = useMutation(mutateUpdateProfile);
@@ -71,18 +69,14 @@ const ProfileEditForm: FC<ProfileEditFormProps> = ({ onClose, profileData }) => 
 
   const trimmedName = draftName.trim();
   const isNameValid = trimmedName !== '';
-  const hasUploadedAvatar = profileData.uploaded_avatar_id != null || pendingAvatarFile != null;
+  const hasUploadedAvatar = userProfile.uploaded_avatar_id != null || pendingAvatarFile != null;
 
   const previewAvatarUrl = (() => {
     if (pendingAvatarPreviewUrl != null && draftAvatarSource === 'uploaded') {
       return pendingAvatarPreviewUrl;
     }
 
-    if (user.data == null) {
-      return undefined;
-    }
-
-    return resolveProfileAvatarUrl({ ...profileData, avatar_source: draftAvatarSource }, user.data);
+    return resolveProfileAvatarUrl({ ...userProfile, avatar_source: draftAvatarSource }, userProfile);
   })();
 
   const handleAvatarSourceChange = (_event: MouseEvent<HTMLElement>, nextAvatarSource: null | ProfileAvatarSource) => {
@@ -115,14 +109,14 @@ const ProfileEditForm: FC<ProfileEditFormProps> = ({ onClose, profileData }) => 
   };
 
   const handleUpdate = async () => {
-    if (!isNameValid || user.data == null) {
+    if (!isNameValid) {
       return;
     }
 
     setFormError(null);
 
-    const nameChanged = trimmedName !== (profileData.name ?? '');
-    const avatarSourceChanged = draftAvatarSource !== profileData.avatar_source;
+    const nameChanged = trimmedName !== (userProfile.name ?? '');
+    const avatarSourceChanged = draftAvatarSource !== userProfile.avatar_source;
 
     try {
       if (pendingAvatarFile != null) {
@@ -192,7 +186,7 @@ const ProfileEditForm: FC<ProfileEditFormProps> = ({ onClose, profileData }) => 
         <Button disabled={isPending} onClick={handleCancel}>
           Cancel
         </Button>
-        <Button disabled={!isNameValid || isPending || user.isPending} onClick={handleUpdate} variant="contained">
+        <Button disabled={!isNameValid || isPending} onClick={handleUpdate} variant="contained">
           Update
         </Button>
       </DialogActions>
@@ -201,23 +195,23 @@ const ProfileEditForm: FC<ProfileEditFormProps> = ({ onClose, profileData }) => 
 };
 
 export const ProfileEditDialog: FC<ProfileEditDialogProps> = ({ onClose, open }) => {
-  const profile = useQuery({ ...queryProfile, enabled: open });
+  const userProfileQuery = useQuery({ ...queryUserProfile, enabled: open });
 
   const handleCancel = () => {
     onClose();
   };
 
-  const profileData = open ? profile.data : null;
+  const userProfile = open ? userProfileQuery.data : null;
 
   return (
     <Dialog fullWidth maxWidth="sm" onClose={handleCancel} open={open}>
       <DialogTitle>Edit Profile</DialogTitle>
-      {profile.isError ? (
+      {userProfileQuery.isError ? (
         <DialogContent>
-          <Typography color="error">{profile.error.message}</Typography>
+          <Typography color="error">{userProfileQuery.error.message}</Typography>
         </DialogContent>
       ) : null}
-      {profileData != null ? <ProfileEditForm onClose={onClose} profileData={profileData} /> : null}
+      {userProfile != null ? <ProfileEditForm onClose={onClose} userProfile={userProfile} /> : null}
     </Dialog>
   );
 };

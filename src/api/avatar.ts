@@ -1,6 +1,6 @@
 import { supabase } from '../services/supabase';
 
-import { getCachedUser } from './user';
+import { getCachedUserProfile } from './userProfile';
 import { buildAvatarObjectPath } from './utils/resolveProfileAvatarUrl';
 
 export const AVATAR_BUCKET = 'avatars';
@@ -28,13 +28,13 @@ export const uploadAvatar = async (file: File): Promise<string> => {
   //   throw new Error(`Avatar must be at most ${MAX_AVATAR_BYTES} bytes`);
   // }
 
-  const user = getCachedUser();
+  const userProfile = getCachedUserProfile();
 
-  if (user == null) {
+  if (userProfile == null) {
     throw new Error('Not authenticated');
   }
 
-  const objectPath = buildAvatarObjectPath(user.id);
+  const objectPath = buildAvatarObjectPath(userProfile.id);
 
   const { data, error } = await supabase.storage.from(AVATAR_BUCKET).upload(objectPath, file, {
     contentType: file.type,

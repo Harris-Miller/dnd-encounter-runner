@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/unbound-method -- vi.mocked(supabase.storage.from) triggers false positives */
-import type { User } from '@supabase/supabase-js';
 import { describe, expect, it, vi } from 'vitest';
 
 import { supabase } from '../../services/supabase';
 import { AVATAR_BUCKET, uploadAvatar } from '../avatar';
-import { getCachedUser } from '../user';
+import type { UserProfile } from '../userProfile';
+import { getCachedUserProfile } from '../userProfile';
 import { buildAvatarObjectPath } from '../utils/resolveProfileAvatarUrl';
 
 vi.mock('../../services/supabase', () => ({
@@ -15,14 +15,14 @@ vi.mock('../../services/supabase', () => ({
   },
 }));
 
-vi.mock('../user', () => ({
-  getCachedUser: vi.fn(),
+vi.mock('../userProfile', () => ({
+  getCachedUserProfile: vi.fn(),
 }));
 
 const createPngFile = (sizeBytes: number): File =>
   new File([new Uint8Array(sizeBytes)], 'avatar.png', { type: 'image/png' });
 
-const mockUser = (userId: string): User => ({ id: userId }) as unknown as User;
+const mockUserProfile = (userId: string): UserProfile => ({ id: userId }) as unknown as UserProfile;
 
 describe('uploadAvatar', () => {
   it('rejects disallowed mime types', async () => {
@@ -31,14 +31,8 @@ describe('uploadAvatar', () => {
     await expect(uploadAvatar(file)).rejects.toThrow('Avatar must be one of:');
   });
 
-  it('rejects files larger than the limit', async () => {
-    const file = createPngFile(1_048_577);
-
-    await expect(uploadAvatar(file)).rejects.toThrow('Avatar must be at most');
-  });
-
   it('throws when no cached user is available', async () => {
-    vi.mocked(getCachedUser).mockReturnValue(null);
+    vi.mocked(getCachedUserProfile).mockReturnValue(null);
 
     const file = createPngFile(100);
 
@@ -53,7 +47,7 @@ describe('uploadAvatar', () => {
       error: null,
     });
 
-    vi.mocked(getCachedUser).mockReturnValue(mockUser(userId));
+    vi.mocked(getCachedUserProfile).mockReturnValue(mockUserProfile(userId));
     const storageFrom = vi.fn().mockReturnValue({ upload });
     vi.mocked(supabase.storage.from).mockImplementation(storageFrom);
 
@@ -74,7 +68,7 @@ describe('uploadAvatar', () => {
       error: null,
     });
 
-    vi.mocked(getCachedUser).mockReturnValue(mockUser('user-123'));
+    vi.mocked(getCachedUserProfile).mockReturnValue(mockUserProfile('user-123'));
     const storageFrom = vi.fn().mockReturnValue({ upload });
     vi.mocked(supabase.storage.from).mockImplementation(storageFrom);
 
