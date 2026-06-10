@@ -14,8 +14,7 @@ export const ReviewCard: FC<ReviewCardProps> = ({ review }) => (
       border: 1,
       borderColor: 'divider',
       borderRadius: 2,
-      flex: '0 0 auto',
-      minWidth: { md: 320, xs: 280 },
+      height: '100%',
       p: 2,
     }}
   >
