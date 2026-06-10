@@ -8,7 +8,6 @@ export const profileAvatarSourceEnum = pgEnum('profile_avatar_source', ['oauth',
 export const profiles = pgTable.withRLS('profiles', {
   avatarSource: profileAvatarSourceEnum().notNull().default('oauth'),
   createdAt: createdAt(),
-  email: text().unique().notNull(),
   gravatarId: char({ length: 64 }),
   id: uuidPk(),
   name: text(),
@@ -16,5 +15,6 @@ export const profiles = pgTable.withRLS('profiles', {
   uploadedAvatarId: uuid('uploaded_avatar_id'),
   userId: uuid()
     .notNull()
+    .unique()
     .references(() => users.id, { onDelete: 'cascade' }),
 });

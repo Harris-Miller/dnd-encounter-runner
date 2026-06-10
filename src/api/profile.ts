@@ -9,7 +9,7 @@ import { getCachedUser } from './user';
 
 export type Profile = Pick<
   Database['public']['Tables']['profiles']['Row'],
-  'avatar_source' | 'email' | 'gravatar_id' | 'id' | 'name' | 'uploaded_avatar_id' | 'user_id'
+  'avatar_source' | 'gravatar_id' | 'id' | 'name' | 'uploaded_avatar_id' | 'user_id'
 >;
 
 export type ProfileAvatarSource = Profile['avatar_source'];

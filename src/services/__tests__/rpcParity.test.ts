@@ -70,8 +70,8 @@ describeIfDb('RPC parity (server JSONB transforms vs client reducer)', () => {
       profileId = existingProfile.id;
     } else {
       const inserted = await sql<{ id: string }[]>`
-        INSERT INTO public.profiles (user_id, email, name)
-        VALUES (${TEST_USER_ID}::uuid, ${TEST_USER_EMAIL}, 'Parity Test')
+        INSERT INTO public.profiles (user_id, name)
+        VALUES (${TEST_USER_ID}::uuid, 'Parity Test')
         RETURNING id
       `;
       const [insertedRow] = inserted;

@@ -421,7 +421,6 @@ export type Database = {
         Row: {
           avatar_source: Database["public"]["Enums"]["profile_avatar_source"]
           created_at: string
-          email: string
           gravatar_id: string | null
           id: string
           name: string | null
@@ -432,7 +431,6 @@ export type Database = {
         Insert: {
           avatar_source?: Database["public"]["Enums"]["profile_avatar_source"]
           created_at?: string
-          email: string
           gravatar_id?: string | null
           id?: string
           name?: string | null
@@ -443,7 +441,6 @@ export type Database = {
         Update: {
           avatar_source?: Database["public"]["Enums"]["profile_avatar_source"]
           created_at?: string
-          email?: string
           gravatar_id?: string | null
           id?: string
           name?: string | null
@@ -622,10 +619,6 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      character_profile_id: {
-        Args: { p_character_id: string }
-        Returns: string
-      }
       encounter_add_combatant: {
         Args: {
           p_combatant: Json
