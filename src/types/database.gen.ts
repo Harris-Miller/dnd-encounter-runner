@@ -420,33 +420,24 @@ export type Database = {
       profiles: {
         Row: {
           avatar_source: Database["public"]["Enums"]["profile_avatar_source"]
-          created_at: string
           gravatar_id: string | null
           id: string
           name: string | null
-          updated_at: string
           uploaded_avatar_id: string | null
-          user_id: string
         }
         Insert: {
           avatar_source?: Database["public"]["Enums"]["profile_avatar_source"]
-          created_at?: string
           gravatar_id?: string | null
-          id?: string
+          id: string
           name?: string | null
-          updated_at?: string
           uploaded_avatar_id?: string | null
-          user_id: string
         }
         Update: {
           avatar_source?: Database["public"]["Enums"]["profile_avatar_source"]
-          created_at?: string
           gravatar_id?: string | null
           id?: string
           name?: string | null
-          updated_at?: string
           uploaded_avatar_id?: string | null
-          user_id?: string
         }
         Relationships: []
       }
