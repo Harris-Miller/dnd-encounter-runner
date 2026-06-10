@@ -7,6 +7,7 @@ import { FinalCtaSection } from '../components/marketing/FinalCtaSection';
 import { HeroSection } from '../components/marketing/HeroSection';
 import { MarketingFooter } from '../components/marketing/MarketingFooter';
 import { PublicHeader } from '../components/marketing/PublicHeader';
+import { ReviewsSection } from '../components/marketing/ReviewsSection';
 
 interface Features {
   description: string;
@@ -46,6 +47,7 @@ const IndexComponent: FC = () => (
         title={feature.title}
       />
     ))}
+    <ReviewsSection />
     <FinalCtaSection />
     <MarketingFooter />
   </AppLayout>
