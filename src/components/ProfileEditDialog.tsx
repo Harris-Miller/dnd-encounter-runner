@@ -17,10 +17,13 @@ import { useRef, useState } from 'react';
 import type { ChangeEvent, FC, MouseEvent } from 'react';
 
 import { uploadAvatar } from '../api/avatar';
-import { mutateUpdateProfile, mutateUpdateProfileAfterUpload, mutateUpdateProfileAvatarSource } from '../api/profile';
-import type { ProfileAvatarSource } from '../api/profile';
-import { queryUserProfile } from '../api/userProfile';
-import type { UserProfile } from '../api/userProfile';
+import {
+  mutateUpdateProfile,
+  mutateUpdateProfileAfterUpload,
+  mutateUpdateProfileAvatarSource,
+  queryUserProfile,
+} from '../api/userProfile';
+import type { ProfileAvatarSource, UserProfile } from '../api/userProfile';
 import { resolveProfileAvatarUrl } from '../api/utils/resolveProfileAvatarUrl';
 
 type ProfileEditDialogProps = {

@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { supabase } from '../../../services/supabase';
 import { AVATAR_BUCKET } from '../../avatar';
-import type { Profile } from '../../profile';
+import type { Profile } from '../../userProfile';
 import { buildAvatarObjectPath, resolveProfileAvatarUrl } from '../resolveProfileAvatarUrl';
 
 vi.mock('../../../services/supabase', () => ({

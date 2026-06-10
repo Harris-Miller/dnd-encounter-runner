@@ -2,7 +2,7 @@ import type { User } from '@supabase/supabase-js';
 
 import { supabase } from '../../services/supabase';
 import { AVATAR_BUCKET, AVATAR_OBJECT_PATH_SUFFIX } from '../avatar';
-import type { Profile } from '../profile';
+import type { Profile } from '../userProfile';
 
 export const buildAvatarObjectPath = (userId: string): string => `${userId}/${AVATAR_OBJECT_PATH_SUFFIX}`;
 
