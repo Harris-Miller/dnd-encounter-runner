@@ -5,13 +5,13 @@ import { useQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
 import type { FC } from 'react';
 
-import { queryProfile } from '../../api/profile';
+import { queryUserProfile } from '../../api/userProfile';
 import { RouterLink } from '../../components/RouterLink';
 import { queryClient } from '../../queryClient';
 
 const DashboardPage: FC = () => {
-  const { data: profile } = useQuery(queryProfile);
-  const displayName = profile?.name ?? 'there';
+  const { data: userProfile } = useQuery(queryUserProfile);
+  const displayName = userProfile?.name ?? 'there';
 
   return (
     <Stack spacing={4}>
@@ -68,6 +68,6 @@ const DashboardPage: FC = () => {
 export const Route = createFileRoute('/dashboard/')({
   component: DashboardPage,
   loader: async () => {
-    await queryClient.ensureQueryData(queryProfile);
+    await queryClient.ensureQueryData(queryUserProfile);
   },
 });

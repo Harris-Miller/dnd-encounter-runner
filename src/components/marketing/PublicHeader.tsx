@@ -2,7 +2,7 @@ import { AppBar, Box, Button, Container, styled, Toolbar, Typography } from '@mu
 import { useQuery } from '@tanstack/react-query';
 import type { FC } from 'react';
 
-import { queryUser } from '../../api/user';
+import { queryUserProfile } from '../../api/userProfile';
 import dndLogo from '../../assets/dnd-logo.svg';
 import { RouterLink } from '../RouterLink';
 import { UserAvatar } from '../UserAvatar';
@@ -12,7 +12,7 @@ const Img = styled('img')();
 const PUBLIC_NAV_LINKS: readonly { label: string; to: string }[] = [];
 
 export const PublicHeader: FC = () => {
-  const { data: user, isError, isLoading } = useQuery(queryUser);
+  const { data: user, isError, isLoading } = useQuery(queryUserProfile);
 
   const isSignedIn = !isLoading && !isError && user != null;
 

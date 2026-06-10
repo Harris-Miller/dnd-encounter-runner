@@ -8,7 +8,7 @@ import { supabase } from '../services/supabase';
 import type { Database } from '../types/database.gen';
 import { EncounterState } from '../types/encounterState';
 
-import { getCachedProfile } from './profile';
+import { getCachedUserProfile } from './userProfile';
 
 type EncounterRow = Database['public']['Tables']['encounters']['Row'];
 
@@ -110,9 +110,9 @@ export interface CreateEncounterVariables {
 export const mutateCreateEncounter = (campaignId: string) =>
   mutationOptions({
     mutationFn: async ({ name }: CreateEncounterVariables = {}) => {
-      const profile = getCachedProfile();
+      const userProfile = getCachedUserProfile();
 
-      if (profile == null) {
+      if (userProfile == null) {
         throw new Error('No profile loaded; cannot create encounter');
       }
 
@@ -121,7 +121,7 @@ export const mutateCreateEncounter = (campaignId: string) =>
         .insert({
           campaign_id: campaignId,
           name,
-          profile_id: profile.id,
+          profile_id: userProfile.id,
         })
         .select()
         .single();

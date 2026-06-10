@@ -18,10 +18,9 @@ vi.mock('../../../services/supabase', () => ({
 const baseProfile: Profile = {
   avatar_source: 'oauth',
   gravatar_id: null,
-  id: 'profile-id',
+  id: 'user-123',
   name: 'Gandalf',
   uploaded_avatar_id: null,
-  user_id: 'user-123',
 };
 
 const baseUser = {

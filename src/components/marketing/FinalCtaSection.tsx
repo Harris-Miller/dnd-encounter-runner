@@ -2,11 +2,11 @@ import { Box, Button, Container, Stack, Typography } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import type { FC } from 'react';
 
-import { queryUser } from '../../api/user';
+import { queryUserProfile } from '../../api/userProfile';
 import { RouterLink } from '../RouterLink';
 
 export const FinalCtaSection: FC = () => {
-  const { data: user, isError, isLoading } = useQuery(queryUser);
+  const { data: user, isError, isLoading } = useQuery(queryUserProfile);
   const isSignedIn = !isLoading && !isError && user != null;
 
   const action = isLoading ? null : isSignedIn ? (

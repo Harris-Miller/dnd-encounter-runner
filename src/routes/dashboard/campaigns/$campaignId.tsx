@@ -35,7 +35,7 @@ import {
   queryCampaignCharacters,
 } from '../../../api/campaigns';
 import { queryEncountersList } from '../../../api/encounters';
-import { queryProfile } from '../../../api/profile';
+import { queryUserProfile } from '../../../api/userProfile';
 import { EncounterListSection } from '../../../components/encounter/encounterLists/EncounterListSection';
 import { RouterLink } from '../../../components/RouterLink';
 import { queryClient } from '../../../queryClient';
@@ -49,7 +49,7 @@ const CampaignDetailPage: FC = () => {
   const navigate = useNavigate();
   const { campaignId } = routeApi.useParams();
   const campaignQuery = useQuery(queryCampaign(campaignId));
-  const profileQuery = useQuery(queryProfile);
+  const userProfileQuery = useQuery(queryUserProfile);
   const charactersQuery = useQuery(queryCampaignCharacters(campaignId));
   const encountersQuery = useQuery(queryEncountersList({ campaignId }));
 
@@ -72,7 +72,7 @@ const CampaignDetailPage: FC = () => {
   const [pendingRemoveCharacterId, setPendingRemoveCharacterId] = useState<null | string>(null);
   const [copySuccess, setCopySuccess] = useState(false);
 
-  if (campaignQuery.isLoading || profileQuery.isLoading) {
+  if (campaignQuery.isLoading || userProfileQuery.isLoading) {
     return (
       <Stack spacing={2}>
         <Skeleton height={48} variant="rectangular" />
@@ -86,8 +86,8 @@ const CampaignDetailPage: FC = () => {
   }
 
   const campaign = campaignQuery.data;
-  const profile = profileQuery.data;
-  const isOwner = campaign.profileId === profile?.id;
+  const userProfile = userProfileQuery.data;
+  const isOwner = campaign.profileId === userProfile?.id;
   const characters = charactersQuery.data ?? [];
   const pendingRemoveCharacter =
     pendingRemoveCharacterId == null
@@ -360,7 +360,7 @@ export const Route = createFileRoute('/dashboard/campaigns/$campaignId')({
     const { campaignId } = params;
     await fetchQueryOrNotFound(queryClient, queryCampaign(campaignId));
     await Promise.all([
-      queryClient.ensureQueryData(queryProfile),
+      queryClient.ensureQueryData(queryUserProfile),
       queryClient.ensureQueryData(queryCampaignCharacters(campaignId)),
       queryClient.ensureQueryData(queryEncountersList({ campaignId })),
     ]);

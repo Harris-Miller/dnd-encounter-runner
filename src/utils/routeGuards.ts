@@ -1,7 +1,7 @@
 import type { Session } from '@supabase/supabase-js';
 import { redirect } from '@tanstack/react-router';
 
-import { queryUser } from '../api/user';
+import { queryUserProfile } from '../api/userProfile';
 import { queryClient } from '../queryClient';
 import { supabase } from '../services/supabase';
 
@@ -25,7 +25,7 @@ export const requireSession = async (): Promise<Session> => {
   }
 
   try {
-    await queryClient.ensureQueryData(queryUser);
+    await queryClient.ensureQueryData(queryUserProfile);
   } catch {
     return redirectToLogin();
   }

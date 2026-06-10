@@ -4,8 +4,7 @@ import { useNavigate } from '@tanstack/react-router';
 import { useState } from 'react';
 import type { FC, MouseEvent } from 'react';
 
-import { queryProfile } from '../api/profile';
-import { queryUser } from '../api/user';
+import { queryUserProfile } from '../api/userProfile';
 import { resolveProfileAvatarUrl } from '../api/utils/resolveProfileAvatarUrl';
 
 import { ProfileEditDialog } from './ProfileEditDialog';
@@ -16,12 +15,10 @@ export const UserAvatar: FC = () => {
   const [avatarAnchorEl, setAvatarAnchorEl] = useState<HTMLElement | null>(null);
   const [profileDialogOpen, setProfileDialogOpen] = useState(false);
 
-  const user = useQuery(queryUser);
-  const profile = useQuery(queryProfile);
+  const userProfile = useQuery(queryUserProfile);
 
-  const avatarUrl =
-    profile.data != null && user.data != null ? resolveProfileAvatarUrl(profile.data, user.data) : undefined;
-  const avatarAlt = profile.data?.name ?? '';
+  const avatarUrl = userProfile.data != null ? resolveProfileAvatarUrl(userProfile.data, userProfile.data) : undefined;
+  const avatarAlt = userProfile.data?.name ?? '';
 
   const handleAvatarOpen = (event: MouseEvent<HTMLButtonElement>) => {
     setAvatarAnchorEl(event.currentTarget);

@@ -1,15 +1,15 @@
-import { mutationOptions, queryOptions } from '@tanstack/react-query';
+import { mutationOptions } from '@tanstack/react-query';
 
-import { queryClient } from '../queryClient';
 import { supabase } from '../services/supabase';
 import type { Database } from '../types/database.gen';
 import { hasProfileName } from '../utils/profileName';
 
-import { getCachedUser } from './user';
+import { getCachedUserProfile, queryUserProfile } from './userProfile';
+import type { UserProfile } from './userProfile';
 
 export type Profile = Pick<
   Database['public']['Tables']['profiles']['Row'],
-  'avatar_source' | 'gravatar_id' | 'id' | 'name' | 'uploaded_avatar_id' | 'user_id'
+  'avatar_source' | 'gravatar_id' | 'id' | 'name' | 'uploaded_avatar_id'
 >;
 
 export type ProfileAvatarSource = Profile['avatar_source'];
@@ -31,26 +31,11 @@ export type UpdateProfileGravatarIdInput = {
   gravatarId: string;
 };
 
-export const queryProfile = queryOptions({
-  queryFn: async (): Promise<Profile> => {
-    const user = getCachedUser();
-
-    if (user == null) {
-      throw new Error('Not authenticated');
-    }
-
-    const { data, error } = await supabase.from('profiles').select().eq('user_id', user.id).single();
-
-    if (error != null) {
-      throw error;
-    }
-
-    return data;
-  },
-  queryKey: ['profile'],
-  // refetchOnMount: false,
-  // refetchOnWindowFocus: false,
-});
+const mergeUpdatedProfileIntoUserProfile = (
+  previousUserProfile: undefined | UserProfile,
+  updatedProfile: Profile,
+): undefined | UserProfile =>
+  previousUserProfile == null ? previousUserProfile : { ...previousUserProfile, ...updatedProfile };
 
 export const mutateUpdateProfile = mutationOptions({
   mutationFn: async ({ name }: UpdateProfileNameInput): Promise<Profile> => {
@@ -60,16 +45,16 @@ export const mutateUpdateProfile = mutationOptions({
       throw new Error('Profile name cannot be empty');
     }
 
-    const user = getCachedUser();
+    const userProfile = getCachedUserProfile();
 
-    if (user == null) {
+    if (userProfile == null) {
       throw new Error('Not authenticated');
     }
 
     const { data, error } = await supabase
       .from('profiles')
       .update({ name: trimmedName })
-      .eq('user_id', user.id)
+      .eq('id', userProfile.id)
       .select()
       .single();
 
@@ -80,15 +65,17 @@ export const mutateUpdateProfile = mutationOptions({
     return data;
   },
   onSuccess: (updatedProfile, _variables, _onMutateResult, { client }) => {
-    client.setQueryData(queryProfile.queryKey, updatedProfile);
+    client.setQueryData(queryUserProfile.queryKey, previousUserProfile =>
+      mergeUpdatedProfileIntoUserProfile(previousUserProfile, updatedProfile),
+    );
   },
 });
 
 export const mutateUpdateProfileAvatarSource = mutationOptions({
   mutationFn: async ({ avatarSource }: UpdateProfileAvatarSourceInput): Promise<Profile> => {
-    const user = getCachedUser();
+    const userProfile = getCachedUserProfile();
 
-    if (user == null) {
+    if (userProfile == null) {
       throw new Error('Not authenticated');
     }
 
@@ -96,7 +83,7 @@ export const mutateUpdateProfileAvatarSource = mutationOptions({
       const { data: existingProfile, error: fetchError } = await supabase
         .from('profiles')
         .select('uploaded_avatar_id')
-        .eq('user_id', user.id)
+        .eq('id', userProfile.id)
         .select()
         .single();
 
@@ -112,7 +99,7 @@ export const mutateUpdateProfileAvatarSource = mutationOptions({
     const { data, error } = await supabase
       .from('profiles')
       .update({ avatar_source: avatarSource })
-      .eq('user_id', user.id)
+      .eq('id', userProfile.id)
       .select()
       .single();
 
@@ -123,22 +110,24 @@ export const mutateUpdateProfileAvatarSource = mutationOptions({
     return data;
   },
   onSuccess: (updatedProfile, _variables, _onMutateResult, { client }) => {
-    client.setQueryData(queryProfile.queryKey, updatedProfile);
+    client.setQueryData(queryUserProfile.queryKey, previousUserProfile =>
+      mergeUpdatedProfileIntoUserProfile(previousUserProfile, updatedProfile),
+    );
   },
 });
 
 export const mutateUpdateProfileAfterUpload = mutationOptions({
   mutationFn: async ({ avatarSource, uploadedAvatarId }: UpdateProfileAfterUploadInput): Promise<Profile> => {
-    const user = getCachedUser();
+    const userProfile = getCachedUserProfile();
 
-    if (user == null) {
+    if (userProfile == null) {
       throw new Error('Not authenticated');
     }
 
     const { data, error } = await supabase
       .from('profiles')
       .update({ avatar_source: avatarSource, uploaded_avatar_id: uploadedAvatarId })
-      .eq('user_id', user.id)
+      .eq('id', userProfile.id)
       .select()
       .single();
 
@@ -146,12 +135,12 @@ export const mutateUpdateProfileAfterUpload = mutationOptions({
       throw error;
     }
 
-    console.log('mutateUpdateProfileAfterUpload :: updatedProfile', data);
-
     return data;
   },
   onSuccess: (updatedProfile, _variables, _onMutateResult, { client }) => {
-    client.setQueryData(queryProfile.queryKey, updatedProfile);
+    client.setQueryData(queryUserProfile.queryKey, previousUserProfile =>
+      mergeUpdatedProfileIntoUserProfile(previousUserProfile, updatedProfile),
+    );
   },
 });
 
@@ -163,16 +152,16 @@ export const mutateUpdateProfileGravatarId = mutationOptions({
       throw new Error('Gravatar ID must be 64 characters');
     }
 
-    const user = getCachedUser();
+    const userProfile = getCachedUserProfile();
 
-    if (user == null) {
+    if (userProfile == null) {
       throw new Error('Not authenticated');
     }
 
     const { data, error } = await supabase
       .from('profiles')
       .update({ gravatar_id: trimmedGravatarId })
-      .eq('user_id', user.id)
+      .eq('id', userProfile.id)
       .select()
       .single();
 
@@ -183,9 +172,8 @@ export const mutateUpdateProfileGravatarId = mutationOptions({
     return data;
   },
   onSuccess: (updatedProfile, _variables, _onMutateResult, { client }) => {
-    client.setQueryData(queryProfile.queryKey, updatedProfile);
+    client.setQueryData(queryUserProfile.queryKey, previousUserProfile =>
+      mergeUpdatedProfileIntoUserProfile(previousUserProfile, updatedProfile),
+    );
   },
 });
-
-export const getCachedProfile = (): null | Profile =>
-  queryClient.getQueryCache().find<unknown, Error, Profile>(queryProfile)?.state.data ?? null;
