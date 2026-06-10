@@ -35,7 +35,7 @@ coverage
 
 # other
 backups
-data
+/data
 design
 diagrams
 scripts
