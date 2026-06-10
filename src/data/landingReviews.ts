@@ -242,5 +242,3 @@ export const LANDING_REVIEWERS: readonly LandingReviewer[] = [
     ],
   },
 ];
-
-export const LANDING_REVIEW_DISPLAY_COUNT = 10;

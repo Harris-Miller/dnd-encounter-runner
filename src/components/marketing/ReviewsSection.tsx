@@ -2,20 +2,13 @@ import { Box, Container, Grid, Typography } from '@mui/material';
 import { useMemo } from 'react';
 import type { FC } from 'react';
 
-import { LANDING_REVIEW_DISPLAY_COUNT, LANDING_REVIEWERS } from '../../data/landingReviews';
+import { LANDING_REVIEWERS } from '../../data/landingReviews';
 import { pickLandingReviews } from '../../utils/pickLandingReviews';
 
 import { ReviewCard } from './ReviewCard';
 
 export const ReviewsSection: FC = () => {
-  const displayedReviews = useMemo(
-    () =>
-      pickLandingReviews(LANDING_REVIEWERS, {
-        count: LANDING_REVIEW_DISPLAY_COUNT,
-        random: Math.random,
-      }),
-    [],
-  );
+  const displayedReviews = useMemo(() => pickLandingReviews(LANDING_REVIEWERS), []);
 
   return (
     <Box

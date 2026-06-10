@@ -14,44 +14,32 @@ export interface DisplayedReview {
   text: string;
 }
 
-const shuffleReviewers = <T>(items: readonly T[], random: () => number): T[] => {
-  const shuffledItems = [...items];
-
-  for (let index = shuffledItems.length - 1; index > 0; index -= 1) {
-    const swapIndex = Math.floor(random() * (index + 1));
-    const currentItem = shuffledItems[index];
-    const swapItem = shuffledItems[swapIndex];
-
-    if (currentItem === undefined || swapItem === undefined) {
-      throw new Error('shuffleReviewers encountered an undefined item while shuffling reviewers');
-    }
-
-    shuffledItems[index] = swapItem;
-    shuffledItems[swapIndex] = currentItem;
+const shuffle = <T>(arr: readonly T[]): T[] => {
+  const result = [...arr];
+  const len = result.length;
+  for (let i = 0; i < len; i += 1) {
+    const rand = i + Math.floor(Math.random() * (len - i));
+    const value = result[rand]!;
+    result[rand] = result[i]!;
+    result[i] = value;
   }
-
-  return shuffledItems;
+  return result;
 };
 
-export const pickLandingReviews = (
-  reviewers: readonly LandingReviewer[],
-  options: { count: number; random: () => number },
-): DisplayedReview[] => {
-  const { count, random } = options;
+const LANDING_REVIEW_DISPLAY_COUNT = 10;
+
+export const pickLandingReviews = (reviewers: readonly LandingReviewer[]): DisplayedReview[] => {
+  const count = LANDING_REVIEW_DISPLAY_COUNT;
 
   if (count > reviewers.length) {
     throw new Error(`pickLandingReviews count ${String(count)} exceeds reviewer pool size ${String(reviewers.length)}`);
   }
 
-  return shuffleReviewers(reviewers, random)
-    .slice(0, count)
+  return shuffle(reviewers)
+    .slice(0, LANDING_REVIEW_DISPLAY_COUNT)
     .map(reviewer => {
-      const reviewIndex = Math.floor(random() * reviewer.reviews.length);
-      const text = reviewer.reviews[reviewIndex];
-
-      if (text === undefined) {
-        throw new Error(`Reviewer ${reviewer.id} is missing review at index ${String(reviewIndex)}`);
-      }
+      const reviewIndex = Math.floor(Math.random() * reviewer.reviews.length);
+      const text = reviewer.reviews[reviewIndex]!;
 
       return {
         avatarSrc: reviewer.avatarSrc,

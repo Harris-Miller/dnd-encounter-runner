@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { LANDING_REVIEWERS } from '../../data/landingReviews';
 import { pickLandingReviews } from '../pickLandingReviews';
@@ -19,20 +19,18 @@ const createSeededRandom = (values: readonly number[]) => {
 };
 
 describe('pickLandingReviews', () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   it('returns exactly 10 reviews from the landing reviewer pool', () => {
-    const reviews = pickLandingReviews(LANDING_REVIEWERS, {
-      count: 10,
-      random: Math.random,
-    });
+    const reviews = pickLandingReviews(LANDING_REVIEWERS);
 
     expect(reviews).toHaveLength(10);
   });
 
   it('returns at most one review per person', () => {
-    const reviews = pickLandingReviews(LANDING_REVIEWERS, {
-      count: 10,
-      random: Math.random,
-    });
+    const reviews = pickLandingReviews(LANDING_REVIEWERS);
 
     const uniqueReviewerIds = new Set(reviews.map(review => review.id));
 
@@ -40,10 +38,7 @@ describe('pickLandingReviews', () => {
   });
 
   it("selects review text from that reviewer's three options", () => {
-    const reviews = pickLandingReviews(LANDING_REVIEWERS, {
-      count: 10,
-      random: Math.random,
-    });
+    const reviews = pickLandingReviews(LANDING_REVIEWERS);
 
     reviews.forEach(review => {
       const reviewer = LANDING_REVIEWERS.find(entry => entry.id === review.id);
@@ -53,29 +48,24 @@ describe('pickLandingReviews', () => {
     });
   });
 
-  it('is deterministic when random is seeded', () => {
-    const seededValues = Array.from({ length: 29 }, (_, index) => (index + 1) / 30);
+  it('is deterministic when Math.random is seeded', () => {
+    const seededValues = Array.from({ length: 30 }, (_, index) => (index + 1) / 31);
     const seededRandom = createSeededRandom(seededValues);
 
-    const firstPass = pickLandingReviews(LANDING_REVIEWERS, {
-      count: 10,
-      random: seededRandom,
-    });
+    vi.spyOn(Math, 'random').mockImplementation(seededRandom);
 
-    const secondPass = pickLandingReviews(LANDING_REVIEWERS, {
-      count: 10,
-      random: createSeededRandom(seededValues),
-    });
+    const firstPass = pickLandingReviews(LANDING_REVIEWERS);
+
+    vi.spyOn(Math, 'random').mockImplementation(createSeededRandom(seededValues));
+
+    const secondPass = pickLandingReviews(LANDING_REVIEWERS);
 
     expect(secondPass).toEqual(firstPass);
   });
 
-  it('throws when count exceeds reviewer pool size', () => {
-    expect(() =>
-      pickLandingReviews(LANDING_REVIEWERS, {
-        count: LANDING_REVIEWERS.length + 1,
-        random: () => 0,
-      }),
-    ).toThrow(/exceeds reviewer pool size/);
+  it('throws when display count exceeds reviewer pool size', () => {
+    const smallPool = LANDING_REVIEWERS.slice(0, 9);
+
+    expect(() => pickLandingReviews(smallPool)).toThrow(/exceeds reviewer pool size/);
   });
 });
