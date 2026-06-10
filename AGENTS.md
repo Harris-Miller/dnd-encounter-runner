@@ -31,7 +31,7 @@
 - NEVER manually edit `src/routeTree.gen.ts`. run `pnpm run routes:gen` after updates in `src/routes/`
 
 ### Git
-- Whenever a `git commit` or `git rebase` is performed, ALWAYS include `--author="harris-ai-agent <harrismillerconsulting+ai_agent@gmail.com@gmail.com>`
+- Whenever a `git commit` or `git rebase` is performed, ALWAYS include `--author="harris-ai-agent <harrismillerconsulting+ai_agent@gmail.com>`
 
 ### MCP
 - if you are doing supabase work and want to use their MCP server, don't use the cursor plugin `supabase`, use the locally defined `supabase-local` instead
